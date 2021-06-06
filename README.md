@@ -29,7 +29,6 @@
 
 - 开发语言：JAVA
 - 开发框架：Spring boot
-- 框架来自：[laravel/framework](https://github.com/laravel/laravel).
 - 后台管理系统：(easyweb)
 - 前端UI [layui](https://www.layui.com/).     
 
