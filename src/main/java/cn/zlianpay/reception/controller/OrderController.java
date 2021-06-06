@@ -3,7 +3,9 @@ package cn.zlianpay.reception.controller;
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.pays.codepay.CodePaysConfig;
+import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
+import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -36,10 +38,11 @@ import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
-public class OrderController {
+public class OrderController extends BaseController {
 
     @Autowired
     private OrdersService ordersService;
@@ -206,6 +209,25 @@ public class OrderController {
             model.addAttribute("website", website);
 
             return "yunpay.html";
+        } else if (orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("xunhupay_alipay")) {
+
+            if (orders.getPayType().equals("xunhupay_wxpay")) {
+                model.addAttribute("type", 1);
+            } else if (orders.getPayType().equals("xunhupay_alipay")) {
+                model.addAttribute("type", 2);
+            }
+
+            Map pay = PayUtils.pay(getWebName(), pays, goodsName, price, ordersMember, productDescription);
+            model.addAttribute("goodsName", goodsName);
+            model.addAttribute("price", price);
+            model.addAttribute("ordersMember", ordersMember);
+            model.addAttribute("result", pay.get("url_qrcode"));
+            model.addAttribute("wap", pay.get("url1"));
+            model.addAttribute("orderId", orders.getId());
+
+            Website website = websiteService.getById(1);
+            model.addAttribute("website", website);
+            return "xunhupay.html";
         }
 
         Website website = websiteService.getById(1);

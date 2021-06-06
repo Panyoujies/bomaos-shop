@@ -77,23 +77,10 @@
 
                     for (let i = 0; i < list.length; i++) {
                         var payName;
-
-                        if (list[i].payType == "codepay_alipay") {
+                        if (list[i].payType == "codepay_alipay" || list[i].payType == "mqpay_alipay" || list[i].payType == "zlianpay_alipay" || list[i].payType == "yungouos_alipay" || list[i].payType == "xunhupay_alipay") {
                             payName = "支付宝";
-                        } else if (list[i].payType == "codepay_wxpay"){
+                        } else if (list[i].payType == "codepay_wxpay" || list[i].payType == "mqpay_wxpay" || list[i].payType == "zlianpay_wxpay" || list[i].payType == "yungouos_wxpay" || list[i].payType == "xunhupay_wxpay") {
                             payName = "微信";
-                        } else if (list[i].payType == "mqpay_wxpay"){
-                            payName = "微信";
-                        } else if (list[i].payType == "mqpay_alipay"){
-                            payName = "支付宝";
-                        } else if (list[i].payType == "zlianpay_wxpay"){
-                            payName = "微信";
-                        } else if (list[i].payType == "zlianpay_alipay"){
-                            payName = "支付宝";
-                        } else if (list[i].payType == "yungouos_wxpay"){
-                            payName = "微信";
-                        } else if (list[i].payType == "yungouos_alipay"){
-                            payName = "支付宝";
                         }
 
                         var status;

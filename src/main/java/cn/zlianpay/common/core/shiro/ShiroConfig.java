@@ -74,6 +74,8 @@ public class ShiroConfig {
 
         // 支付
         filterChainDefinitions.put("/pay/**", "anon");
+        filterChainDefinitions.put("/order/state/**", "anon");
+        filterChainDefinitions.put("/pay/state/**", "anon");
 
         // 异步通知
         filterChainDefinitions.put("/mqpay/notifyUrl", "anon");
@@ -82,10 +84,11 @@ public class ShiroConfig {
         filterChainDefinitions.put("/codepay/return", "anon");
         filterChainDefinitions.put("/zlianpay/notifyUrl", "anon");
         filterChainDefinitions.put("/zlianpay/returnUrl", "anon");
+        filterChainDefinitions.put("/xunhupay/notifyUrl", "anon");
+        filterChainDefinitions.put("/xunhupay/returnUrl", "anon");
         filterChainDefinitions.put("/yungouos/notify", "anon");
-        filterChainDefinitions.put("/order/state/**", "anon");
-        filterChainDefinitions.put("/pay/state/**", "anon");
 
+        // api
         filterChainDefinitions.put("/api/**", "anon");
         filterChainDefinitions.put("/error", "anon");
         filterChainDefinitions.put("/login", "anon");

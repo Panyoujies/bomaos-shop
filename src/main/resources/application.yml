@@ -5,7 +5,7 @@ server:
 # 多环境配置
 spring:
   profiles:
-    active: prods
+    active: dev
 
   # 连接池配置
   datasource:
@@ -45,9 +45,8 @@ spring:
   # 邮件服务器配置
   mail:
     host: smtp.qq.com
-    username: 1724962375@qq.com
-    password: mqmgdlcvdvkhfdca
-    # 密码： hd673rds33
+    username: xxxxxx@xxx.com
+    password: xxxxxxxx
     default-encoding: UTF-8
     properties:
       mail:

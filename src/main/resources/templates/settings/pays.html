@@ -27,6 +27,9 @@
     {{# if(d.driver=='yungouos_wxpay' || d.driver=='yungouos_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yungouos">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='xunhupay_wxpay' || d.driver=='xunhupay_alipay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="xunhupay">配置修改</a>
+    {{# } }}
 </script>
 
 <!-- mqpay -->
@@ -295,6 +298,70 @@
     </form>
 </script>
 
+
+<!-- xunhupay -->
+<script type="text/html" id="xunhupayEditDialog">
+    <form id="xunhupayEditForm" lay-filter="xunhupayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">appid:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">appsecret:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入appsecret" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="xunhupayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
 <!-- 商品状态 -->
 <script type="text/html" id="paysTbStatus">
     <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -320,7 +387,7 @@
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
-                {field: 'driver', title: '驱动', width: 130},
+                {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
                 {field: 'enabled', title: '开关', templet: '#paysTbStatus', width: 90},
                 {field: 'updatedAt', title: '更新时间', width: 200},
@@ -337,6 +404,8 @@
             } else if ('zlianpay' === obj.event) {
                 showEditModel(obj.data);
             } else if ('yungouos' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('xunhupay' === obj.event) {
                 showEditModel(obj.data);
             }
         });
@@ -359,6 +428,10 @@
                 var html = $('#yungouosEditDialog').html();
                 var forms = 'yungouosEditForm';
                 var submit = 'yungouosEditSubmit';
+            } else if (mData.driver == 'xunhupay_wxpay' || mData.driver == 'xunhupay_alipay') {
+                var html = $('#xunhupayEditDialog').html();
+                var forms = 'xunhupayEditForm';
+                var submit = 'xunhupayEditSubmit';
             }
 
             admin.open({
@@ -404,7 +477,7 @@
                 }
             });
         });
-        
+
     });
 </script>
 </body>

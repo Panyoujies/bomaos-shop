@@ -380,6 +380,40 @@ public class NotifyController {
     }
 
     /**
+     * 虎皮椒支付通知
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/xunhupay/notifyUrl")
+    @ResponseBody
+    public String xunhuNotifyUrl(HttpServletRequest request) {
+        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
+        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
+        if ("OD".equals(params.get("status"))) {
+            String returnBig = returnBig(params.get("total_fee"), params.get("total_fee"), params.get("trade_order_id"), params.get("transaction_id"), params.get("plugins"), "success", "fiald");
+            return returnBig;
+        } else {
+            return "fiald";
+        }
+    }
+
+    /**
+     * 虎皮椒支付通知
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/xunhupay/returnUrl")
+    @ResponseBody
+    public void xunhuReturnUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
+        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
+        String url = "/pay/state/" + params.get("trade_order_id");
+        response.sendRedirect(url);
+    }
+
+    /**
      * 业务处理
      * @param money 实收款金额
      * @param price 订单金额

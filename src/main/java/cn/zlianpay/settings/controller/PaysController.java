@@ -68,6 +68,10 @@ public class PaysController extends BaseController {
                 paysVo.setAppid(configs.get("mchId").toString());
                 paysVo.setKey(configs.get("key").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("xunhupay_wxpay") || pays.getDriver().equals("xunhupay_alipay")) {
+                paysVo.setAppid(configs.get("appid").toString());
+                paysVo.setKey(configs.get("appsecret").toString());
+                paysVo.setNotifyUrl(configs.get("notify_url").toString());
             }
             return paysVo;
         }).collect(Collectors.toList());
@@ -139,6 +143,10 @@ public class PaysController extends BaseController {
         } else if (paysVo.getDriver().equals("yungouos_wxpay") || paysVo.getDriver().equals("yungouos_alipay")) {
             map.put("mchId", paysVo.getAppid());
             map.put("key", paysVo.getKey());
+            map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("xunhupay_wxpay") || paysVo.getDriver().equals("xunhupay_alipay")) {
+            map.put("appid", paysVo.getAppid());
+            map.put("appsecret", paysVo.getKey());
             map.put("notify_url", paysVo.getNotifyUrl());
         }
         String jsonString = JSON.toJSONString(map);
