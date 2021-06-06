@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="卡密管理"/>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <!-- 表格工具栏 -->
+            <form class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">卡密:</label>
+                        <div class="layui-input-inline">
+                            <input name="cardInfo" class="layui-input" placeholder="输入卡密"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">&emsp;
+                        <button class="layui-btn icon-btn" lay-filter="cardsTbSearch" lay-submit>
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!-- 数据表格 -->
+            <table id="cardsTable" lay-filter="cardsTable"></table>
+        </div>
+    </div>
+</div>
+
+<:include file="../common/js.html"/>
+<script>
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var util = layui.util;
+        var admin = layui.admin;
+
+        /* 渲染表格 */
+        var insTb = tableX.render({
+            elem: '#cardsTable',
+            url: '/carmi/cards/soldPage',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'checkbox'},
+                {type: 'numbers'},
+                {field: 'productName', title: '商品名称'},
+                {field: 'cardInfo', title: '卡密'},
+                {field: 'status', title: '卡密状态', templet: function (res) {
+                        if (res.status == 0) {
+                            return "未出售";
+                        } else {
+                            return '<span style="color: #00a65a">已售出</span>'
+                        }
+                    }},
+                {field: 'updatedAt', title: '售出时间', sort: true, maxWidth: 200},
+            ]]
+        });
+
+    });
+</script>
+</body>
+</html>

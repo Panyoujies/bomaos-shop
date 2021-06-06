@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="支付配置管理"/>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <!-- 数据表格 -->
+            <table id="paysTable" lay-filter="paysTable"></table>
+        </div>
+    </div>
+</div>
+<!-- 表格操作列 -->
+<script type="text/html" id="paysTbBar">
+    {{# if(d.driver=='mqpay_alipay' || d.driver=='mqpay_wxpay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="mqpay">配置修改</a>
+    {{# } }}
+    {{# if(d.driver=='codepay_alipay' || d.driver=='codepay_wxpay' || d.driver=='codepay_qqpay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="codepay">配置修改</a>
+    {{# } }}
+    {{# if(d.driver=='zlianpay_alipay' || d.driver=='zlianpay_wxpay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="codepay">配置修改</a>
+    {{# } }}
+    {{# if(d.driver=='yungouos_wxpay' || d.driver=='yungouos_alipay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yungouos">配置修改</a>
+    {{# } }}
+</script>
+
+<!-- mqpay -->
+<script type="text/html" id="mqpayEditDialog">
+    <form id="mqpayEditForm" lay-filter="mqpayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">V免签官网:</label>
+            <div class="layui-input-block">
+                <input name="createUrl" placeholder="输入V免签官网" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="mqpayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
+<!-- codepay -->
+<script type="text/html" id="codepayEditDialog">
+    <form id="codepayEditForm" lay-filter="codepayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">ID:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入ID" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="codepayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
+
+<!-- zlianpay -->
+<script type="text/html" id="zlianpayEditDialog">
+    <form id="zlianpayEditForm" lay-filter="zlianpayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">pid:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入pid" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付网关:</label>
+            <div class="layui-input-block">
+                <input name="createUrl" placeholder="输入V免签官网" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="zlianpayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
+
+<!-- yungouos -->
+<script type="text/html" id="yungouosEditDialog">
+    <form id="yungouosEditForm" lay-filter="yungouosEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">mch_id:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入mch_id" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="yungouosEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
+<!-- 商品状态 -->
+<script type="text/html" id="paysTbStatus">
+    <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
+           lay-text="开启|关闭" {{d.enabled==1?'checked':''}}/>
+</script>
+<:include file="../common/js.html"/>
+<script>
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var util = layui.util;
+        var admin = layui.admin;
+        var notice = layui.notice;
+
+        /* 渲染表格 */
+        var insTb = tableX.render({
+            elem: '#paysTable',
+            url: 'pays/page',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'driver', title: '驱动', width: 130},
+                {field: 'comment', title: '说明', minWidth: 200},
+                {field: 'enabled', title: '开关', templet: '#paysTbStatus', width: 90},
+                {field: 'updatedAt', title: '更新时间', width: 200},
+                {title: '操作', toolbar: '#paysTbBar', align: 'center', width: 130}
+            ]]
+        });
+
+        /* 表格工具条点击事件 */
+        table.on('tool(paysTable)', function (obj) {
+            if ('codepay' === obj.event) { // 修改马支付
+                showEditModel(obj.data);
+            } else if ('mqpay' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('zlianpay' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('yungouos' === obj.event) {
+                showEditModel(obj.data);
+            }
+        });
+
+        /* 显示表单弹窗 */
+        function showEditModel(mData) {
+            if (mData.driver == 'codepay_alipay' || mData.driver == 'codepay_wxpay' || mData.driver == 'codepay_qqpay') {
+                var html = $('#codepayEditDialog').html();
+                var forms = 'codepayEditForm';
+                var submit = 'codepayEditSubmit';
+            } else if (mData.driver == 'mqpay_alipay' || mData.driver == 'mqpay_wxpay') {
+                var html = $('#mqpayEditDialog').html();
+                var forms = 'mqpayEditForm';
+                var submit = 'mqpayEditSubmit';
+            } else if (mData.driver == 'zlianpay_alipay' || mData.driver == 'zlianpay_wxpay') {
+                var html = $('#zlianpayEditDialog').html();
+                var forms = 'zlianpayEditForm';
+                var submit = 'zlianpayEditSubmit';
+            } else if (mData.driver == 'yungouos_wxpay' || mData.driver == 'yungouos_alipay') {
+                var html = $('#yungouosEditDialog').html();
+                var forms = 'yungouosEditForm';
+                var submit = 'yungouosEditSubmit';
+            }
+
+            admin.open({
+                type: 1,
+                title: '修改支付渠道',
+                content: html,
+                success: function (layero, dIndex) {
+                    // 回显表单数据
+                    form.val(forms, mData);
+                    // 表单提交事件
+                    form.on('submit('+ submit +')', function (data) {
+                        var loadIndex = layer.load(2);
+                        $.post(mData ? 'pays/update' : 'pays/save', data.field, function (res) {
+                            layer.close(loadIndex);
+                            if (0 === res.code) {
+                                layer.close(dIndex);
+                                layer.msg(res.msg, {icon: 1});
+                                insTb.reload({page: {curr: 1}});
+                            } else {
+                                layer.msg(res.msg, {icon: 2, anim: 6});
+                            }
+                        });
+                        return false;
+                    });
+                }
+            });
+        }
+
+        /* 修改商品状态 */
+        form.on('switch(paysTbStatuCk)', function (obj) {
+            var loadIndex = layer.load(2);
+            $.post('pays/status/update', {
+                id: obj.elem.value,
+                enabled: obj.elem.checked ? 1 : 0
+            }, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    notice.msg(res.msg, {icon: 1});
+                } else {
+                    notice.msg(res.msg, {icon: 2});
+                    $(obj.elem).prop('checked', !obj.elem.checked);
+                    form.render('checkbox', $('#paysTable').next().attr('lay-filter'));
+                }
+            });
+        });
+        
+    });
+</script>
+</body>
+</html>

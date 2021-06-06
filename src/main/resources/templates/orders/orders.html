@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="订单表管理"/>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <!-- 表格工具栏 -->
+            <form class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">订单号:</label>
+                        <div class="layui-input-inline">
+                            <input name="member" class="layui-input" placeholder="输入订单号"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">联系方式:</label>
+                        <div class="layui-input-inline">
+                            <input name="contact" class="layui-input" placeholder="输入买家联系方式"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">流水号:</label>
+                        <div class="layui-input-inline">
+                            <input name="payNo" class="layui-input" placeholder="输入流水号"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">&emsp;
+                        <button class="layui-btn icon-btn" lay-filter="ordersTbSearch" lay-submit>
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!-- 数据表格 -->
+            <table id="ordersTable" lay-filter="ordersTable"></table>
+        </div>
+    </div>
+</div>
+<!-- 表格操作列 -->
+<script type="text/html" id="ordersTbBar">
+    {{# if(d.status==0){ }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="budan">手动补单</a>
+    {{# }else{ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">查看卡密</a>
+    {{# } }}
+
+</script>
+
+<script type="text/html" id="goodsEditDialog">
+    <form id="goodsEditForm" lay-filter="goodsEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">流水号:</label>
+            <div class="layui-input-block">
+                <input name="payNo" placeholder="请输入流水号..." class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="goodsEditSubmit" lay-submit>立即补单</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+<:include file="../common/js.html"/>
+<script>
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var util = layui.util;
+        var admin = layui.admin;
+        var notice = layui.notice;
+
+        /* 渲染表格 */
+        var insTb = tableX.render({
+            elem: '#ordersTable',
+            url: 'orders/page',
+            page: true,
+            toolbar: ['<p>',
+                '<button lay-event="clear" class="layui-btn layui-btn-sm layui-btn-danger icon-btn"><i class="layui-icon">&#xe640;</i>清理未支付订单</button>',
+                '</p>'].join(''),
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'member', title: '订单号', width: 150},
+                {
+                    field: 'status', title: '状态', templet: function (res) {
+                        switch (res.status) {
+                            case 1 :
+                                return '<span style="color: #00a65a">已支付</span>';
+                            case 0 :
+                                return '<span style="color: #dd4b39">未支付</span>';
+                        }
+                    }, width: 90
+                },
+                {field: 'productName', title: '商品名称', width: 90},
+                {field: 'contact', title: '联系方式'},
+                {
+                    field: 'payType', title: '支付类型', templet: function (res) {
+                        switch (res.payType) {
+                            case 'mqpay_alipay' :
+                                return "支付宝-v免签";
+                            case 'mqpay_wxpay' :
+                                return "微信-v免签";
+                            case 'codepay_alipay' :
+                                return "支付宝-码支付";
+                            case 'codepay_wxpay' :
+                                return "微信-码支付";
+                            case 'zlianpay_alipay' :
+                                return "支付宝-码支付";
+                            case 'zlianpay_wxpay' :
+                                return "微信-码支付";
+                            case 'yungouos_alipay' :
+                                return "支付宝-yungouos";
+                            case 'yungouos_wxpay' :
+                                return "微信-yungouos";
+                        }
+                    }, width: 90
+                },
+                {field: 'device', title: '下单设备'},
+                {field: 'number', title: '购买数量', width: 90},
+                {field: 'payNo', title: '流水号'},
+                {field: 'price', title: '金额'},
+                {
+                    field: 'createTime', title: '订单创建时间', templet: function (d) {
+                        return util.toDateString(d.createTime);
+                    }
+                },
+                {title: '操作', toolbar: '#ordersTbBar', align: 'center', minWidth: 200}
+            ]]
+        });
+
+        /* 表格搜索 */
+        form.on('submit(ordersTbSearch)', function (data) {
+            insTb.reload({where: data.field, page: {curr: 1}});
+            return false;
+        });
+
+        /* 表格工具条点击事件 */
+        table.on('tool(ordersTable)', function (obj) {
+            if ('edit' === obj.event) { // 修改
+                showEditModel(obj.data);
+            } else if ('budan' === obj.event) { // 补单
+                showBudanModel(obj.data)
+            }
+        });
+
+        /* 表格头工具栏点击事件 */
+        table.on('toolbar(ordersTable)', function (obj) {
+            if ('clear' === obj.event) { // 清理订单
+                clearDel();
+            }
+        });
+
+        /* 补单 */
+        function showBudanModel(mData) {
+            admin.open({
+                type: 1,
+                title: '补充流水号',
+                content: $('#goodsEditDialog').html(),
+                success: function (layero, dIndex) {
+                    form.on('submit(goodsEditSubmit)', function (data) {
+                        var loadIndex = layer.load(2);
+                        $.post('orders/status/update', {
+                            id: mData.id,
+                            productId: mData.productId,
+                            payNo: data.field.payNo
+                        }, function (res) {
+                            layer.close(loadIndex);
+                            if (0 === res.code) {
+                                layer.close(dIndex);
+                                notice.msg(res.msg, {icon: 1});
+                                insTb.reload({page: {curr: 1}});
+                            } else {
+                                notice.msg(res.msg, {icon: 2});
+                            }
+                        });
+                        return false;
+                    })
+                }
+            });
+        }
+
+        /* 删除 */
+        function clearDel() {
+            admin.confirm('确定要清理未支付的订单吗？', function (i) {
+                layer.close(i);
+                var loadIndex = layer.load(2);
+                $.get('orders/clearRemove', function (res) {
+                    layer.close(loadIndex);
+                    if (0 === res.code) {
+                        layer.msg(res.msg, {icon: 1});
+                        insTb.reload({page: {curr: 1}});
+                    } else {
+                        layer.msg(res.msg, {icon: 2, anim: 6});
+                    }
+                });
+            })
+        }
+
+        /* 显示表单弹窗 */
+        function showEditModel(mData) {
+            layer.open({
+                type: 1
+                , offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'layerDemo' + mData.id //防止重复弹出
+                , content: getcardkey(mData)
+                , btn: '关闭'
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                    layer.closeAll();
+                }
+            });
+        }
+
+        // 获取卡密
+        function getcardkey(data) {
+            var list = data.cardInfo;
+            var html = '';
+            for (const listElement of list) {
+                html += '<div style="padding: 20px 100px;">卡密: ' + listElement.cardInfo + '</div>'
+            }
+            return html;
+        }
+
+    });
+</script>
+</body>
+</html>

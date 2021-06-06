@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="添加卡密"/>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+        <div class="layui-card-body">
+            <!-- 表单开始 -->
+            <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">选择商品</label>
+                    <div class="layui-input-inline">
+                        <select id="classifyId" lay-verType="tips" lay-verify="required" lay-filter="classifyId" required>
+                            <option value="">请选择分类</option>
+                            <:for items="${classifysList}" var="item">
+                                <option value="${item.id}">${item.name}</option>
+                            </:for>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline">
+                        <select name="productId" id="productId" lay-verify="required" lay-filter="productId">
+                            <option value="">请选择商品</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label layui-form-required">输入卡密</label>
+                    <div class="layui-input-block">
+						<textarea name="cardInfo" lay-verify="required" placeholder="卡号+空格+密码，一行一张卡
+						如：ABCDEFG 123456
+						(卡密长度不得超过200位)
+						(建议每次添加不超过2000张)" class="layui-textarea" style="min-height: 222px; height: 222px;"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">过滤重复</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" name="repeat" value="0">
+                        <input type="checkbox" lay-filter="repeat" name="repeat" value="1" lay-skin="switch"
+                               lay-text="关闭|开启">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加&emsp;</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<:include file="../common/js.html"/>
+<script>
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var util = layui.util;
+        var admin = layui.admin;
+        var notice = layui.notice;
+
+        /* 监听表单提交 */
+        form.on('submit(formBasSubmit)', function (data) {
+            $.post('save', data.field, function (res) {
+                console.log(data.field)
+                if (0 === res.code) {
+                    notice.msg(res.msg, {icon: 1, timeout: 1500, onClosing: function () {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    notice.msg(res.msg, {icon: 2});
+                }
+            });
+            return false;
+        });
+
+        /* 根据分类id查询商品列表 */
+        form.on('select(classifyId)', function (data) {
+            $("#productId").html(
+                '<option value="" >请选择商品</option>'
+            );
+            $.post('/products/products/getProductList', {
+                id: data.value
+            }, function (res) {
+                if (0 === res.code) {
+                    var list = res.data;
+                    var goodsid = document.getElementById("productId");
+                    for (const listElement of list) {
+                        var option = document.createElement("option");
+                        option.setAttribute("value", listElement.id);
+                        option.innerText = listElement.name;
+                        goodsid.appendChild(option);
+                    }
+                    form.render("select")
+                    layer.msg(res.msg, {icon: 1});
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

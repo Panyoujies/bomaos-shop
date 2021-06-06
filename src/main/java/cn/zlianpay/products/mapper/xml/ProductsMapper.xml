@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zlianpay.products.mapper.ProductsMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="relSelect">
+        SELECT a.*
+        FROM sys_products a
+        <where>
+            <if test="page!=null and page.pageData!=null">
+				<if test="page.pageData.id != null">
+					AND a.id = #{page.pageData.id}
+				</if>
+				<if test="page.pageData.name != null">
+                    AND a.name LIKE CONCAT('%', #{page.pageData.name}, '%')
+				</if>
+				<if test="page.pageData.price != null">
+                    AND a.price LIKE CONCAT('%', #{page.pageData.price}, '%')
+				</if>
+				<if test="page.pageData.sort != null">
+					AND a.sort = #{page.pageData.sort}
+                </if>
+				<if test="page.pageData.link != null">
+                    AND a.link LIKE CONCAT('%', #{page.pageData.link}, '%')
+				</if>
+				<if test="page.pageData.status != null">
+					AND a.status = #{page.pageData.status}
+                </if>
+				<if test="page.pageData.pdInfo != null">
+                    AND a.pd_info LIKE CONCAT('%', #{page.pageData.pdInfo}, '%')
+				</if>
+				<if test="page.pageData.createdAt != null">
+                    AND a.created_at LIKE CONCAT('%', #{page.pageData.createdAt}, '%')
+				</if>
+				<if test="page.pageData.updatedAt != null">
+                    AND a.updated_at LIKE CONCAT('%', #{page.pageData.updatedAt}, '%')
+				</if>
+				<if test="page.pageData.deletedAt != null">
+                    AND a.deleted_at LIKE CONCAT('%', #{page.pageData.deletedAt}, '%')
+				</if>
+                <if test="page.pageData.imageLogo != null">
+                    AND a.image_logo LIKE CONCAT('%', #{page.pageData.imageLogo}, '%')
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="listPage" resultType="cn.zlianpay.products.entity.Products">
+        <include refid="relSelect"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="listAll" resultType="cn.zlianpay.products.entity.Products">
+        <include refid="relSelect"></include>
+    </select>
+
+</mapper>

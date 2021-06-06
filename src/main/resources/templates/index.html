@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <:include file="./common/title.html" websiteName="${website.websiteName}"/>
+    <style>
+        .uuids {
+            height: auto;
+            padding-bottom: 100px;
+            padding-top: 100px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+            font-size: 25px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        /** 项目列表样式 */
+        .project-list-item {
+            background-color: #f8f8f8;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .project-list-item:hover {
+            box-shadow: 0 2px 10px rgb(29 122 255 / 15%);
+        }
+
+        .project-list-item .project-list-item-cover {
+            width: 100%;
+            height: 220px;
+            display: block;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .project-list-item-body {
+            padding: 20px;
+        }
+
+        .project-list-item .project-list-item-body > h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .project-list-item .project-list-item-text {
+            overflow: hidden;
+        }
+
+        .project-list-item .project-list-item-desc {
+            position: relative;
+        }
+
+        .project-list-item .project-list-item-desc .time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .project-list-item .project-list-item-desc .ew-head-list {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .ew-head-list .ew-head-list-item {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            margin-left: -10px;
+        }
+
+        .ew-head-list .ew-head-list-item:first-child {
+            margin-left: 0;
+        }
+
+        /** // 项目列表样式结束 */
+        .classify-type > div .project-list-item.active {
+            background: #448bff linear-gradient(45deg, #448bff, #44e9ff);
+            color: #FFFFFF;
+        }
+
+        .product-type > div .project-list-item.active {
+            background: #448bff linear-gradient(45deg, #448bff, #44e9ff);
+            color: #FFFFFF;
+        }
+
+        .classify-theme {
+            letter-spacing: 1.5px;
+            position: relative;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            padding-left: 26px;
+            background-size: 32px;
+            background-position: 0 19px;
+            background-repeat: no-repeat;
+        }
+
+        .classify-theme > svg {
+            top: 1px;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            left: 0;
+        }
+
+    </style>
+</head>
+<body>
+<!-- header -->
+<:include file="./common/header_hd.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+
+<!-- goods-card -->
+<div class="layui-container body-card" style="margin-bottom: 15px;">
+    <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+        <div class="layui-card-header" style="font-size: 18px; font-weight: 600;">购物须知:</div>
+        <div class="layui-card-body" style="padding: 20px 20px; font-size: 17px; font-weight: 600;">
+            ${website.storeDetails}
+        </div>
+    </div>
+</div>
+
+<!-- goods-card -->
+<div class="layui-container body-card" style="margin-bottom: 15px;">
+    <div class="layui-card order-show" style="padding: 15px 20px 20px 20px;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm12">
+                <div class="classify-theme" style="margin-bottom: 10px;">
+                    <svg t="1602925747464" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg" p-id="1270" data-spm-anchor-id="a313x.7781069.0.i4"
+                         width="20" height="20">
+                        <path d="M619.52 578.56V808.96h194.56V660.48h-133.12v-81.92h215.04V849.92l-40.96 40.96h-276.48l-40.96-40.96V578.56z"
+                              fill="#00EAFF" p-id="1271" data-spm-anchor-id="a313x.7781069.0.i0" class=""></path>
+                        <path d="M619.52 512V215.04h194.56v172.032h-133.12v81.92h174.08l40.96-40.96V174.08l-40.96-40.96h-276.48l-40.96 40.96v337.92z"
+                              fill="#3C8CE7" p-id="1272" data-spm-anchor-id="a313x.7781069.0.i6" class=""></path>
+                        <path d="M445.44 890.88h-276.48l-40.96-40.96V619.52l40.96-40.96h174.08v81.92h-133.12V808.96h194.56V215.04h-194.56v172.032h133.12v81.92h-174.08l-40.96-40.96V174.08l40.96-40.96h276.48l40.96 40.96v675.84z"
+                              fill="#3C8CE7" p-id="1273" data-spm-anchor-id="a313x.7781069.0.i3" class=""></path>
+                    </svg>
+                    <span>选择分类</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15 classify-type" id="classifyList">
+        </div>
+    </div>
+    <div class="layui-card order-show" style="padding: 15px 20px 20px 20px; margin-top: 20px;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm12">
+                <div class="classify-theme" style="margin-bottom: 10px;">
+                    <svg t="1602925988984" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg" p-id="1945" width="17" height="17">
+                        <path d="M803.84 883.712h-163.84v-81.92h133.12l118.784-393.216-178.176 95.232-55.296-15.36L512 240.64 365.568 488.448l-55.296 15.36-178.176-95.232 118.784 393.216h133.12v81.92h-163.84l-38.912-28.672L25.6 336.896l58.368-47.104 230.4 122.88 162.816-272.384h69.632l162.816 272.384 230.4-122.88 58.368 47.104-155.648 518.144z"
+                              fill="#3C8CE7" p-id="1946" data-spm-anchor-id="a313x.7781069.0.i17" class=""></path>
+                        <path d="M305.152 620.544h61.44v61.44h-61.44zM481.28 620.544h61.44v61.44h-61.44zM657.408 620.544h61.44v61.44h-61.44z"
+                              fill="#00EAFF" p-id="1947" data-spm-anchor-id="a313x.7781069.0.i14" class=""></path>
+                    </svg>
+                    <span>选择商品</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15 product-type" id="goodsList">
+        </div>
+    </div>
+
+</div>
+<!-- footer -->
+<:include file="./common/footer.html" websiteName="${website.websiteName}"/>
+<!-- js部分 -->
+<:include file="./common/qiantaijs.html"/>
+<script type="text/javascript" src="${ctxPath}/qiantai/js/backend-bundle.min.js"></script>
+<script>
+    layui.use(['layer', 'form', 'notice'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var notice = layui.notice;
+        var classifysListJson = JSON.parse('${classifysListJson!}');
+        var classifyId;
+        var product1;
+
+        // 支付方式点击事件
+        $('.pay-type-group>div').click(function () {
+            $('.pay-type-group>div').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        var list = classifysListJson;
+
+        var classifyHtml = '';
+        if (list.length != 0) {
+            for (var i = 0; i < list.length; i++) {
+                if (i == 0) {
+                    classifyHtml += '' +
+                        '<div class="layui-col-sm3">' +
+                        '     <div class="project-list-item active" data-id="' + list[i].id + '" lay-filter="classifySubmit" lay-submit>' +
+                        '         <div class="project-list-item-body">' +
+                        '              <div style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 10px;">' + list[i].name + '</div>' +
+                        '              <div class="project-list-item-text">商品数量： ' + list[i].productsMember + '</div>' +
+                        '         </div>' +
+                        '    </div>' +
+                        '</div>';
+                    classifyId = list[i].id;
+                } else {
+                    classifyHtml += '' +
+                        '<div class="layui-col-sm3">' +
+                        '     <div class="project-list-item" data-id="' + list[i].id + '" lay-filter="classifySubmit" lay-submit>' +
+                        '         <div class="project-list-item-body">' +
+                        '              <div style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 10px;">' + list[i].name + '</div>' +
+                        '              <div class="project-list-item-text">商品数量： ' + list[i].productsMember + '</div>' +
+                        '         </div>' +
+                        '    </div>' +
+                        '</div>';
+                }
+            }
+        } else {
+            classifyHtml = '' +
+                '<div style="text-align: center; padding: 30px;">' +
+                '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
+                '       <img src="/qiantai/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                '       <span>暂无分类</span>' +
+                '   </div>' +
+                '</div>';
+        }
+
+        $("#classifyList").html(classifyHtml);
+
+        // 点击事件
+        $('.classify-type>div .project-list-item').click(function () {
+            $('.classify-type>div .project-list-item').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('.product-type>div .project-list-item').click(function () {
+            $('.product-type>div .project-list-item').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $.post('/getProductList', {
+            classifyId: classifyId
+        }, function (res) {
+            if (0 === res.code) {
+                var list = res.data;
+                var goodsHtml = '';
+
+                if (list.length != 0) {
+                    for (var i = 0; i < list.length; i++) {
+                        goodsHtml += '' +
+                            '<div class="layui-col-sm3">' +
+                            '     <div class="project-list-item" style="background-image: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)), url(${ctxPath}/file/' + list[i].imageLogo + ');background-repeat: no-repeat;background-size: cover;background-position: 100% 100%;" data-id="' + list[i].id + '" lay-filter="productSubmit" lay-submit>' +
+                            '         <div class="project-list-item-body">' +
+                            '              <div style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 10px;">' + list[i].name + '</div>' +
+                            '              <div class="project-list-item-text" style="font-weight: 700; padding-bottom: 10px;font-size: 15px; color: #00beff">¥ ' + list[i].price + '</div>' +
+                            '              <div class="project-list-item-text">库存数量：' + list[i].cardMember + '</div>' +
+                            '         </div>' +
+                            '    </div>' +
+                            '</div>';
+                    }
+                } else {
+                    goodsHtml = '' +
+                        '<div style="text-align: center; padding: 30px;">' +
+                        '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
+                        '       <img src="/qiantai/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                        '       <span>暂无商品</span>' +
+                        '   </div>' +
+                        '</div>';
+                }
+
+                $("#goodsList").html(goodsHtml);
+            } else {
+                layer.msg(res.msg, {icon: 2})
+            }
+        });
+
+        /* 表单提交 */
+        form.on('submit(classifySubmit)', function () {
+
+
+            product1 = null;
+            classifyId = $('.classify-type>div .project-list-item.active').data('id');
+            $.post('/getProductList', {
+                classifyId: $('.classify-type>div .project-list-item.active').data('id')
+            }, function (res) {
+                if (0 === res.code) {
+                    var list = res.data;
+                    var goodsHtml = '';
+                    if (list.length != 0) {
+                        for (var i = 0; i < list.length; i++) {
+                            goodsHtml += '' +
+                                '<div class="layui-col-sm3">' +
+                                '     <div class="project-list-item" style="background-image: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)), url(${ctxPath}/file/' + list[i].imageLogo + ');background-repeat: no-repeat;background-size: cover;background-position: 100% 100%;" data-id="' + list[i].id + '" lay-filter="productSubmit" lay-submit>' +
+                                '         <div class="project-list-item-body">' +
+                                '              <div style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 10px;">' + list[i].name + '</div>' +
+                                '              <div class="project-list-item-text" style="font-weight: 700; padding-bottom: 10px;font-size: 15px; color: #00beff">¥ ' + list[i].price + '</div>' +
+                                '              <div class="project-list-item-text">库存数量：' + list[i].cardMember + '</div>' +
+                                '         </div>' +
+                                '    </div>' +
+                                '</div>';
+                        }
+                    } else {
+                        goodsHtml = '' +
+                            '<div style="text-align: center; padding: 30px;">' +
+                            '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
+                            '       <img src="/qiantai/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                            '       <span>暂无商品</span>' +
+                            '   </div>' +
+                            '</div>';
+                    }
+
+                    $("#goodsList").html(goodsHtml);
+                } else {
+                    layer.msg(res.msg, {icon: 2})
+                }
+            });
+        });
+
+        /* 表单提交 */
+        form.on('submit(productSubmit)', function () {
+            $('.product-type>div .project-list-item').removeClass('active');
+            $(this).addClass('active');
+            var productId = $('.product-type>div .project-list-item.active').data('id')
+            $.post('/getProductById', {
+                id: productId
+            }, function (res) {
+                if (0 === res.code) {
+                    var product = res.data;
+                    product1 = product;
+                    window.location = '${ctxPath}/product/' + product.link;
+                } else {
+                    layer.msg(res.msg, {icon: 2})
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

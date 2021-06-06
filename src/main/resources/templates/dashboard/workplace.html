@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="网站设置管理"/>
+    <style>
+        /** 应用快捷块样式 */
+        .console-app-group {
+            padding: 16px;
+            border-radius: 4px;
+            text-align: center;
+            background-color: #fff;
+            cursor: pointer;
+            display: block;
+        }
+
+        .console-app-group .console-app-icon {
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            margin-bottom: 6px;
+            display: inline-block;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            font-size: 32px;
+            color: #69c0ff;
+        }
+
+        .console-app-group:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, .08);
+        }
+
+        /** //应用快捷块样式 */
+
+        /** 小组成员 */
+        .console-user-group {
+            position: relative;
+            padding: 10px 0 10px 60px;
+        }
+
+        .console-user-group .console-user-group-head {
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            margin-top: -16px;
+            border-radius: 50%;
+        }
+
+        .console-user-group .layui-badge {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            margin-top: -10px;
+        }
+
+        .console-user-group .console-user-group-name {
+            line-height: 1.2;
+        }
+
+        .console-user-group .console-user-group-desc {
+            color: #8c8c8c;
+            line-height: 1;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /** 卡片轮播图样式 */
+        .admin-carousel .layui-carousel-ind {
+            position: absolute;
+            top: -41px;
+            text-align: right;
+        }
+
+        .admin-carousel .layui-carousel-ind ul {
+            background: 0 0;
+        }
+
+        .admin-carousel .layui-carousel-ind li {
+            background-color: #e2e2e2;
+        }
+
+        .admin-carousel .layui-carousel-ind li.layui-this {
+            background-color: #999;
+        }
+
+        /** 广告位轮播图 */
+        .admin-news .layui-carousel-ind {
+            height: 45px;
+        }
+
+        .admin-news a {
+            display: block;
+            line-height: 70px;
+            text-align: center;
+        }
+
+        /** 最新动态时间线 */
+        .layui-timeline-dynamic .layui-timeline-item {
+            padding-bottom: 0;
+        }
+
+        .layui-timeline-dynamic .layui-timeline-item:before {
+            top: 16px;
+        }
+
+        .layui-timeline-dynamic .layui-timeline-axis {
+            width: 9px;
+            height: 9px;
+            left: 1px;
+            top: 7px;
+            background-color: #cbd0db;
+        }
+
+        .layui-timeline-dynamic .layui-timeline-axis.active {
+            background-color: #0c64eb;
+            box-shadow: 0 0 0 2px rgba(12, 100, 235, .3);
+        }
+
+        .dynamic-card-body {
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .dynamic-card-body:hover {
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        /** 优先级徽章 */
+        .layui-badge-priority {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            line-height: 18px;
+            border-width: 2px;
+            font-weight: 600;
+        }
+
+        /* 用户信息 */
+        .user-info-head {
+            width: 110px;
+            height: 110px;
+            line-height: 110px;
+            position: relative;
+            display: inline-block;
+            border: 2px solid #eee;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+
+        .user-info-head:hover:after {
+            content: '\e681';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.3);
+            font-size: 28px;
+            padding-top: 2px;
+            font-style: normal;
+            font-family: layui-icon;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .user-info-head img {
+            width: 110px;
+            height: 110px;
+        }
+
+        .user-info-list-item {
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .user-info-list-item > .layui-icon {
+            position: absolute;
+        }
+
+        .user-info-list-item > p {
+            padding-left: 30px;
+        }
+
+        .layui-line-dash {
+            border-bottom: 1px dashed #ccc;
+            margin: 15px 0;
+        }
+
+        /* 基本信息 */
+        #userInfoForm .layui-form-item {
+            margin-bottom: 25px;
+        }
+
+        /* 账号绑定 */
+        .user-bd-list-item {
+            padding: 14px 60px 14px 10px;
+            border-bottom: 1px solid #e8e8e8;
+            position: relative;
+        }
+
+        .user-bd-list-item .user-bd-list-lable {
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .user-bd-list-item .user-bd-list-oper {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            margin-top: -8px;
+            cursor: pointer;
+        }
+
+        .user-bd-list-item .user-bd-list-img {
+            width: 48px;
+            height: 48px;
+            line-height: 48px;
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            margin-top: -24px;
+        }
+
+        .user-bd-list-item .user-bd-list-img + .user-bd-list-content {
+            margin-left: 68px;
+        }
+
+        .btn-cloud {
+            width: 28%;
+        }
+
+    </style>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid ew-console-wrapper">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">
+                            今日成交<span class="layui-badge layui-badge-green pull-right">今日</span>
+                        </div>
+                        <div class="layui-card-body">
+                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>${orderTimeTotal.toDayTotal!}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">
+                            昨日成交<span class="layui-badge layui-badge-blue pull-right">昨日</span>
+                        </div>
+                        <div class="layui-card-body">
+                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>${orderTimeTotal.yesterDayTotal!}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">
+                            本周成交<span class="layui-badge layui-badge-red pull-right">本周</span>
+                        </div>
+                        <div class="layui-card-body">
+                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>${orderTimeTotal.OfWeekDayTotal!}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">
+                            今日成交订单
+                            <span class="icon-text pull-right" lay-tips="今日成交订单、不包括未支付" lay-direction="4"
+                                  lay-offset="5px,5px">
+                        <i class="layui-icon layui-icon-tips"></i>
+                    </span>
+                        </div>
+                        <div class="layui-card-body">
+                            <p class="lay-big-font">${orderTimeTotal.longTotal!} <span
+                                    style="font-size: 24px;line-height: 1;">笔</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs12 layui-col-sm6">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">七天交易流水</div>
+                        <div class="layui-card-body">
+                            <div id="hdqkyc1" style="height: 250px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs12 layui-col-sm6">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">支付方式</div>
+                        <div class="layui-card-body">
+                            <div id="consoleChartsMonth" style="height: 250px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs12 layui-col-md12">
+                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                        <div class="layui-card-header">最新支付订单</div>
+                        <div class="layui-card-body dynamic-card-body mini-bar">
+                            <!-- 数据表格 -->
+                            <table id="ordersTable" lay-filter="ordersTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<:include file="../common/js.html"/>
+
+<script src="../assets/libs/echarts/echarts.min.js"></script>
+<script src="../assets/libs/echarts/echartsTheme.js"></script>
+<script>
+    layui.use(['layer', 'carousel', 'element', 'notice', 'form', 'table', 'tableX'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var carousel = layui.carousel;
+        var device = layui.device();
+        var day = JSON.parse('${day!}');
+        var mData = JSON.parse('${data!}');
+        var notice = layui.notice;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var alipayCount = JSON.parse('${alipayCount!}');
+        var wxCount = JSON.parse('${wxCount!}');
+
+        /* 渲染表格 */
+        var insTb = tableX.render({
+            elem: '#ordersTable',
+            url: '/orders/orders/page',
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'member', title: '订单号'},
+                {field: 'payNo', title: '流水号'},
+                {field: 'productName', title: '商品名称'},
+                {
+                    field: 'payType', title: '支付类型', templet: function (res) {
+                        switch (res.payType) {
+                            case 'mqpay_alipay' :
+                                return "支付宝-v免签";
+                            case 'mqpay_wxpay' :
+                                return "微信-v免签";
+                            case 'codepay_alipay' :
+                                return "支付宝-码支付";
+                            case 'codepay_wxpay' :
+                                return "微信-码支付";
+                            case 'zlianpay_alipay' :
+                                return "支付宝-码支付";
+                            case 'zlianpay_wxpay' :
+                                return "微信-码支付";
+                            case 'yungouos_alipay' :
+                                return "支付宝-yungouos";
+                            case 'yungouos_wxpay' :
+                                return "微信-yungouos";
+                        }
+                    }
+                },
+                {field: 'money', title: '商品总价'},
+                {
+                    field: 'status', title: '支付状态', templet: function (res) {
+                        switch (res.status) {
+                            case 1 :
+                                return '<span style="color: #00a65a">已支付</span>';
+                            case 0 :
+                                return '<span style="color: #dd4b39">未支付</span>';
+                        }
+                    }, width: 100
+                },
+                {field: 'payTime', title: '支付时间', sort: true},
+                {field: 'contact', title: '联系方式'}
+            ]]
+        });
+
+        // 渲染轮播
+        carousel.render({
+            elem: '#workplaceNewsCarousel',
+            width: '100%',
+            height: '70px',
+            arrow: 'none',
+            autoplay: true,
+            trigger: device.ios || device.android ? 'click' : 'hover',
+            anim: 'fade'
+        });
+
+        // 渲染活动情况预测
+        var myCharts = echarts.init(document.getElementById('hdqkyc1'), myEchartsTheme);
+        var option = {
+            color: ['#1e9fff'],
+            tooltip: {
+                trigger: "axis"
+            },
+            xAxis: [{
+                type: "category",
+                boundaryGap: !1,
+                axisLine: {lineStyle: {color: '#1e9fff'}, symbol: ['none'], symbolOffset: [0, 10]},
+                axisLabel: {
+                    color: '#1e9fff'
+                },
+                data: day
+            }],
+            yAxis: [{
+                type: "value",
+                axisLine: {lineStyle: {color: '#1e9fff'}, symbol: ['none'], symbolOffset: [0, 10]},
+                axisLabel: {color: '#1e9fff'},
+            }],
+            series: [{
+                name: "金额",
+                type: "line",
+                smooth: !0,
+                itemStyle: {
+                    normal: {
+                        areaStyle: {
+                            type: "default"
+                        }
+                    }
+                },
+                data: mData
+            }]
+        };
+        myCharts.setOption(option);
+
+        /** 渲染月统计图表 */
+        var myCharts3 = echarts.init(document.getElementById('consoleChartsMonth'));
+        var options3 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {lineStyle: {color: '#E0E0E0'}},
+                formatter: '{b}号<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#10B4E8;"></span>{a0}: {c0}<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#00BC22;"></span>{a1}: {c1}'
+            },
+            color: ['#10B4E8', '#00BC22'],
+            legend: {
+                orient: 'vertical', right: '0px', top: '0px',
+                data: ['支付宝', '微信'], textStyle: {color: '#595959'}
+            },
+            grid: {top: '75px', left: '35px', right: '55px', bottom: '40px'},
+            xAxis: {
+                name: '日期',
+                nameTextStyle: {color: '#595959'},
+                type: 'category',
+                data: day,
+                axisLine: {lineStyle: {color: '#E0E0E0'}, symbol: ['none', 'arrow'], symbolOffset: [0, 10]},
+                axisLabel: {
+                    color: '#8c8c8c'
+                },
+                axisTick: {alignWithLabel: true}
+            },
+            yAxis: {
+                name: '笔数',
+                nameTextStyle: {color: '#595959'},
+                type: 'value',
+                boundaryGap: ['0', '20%'],
+                axisTick: {show: false},
+                axisLine: {lineStyle: {color: '#E0E0E0'}, symbol: ['none', 'arrow'], symbolOffset: [0, 10]},
+                axisLabel: {color: '#8c8c8c'},
+                splitLine: {show: false},
+                splitArea: {show: false},
+                minInterval: 1
+            },
+            series: [
+                {name: '支付宝', type: 'line', smooth: false},
+                {name: '微信', type: 'line', smooth: false}
+            ]
+        };
+        myCharts3.setOption(options3);
+        // 赋值
+        myCharts3.setOption({
+            series: [
+                {data: alipayCount},
+                {data: wxCount}
+            ]
+        });
+
+        // 窗口大小改变事件
+        window.onresize = function () {
+            myCharts.resize();
+            myCharts3.resize();
+        };
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="发送邮件"/>
+    <style>
+        .layui-upload-img {
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <form class="layui-form" lay-filter="emailForm">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                添加商品
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品分类:</label>
+                    <div class="layui-input-block">
+                        <select name="classifyId" lay-verType="tips" lay-verify="required" required>
+                            <option value="">请选择分类</option>
+                            <:for items="${classifysList}" var="item">
+                                <option value="${item.id}">${item.name}</option>
+                            </:for>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品名称:</label>
+                    <div class="layui-input-block">
+                        <input name="name" placeholder="请输入商品名称" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品金额:</label>
+                    <div class="layui-input-block">
+                        <input name="price" type="number" placeholder="请输入商品金额" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">排序:</label>
+                    <div class="layui-input-block">
+                        <input name="sort" placeholder="请输入排序" class="layui-input" value="1000"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 15px">
+                    <label class="layui-form-label layui-form-required">商品图片:</label>
+                    <input id="imageLogo" name="imageLogo" type="hidden"/>
+                    <div class="layui-input-inline" style="width: auto">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                            <div style="width: 95px;">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品详情:</label>
+                    <div class="layui-input-block">
+                        <textarea id="pdInfoEditor"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品状态:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="上架" checked>
+                        <input type="radio" name="status" value="0" title="下架">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit> 保存商品</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<:include file="../common/js.html"/>
+<script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
+<script>
+    layui.use(['layer', 'form', 'admin', 'upload', 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var upload = layui.upload;
+        var element = layui.element;
+
+        /* 表单提交 */
+        form.on('submit(productsEditSubmit)', function (data) {
+            data.field.pdInfo = tinymce.get('pdInfoEditor').getContent();
+            if (layui.admin.util.fullTextIsEmpty(data.field.pdInfo)) {
+                return layer.msg('请输入商品介绍正文', {icon: 2, anim: 6});
+            }
+            var loadIndex = layer.load(2);
+            $.post('/products/products/save', data.field, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    layer.msg(res.msg, {icon: 1});
+                    $('[lay-filter="emailForm"]')[0].reset();
+                    tinymce.get('pdInfoEditor').setContent('');
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            });
+            return false;
+        });
+
+        /* 渲染富文本编辑器 */
+        tinymce.init({
+            selector: '#pdInfoEditor',
+            height: 300,
+            branding: false,
+            language: 'zh_CN',
+            plugins: 'code print preview fullscreen paste searchreplace save autosave link autolink image imagetools media table codesample lists advlist hr charmap emoticons anchor directionality pagebreak quickbars nonbreaking visualblocks visualchars wordcount',
+            toolbar: 'fullscreen preview code | undo redo | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | formatselect fontselect fontsizeselect | link image media emoticons charmap anchor pagebreak codesample | ltr rtl',
+            toolbar_drawer: 'sliding',
+            images_upload_url: '${ctxPath}/file/upload',
+            file_picker_types: 'media',
+            file_picker_callback: function (callback, value, meta) {
+                layer.msg('演示环境不允许上传', {anim: 6});
+            }
+        });
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '${ctxPath}/file/upload' //改成您自己的上传接口
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                console.log(res)
+
+                if (res.code == 0) {
+                    $("#imageLogo").val(res.url);
+                }
+
+                //……
+                $('#demoText').html(''); //置空上传失败的状态
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+            //进度条
+            , progress: function (n, elem, e) {
+                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

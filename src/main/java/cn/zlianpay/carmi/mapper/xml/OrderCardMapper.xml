@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zlianpay.carmi.mapper.OrderCardMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="relSelect">
+        SELECT a.*
+        FROM sys_order_card a
+        <where>
+            <if test="page!=null and page.pageData!=null">
+				<if test="page.pageData.id != null">
+					AND a.id = #{page.pageData.id}
+				</if>
+				<if test="page.pageData.cardId != null">
+					AND a.card_id = #{page.pageData.cardId}
+                </if>
+				<if test="page.pageData.orderId != null">
+					AND a.order_id = #{page.pageData.orderId}
+                </if>
+				<if test="page.pageData.createdAt != null">
+                    AND a.created_at LIKE CONCAT('%', #{page.pageData.createdAt}, '%')
+				</if>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="listPage" resultType="cn.zlianpay.carmi.entity.OrderCard">
+        <include refid="relSelect"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="listAll" resultType="cn.zlianpay.carmi.entity.OrderCard">
+        <include refid="relSelect"></include>
+    </select>
+
+</mapper>

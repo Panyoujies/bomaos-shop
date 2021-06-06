@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="发送邮件"/>
+    <style>
+        .layui-upload-img {
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <form class="layui-form" lay-filter="websiteForm">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                网站设置
+            </div>
+            <div class="layui-card-body">
+                <input name="id" type="hidden"/>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">favicon:</label>
+                    <input id="favicon" name="favicon" type="hidden"/>
+                    <div class="layui-input-inline" style="width: auto">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                            <div style="width: 95px;">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">网站logo:</label>
+                    <input id="websiteLogo" name="websiteLogo" type="hidden"/>
+                    <div class="layui-input-inline" style="width: auto">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="test2">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo2">
+                                <p id="demoText1"></p>
+                            </div>
+                            <div style="width: 95px;">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo1">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">网站名称:</label>
+                    <div class="layui-input-block">
+                        <input name="websiteName" placeholder="请输入网站名称" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">网站域名:</label>
+                    <div class="layui-input-block">
+                        <input name="websiteUrl" placeholder="请输入网站域名" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">联系方式:</label>
+                    <div class="layui-input-block">
+                        <input name="contact" placeholder="请输入联系方式" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">备案ICP:</label>
+                    <div class="layui-input-block">
+                        <input name="beianIcp" placeholder="请输入备案ICP" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">关键字:</label>
+                    <div class="layui-input-block">
+                        <textarea name="keywords" placeholder="请输入关键字" class="layui-textarea"
+                                  lay-verType="tips" lay-verify="required" required></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">网站描述:</label>
+                    <div class="layui-input-block">
+                        <textarea name="description" placeholder="请输入网站描述" class="layui-textarea"
+                                  lay-verType="tips" lay-verify="required" required></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商店详情:</label>
+                    <div class="layui-input-block">
+                        <textarea id="storeDetails"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="websiteEditSubmit" lay-submit> 保存设置 </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<:include file="../common/js.html"/>
+<script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
+<script>
+    layui.use(['layer', 'form', 'admin', 'upload', 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var upload = layui.upload;
+        var element = layui.element;
+
+        /* 渲染富文本编辑器 */
+        tinymce.init({
+            selector: '#storeDetails',
+            height: 300,
+            branding: false,
+            language: 'zh_CN',
+            plugins: 'code print preview fullscreen paste searchreplace save autosave link autolink image imagetools media table codesample lists advlist hr charmap emoticons anchor directionality pagebreak quickbars nonbreaking visualblocks visualchars wordcount',
+            toolbar: 'fullscreen preview code | undo redo | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | formatselect fontselect fontsizeselect | link image media emoticons charmap anchor pagebreak codesample | ltr rtl',
+            images_upload_url: '${ctxPath}/file/upload',
+            file_picker_types: 'media',
+            file_picker_callback: function (callback, value, meta) {
+                layer.msg('演示环境不允许上传', {anim: 6});
+            }
+        });
+
+        $.get("website/get", function (res) {
+            if (0 === res.code) {
+                var mData = res.data;
+                // 回显表单数据
+                form.val('websiteForm', mData);
+                $('#storeDetails').html(mData.storeDetails);
+                $('#demo1').attr('src', '${ctxPath}/file/' + mData.favicon);
+                $('#demo2').attr('src', '${ctxPath}/file/' + mData.websiteLogo);
+            } else {
+                layer.msg(res.msg, {icon: 2});
+            }
+        });
+
+        /* 表单提交 */
+        form.on('submit(websiteEditSubmit)', function (data) {
+            data.field.storeDetails = tinymce.get('storeDetails').getContent();
+            if (layui.admin.util.fullTextIsEmpty(data.field.storeDetails)) {
+                return layer.msg('请输入商店介绍正文', {icon: 2, anim: 6});
+            }
+            var loadIndex = layer.load(2);
+            var field = data.field; //获取提交的字段
+            $.post(getPostType(field), field, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    layer.msg(res.msg, {icon: 1, time: 1000}, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+        function getPostType(mData) {
+            if (mData == null) {
+                return "website/save";
+            } else {
+                return "website/update";
+            }
+        }
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '${ctxPath}/file/upload' //改成您自己的上传接口
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }, done: function (res) {
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                if (res.code == 0) {
+                    $("#favicon").val(res.url);
+                }
+                $('#demoText').html(''); //置空上传失败的状态
+            }, error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }, progress: function (n, elem, e) { //进度条
+                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test2'
+            , url: '${ctxPath}/file/upload' //改成您自己的上传接口
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+                element.progress('demo1', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }, done: function (res) {
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                if (res.code == 0) {
+                    $("#websiteLogo").val(res.url);
+                }
+                $('#demoText1').html(''); //置空上传失败的状态
+            }, error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }, progress: function (n, elem, e) { //进度条
+                element.progress('demo1', n + '%'); //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
