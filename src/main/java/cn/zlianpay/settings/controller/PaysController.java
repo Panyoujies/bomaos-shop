@@ -72,6 +72,9 @@ public class PaysController extends BaseController {
                 paysVo.setAppid(configs.get("appid").toString());
                 paysVo.setKey(configs.get("appsecret").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("jiepay_wxpay") || pays.getDriver().equals("jiepay_alipay")) {
+                paysVo.setAppid(configs.get("appid").toString());
+                paysVo.setKey(configs.get("apptoken").toString());
             }
             return paysVo;
         }).collect(Collectors.toList());
@@ -88,8 +91,6 @@ public class PaysController extends BaseController {
     public JsonResult list(HttpServletRequest request) {
         PageParam<Pays> pageParam = new PageParam<>(request);
         return JsonResult.ok().setData(paysService.list(pageParam.getOrderWrapper()));
-        //List<Pays> records = paysService.listAll(pageParam.getNoPageParam());  // 使用关联查询
-        //return JsonResult.ok().setData(pageParam.sortRecords(records));
     }
 
     /**
@@ -148,6 +149,9 @@ public class PaysController extends BaseController {
             map.put("appid", paysVo.getAppid());
             map.put("appsecret", paysVo.getKey());
             map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("jiepay_wxpay") || paysVo.getDriver().equals("jiepay_alipay")) {
+            map.put("appid", paysVo.getAppid());
+            map.put("apptoken", paysVo.getKey());
         }
         String jsonString = JSON.toJSONString(map);
 

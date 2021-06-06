@@ -3,6 +3,7 @@ package cn.zlianpay.reception.controller;
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.pays.codepay.CodePaysConfig;
+import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.web.BaseController;
@@ -210,7 +211,6 @@ public class OrderController extends BaseController {
 
             return "yunpay.html";
         } else if (orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("xunhupay_alipay")) {
-
             if (orders.getPayType().equals("xunhupay_wxpay")) {
                 model.addAttribute("type", 1);
             } else if (orders.getPayType().equals("xunhupay_alipay")) {
@@ -228,6 +228,9 @@ public class OrderController extends BaseController {
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
             return "xunhupay.html";
+        } else if (orders.getPayType().equals("jiepay_wxpay") || orders.getPayType().equals("jiepay_alipay")) {
+            String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
+            response.sendRedirect(payUtils);
         }
 
         Website website = websiteService.getById(1);

@@ -87,6 +87,8 @@ public class ShiroConfig {
         filterChainDefinitions.put("/xunhupay/notifyUrl", "anon");
         filterChainDefinitions.put("/xunhupay/returnUrl", "anon");
         filterChainDefinitions.put("/yungouos/notify", "anon");
+        filterChainDefinitions.put("/jiepay/notifyUrl", "anon");
+        filterChainDefinitions.put("/jiepay/returnUrl", "anon");
 
         // api
         filterChainDefinitions.put("/api/**", "anon");

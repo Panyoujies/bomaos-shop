@@ -30,6 +30,9 @@
     {{# if(d.driver=='xunhupay_wxpay' || d.driver=='xunhupay_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="xunhupay">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='jiepay_wxpay' || d.driver=='jiepay_alipay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="jiepay">配置修改</a>
+    {{# } }}
 </script>
 
 <!-- mqpay -->
@@ -362,6 +365,62 @@
         </div>
     </form>
 </script>
+
+<!-- jiepay -->
+<script type="text/html" id="jiepayEditDialog">
+    <form id="jiepayEditForm" lay-filter="jiepayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">appid:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">apptoken:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入appsecret" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="jiepayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
 <!-- 商品状态 -->
 <script type="text/html" id="paysTbStatus">
     <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -407,6 +466,8 @@
                 showEditModel(obj.data);
             } else if ('xunhupay' === obj.event) {
                 showEditModel(obj.data);
+            } else if ('jiepay' === obj.event) {
+                showEditModel(obj.data);
             }
         });
 
@@ -432,6 +493,10 @@
                 var html = $('#xunhupayEditDialog').html();
                 var forms = 'xunhupayEditForm';
                 var submit = 'xunhupayEditSubmit';
+            } else if (mData.driver == 'jiepay_wxpay' || mData.driver == 'jiepay_alipay') {
+                var html = $('#jiepayEditDialog').html();
+                var forms = 'jiepayEditForm';
+                var submit = 'jiepayEditSubmit';
             }
 
             admin.open({

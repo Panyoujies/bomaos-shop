@@ -1,5 +1,6 @@
 package cn.zlianpay.reception.controller;
 
+import cn.hutool.crypto.SecureUtil;
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
@@ -64,7 +65,7 @@ public class NotifyController {
 
     @RequestMapping("/mqpay/notifyUrl")
     @ResponseBody
-    public String notifyUrl(HttpServletRequest request){
+    public String notifyUrl(HttpServletRequest request) {
         /**
          *验证通知 处理自己的业务
          */
@@ -410,6 +411,67 @@ public class NotifyController {
         // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
         Map<String, String> params = RequestParamsUtil.getParameterMap(request);
         String url = "/pay/state/" + params.get("trade_order_id");
+        response.sendRedirect(url);
+    }
+
+    private String order_id;
+    /**
+     * 捷支付通知
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/jiepay/notifyUrl")
+    @ResponseBody
+    public String jiepayNotifyUrl(HttpServletRequest request) {
+        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
+        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
+        String code = params.get("code");
+        String order_id = params.get("order_id");
+        String order_rmb = params.get("order_rmb");
+        String diy = params.get("diy");
+        String sign = params.get("sign");
+
+        String appid = "";
+        String apptoken = "";
+
+        if (code.equals("1")) {
+            Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "jiepay_alipay"));
+            Map wxMap = JSON.parseObject(wxPays.getConfig());
+            appid = wxMap.get("appid").toString();
+            apptoken = wxMap.get("apptoken").toString();
+        } else if (code.equals("2")) {
+            Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "jiepay_wxpay"));
+            Map wxMap = JSON.parseObject(wxPays.getConfig());
+            appid = wxMap.get("appid").toString();
+            apptoken = wxMap.get("apptoken").toString();
+        }
+
+        String newSign = SecureUtil.md5(appid + apptoken + code + order_id + order_rmb + diy);
+        if (sign.equals(newSign)) {
+            this.order_id = order_id;
+            String returnBig = returnBig(order_rmb, order_rmb, order_id, new Date().getTime() + "", diy, "success", "fiald");
+            return returnBig;
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 捷支付通知
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/jiepay/returnUrl")
+    @ResponseBody
+    public void jiepayReturnUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        while (true) {
+            if (!StringUtils.isEmpty(this.order_id)) {
+                break;
+            }
+        }
+        String url = "/pay/state/" + this.order_id;
         response.sendRedirect(url);
     }
 

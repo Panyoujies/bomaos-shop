@@ -108,26 +108,18 @@
                 {
                     field: 'payType', title: '支付类型', templet: function (res) {
                         switch (res.payType) {
-                            case 'mqpay_alipay' :
-                                return "支付宝-v免签";
-                            case 'mqpay_wxpay' :
-                                return "微信-v免签";
-                            case 'codepay_alipay' :
-                                return "支付宝-码支付";
-                            case 'codepay_wxpay' :
-                                return "微信-码支付";
-                            case 'zlianpay_alipay' :
-                                return "支付宝-码支付";
-                            case 'zlianpay_wxpay' :
-                                return "微信-码支付";
-                            case 'yungouos_alipay' :
-                                return "支付宝-YunGouOS";
-                            case 'yungouos_wxpay' :
-                                return "微信-YunGouOS";
-                            case 'xunhupay_alipay' :
-                                return "支付宝-虎皮椒";
-                            case 'xunhupay_wxpay' :
-                                return "微信-虎皮椒";
+                            case 'mqpay_alipay' : return "支付宝-v免签";
+                            case 'mqpay_wxpay' : return "微信-v免签";
+                            case 'codepay_alipay' : return "支付宝-码支付";
+                            case 'codepay_wxpay' : return "微信-码支付";
+                            case 'zlianpay_alipay' : return "支付宝-码支付";
+                            case 'zlianpay_wxpay' : return "微信-码支付";
+                            case 'yungouos_alipay' : return "支付宝-YunGouOS";
+                            case 'yungouos_wxpay' : return "微信-YunGouOS";
+                            case 'xunhupay_alipay' : return "支付宝-虎皮椒";
+                            case 'xunhupay_wxpay' : return "微信-虎皮椒";
+                            case 'jiepay_alipay' : return "支付宝-捷支付";
+                            case 'jiepay_wxpay' : return "微信-捷支付";
                         }
                     }, width: 90
                 },
