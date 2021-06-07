@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName}"/>
+    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/product.css"/>
 </head>
 <body>
@@ -166,7 +166,7 @@
 </div>
 
 <!-- footer -->
-<:include file="./common/footer.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
 <!-- js部分 -->
 <:include file="./common/qiantaijs.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/js/backend-bundle.min.js"></script>
