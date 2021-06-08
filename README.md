@@ -30,7 +30,6 @@
 
 - 开发语言：JAVA
 - 开发框架：Spring boot
-- 后台管理系统：(easyweb)
 - 前端UI [layui](https://www.layui.com/).     
 
 - 主要功能
