@@ -6,8 +6,8 @@
 <a href="http://mp.baomidou.com"><img src="https://img.shields.io/badge/mybatis--plus-3.0-blue.svg" alt="mybatis-plus"></a>
 <img alt="shiro" src="https://img.shields.io/badge/Shiro-1.3.0-yellow">
 <br><br>
-<a href="https://github.com/Panyoujies/zlianpay-faka/wiki/%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B---%E5%AE%9D%E5%A1%94%E7%AF%87">部署文档</a>&nbsp;&nbsp;
-<a href="http://shop.zlianpay.cn">演示地址</a>
+<a href="http://doc.zlianpay.cn/index.php/archives/29/" target="_blank">部署文档</a>&nbsp;&nbsp;
+<a href="http://shop.zlianpay.cn" target="_blank">演示地址</a>
 </p>
 
 ## 介绍
