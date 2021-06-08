@@ -13,12 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -29,144 +28,219 @@ public class DashboardController extends BaseController {
 
     @RequiresPermissions("dashboard:user:view")
     @RequestMapping("/workplace")
-    public String view(Model model) throws ParseException {
+    public String view(Model model) throws ParseException{
+        /**
+         * 今日订单
+         */
+        Map<String, Object> orderList = getOrderList(ordersService);
+        Integer count = (Integer) orderList.get("count");// 今日成功订单数量
+        BigDecimal money = (BigDecimal) orderList.get("money"); // 今日成功金额
+        model.addAttribute("count", count);
+        model.addAttribute("money", money);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        /**
+         * 昨日订单
+         */
+        Map<String, Object> yesterDayOrder = getYesterDayOrder(ordersService);
+        Integer YesterDayCount = (Integer) yesterDayOrder.get("YesterDayCount");// 昨天成功订单数量
+        BigDecimal YesterDayMoney = (BigDecimal) yesterDayOrder.get("YesterDayMoney"); // 昨天成功金额
+        model.addAttribute("YesterDayCount", YesterDayCount);
+        model.addAttribute("YesterDayMoney", YesterDayMoney);
 
-        // 获取今天的开始时间到结束时间
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String todayStartTime = formatter.format(DateUtil.getDayBegin());
-        String todayEndTime = formatter.format(DateUtil.getDayEnd());
-        Map<String, Object> toDayTotal = getTimeDayList(todayStartTime, todayEndTime, ordersService);
+        /**
+         * 近七天订单
+         */
+        Map<String, Object> sevenDaysOrder = getSevenDaysOrder(ordersService);
+        Integer SevenDaysCount = (Integer) sevenDaysOrder.get("SevenDaysCount");// 近七天成功订单数量
+        BigDecimal SevenDaysMoney = (BigDecimal) sevenDaysOrder.get("SevenDaysMoney"); // 近七天成功金额
+        model.addAttribute("SevenDaysCount", SevenDaysCount);
+        model.addAttribute("SevenDaysMoney", SevenDaysMoney);
 
-        List<Object> list = new ArrayList<>();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
+        List<String> dayList = new ArrayList<>(); // 天
+        List<BigDecimal> wxpayList = new ArrayList<>(); // 每天微信的总金额
+        List<BigDecimal> alipayList = new ArrayList<>(); // 每天支付宝的总金额
+
+        Integer wxpayAll = 0; // 七天微信的交易量
+        Integer alipayAll = 0; // 七天支付宝的交易量
         for (int i = 0; i < 7; i++) {
-            String DayStartTime = formatter.format(DateUtil.getStartDayTime(-+i));
-            String DayEndTime = formatter.format(DateUtil.getEndDayTime(-+i));
-            Map<String, Object> DayTotal = getTimeDayList(DayStartTime, DayEndTime, ordersService);
+            Date startDayTime = DateStrUtil.getStartDayTime(-+i);
+            Date endDayTime = DateStrUtil.getEndDayTime(-+i);
+            Map<String, BigDecimal> timeDayList = getTimeDayList(startDayTime, endDayTime, ordersService);
             String day = simpleDateFormat.format(DateUtil.getStartDayTime(-+i));
-            Map<String, Object> map1 = new HashMap<>();
-            map1.put("totalSumlong", DayTotal);
-            map1.put("day", day);
-            list.add(map1);
+            BigDecimal wxpay = timeDayList.get("wxpay");
+            BigDecimal alipay = timeDayList.get("alipay");
+
+            Map<String, Integer> timeDayCount = getTimeDayCount(startDayTime, endDayTime, ordersService);
+            Integer wxpay1 = timeDayCount.get("wxpay");
+            Integer alipay1 = timeDayCount.get("alipay");
+            wxpayAll += wxpay1;
+            alipayAll += alipay1;
+
+            wxpayList.add(wxpay);
+            alipayList.add(alipay);
+            dayList.add(day);
         }
 
-        // 昨天的开始时间和结束时间
-        String yesterDayStartTime = formatter.format(DateUtil.getStartDayTime(-1));
-        String yesterDayEndTime = formatter.format(DateUtil.getEndDayTime(-1));
-        Map<String, Object> yesterDayTotal = getTimeDayList(yesterDayStartTime, yesterDayEndTime, ordersService);
+        List<Map> mapList = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
+        map.put("value", wxpayAll.toString());
+        map.put("name", "微信");
+        mapList.add(map);
 
-        // 本周的开始时间和本周的结束时间
-        String BeginDayStartTime = formatter.format(DateUtil.getBeginDayOfWeek());
-        String EndDayEndTime = formatter.format(DateUtil.getEndDayOfWeek());
-        Map<String, Object> OfWeekDayTotal = getTimeDayList(BeginDayStartTime, EndDayEndTime, ordersService);
+        Map<String, String> map1 = new HashMap<>();
+        map1.put("value", alipayAll.toString());
+        map1.put("name", "支付宝");
+        mapList.add(map1);
 
-        // 这七天的数据
-        List<Object> data = new ArrayList<>();
-        // 近期七天的交易金额统计
-        List<Object> day = new ArrayList<>();
-        for (Object o : list) {
-            Map<String, Object> map = (Map<String, Object>) o;
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Object entryValue = entry.getValue();
-                if (key.equals("totalSumlong")) {
-                    Map<Object, Object> value = (Map<Object, Object>) entryValue;
-                    data.add(value.get("totalSumlong"));
-                } else if (key.equals("day")) {
-                    day.add(entry.getValue());
-                }
-            }
-        }
-
-        getPayTypeCount(null,null);
-
-
-        List<Map> countlist = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            String DayStartTime = formatter.format(DateUtil.getStartDayTime(-+i));
-            String DayEndTime = formatter.format(DateUtil.getEndDayTime(-+i));
-            Map payTypeCount = getPayTypeCount(DayStartTime, DayEndTime);
-            countlist.add(payTypeCount);
-        }
-
-        List<Integer> alipayCount = new ArrayList<>();
-
-        for (Map map : countlist) {
-            alipayCount.add((Integer) map.get("alipayCount"));
-        }
-
-        List<Integer> wxCount = new ArrayList<>();
-        for (Map map : countlist) {
-            wxCount.add((Integer) map.get("wxCount"));
-        }
-
-        model.addAttribute("alipayCount", JSON.toJSONString(alipayCount)); // 显示哪天 截止七天前
-        model.addAttribute("wxCount", JSON.toJSONString(wxCount)); // 显示这七天的数据
-
-        model.addAttribute("day", JSON.toJSONString(day)); // 显示哪天 截止七天前
-        model.addAttribute("data", JSON.toJSONString(data)); // 显示这七天的数据
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("toDayTotal", toDayTotal.get("totalSumlong")); // 今天的订单金额
-        map.put("yesterDayTotal", yesterDayTotal.get("totalSumlong")); // 昨天的订单金额
-        map.put("OfWeekDayTotal", OfWeekDayTotal.get("totalSumlong")); // 本周的订单成交金额
-        map.put("longTotal", toDayTotal.get("longTotal")); // 本周的订单成交金额
-
-        model.addAttribute("orderTimeTotal", map);
+        model.addAttribute("mapList", JSON.toJSONString(mapList));
+        model.addAttribute("dayList", JSON.toJSONString(dayList));
+        model.addAttribute("wxpayList", JSON.toJSONString(wxpayList));
+        model.addAttribute("alipayList", JSON.toJSONString(alipayList));
 
         return "dashboard/workplace.html";
     }
 
-    public Map<String, Object> getTimeDayList(String StartTime, String EndTime, OrdersService service) {
+    /**
+     * 获取今天的交易订单
+     *
+     * @return
+     */
+    public static Map<String, Object> getOrderList(OrdersService ordersService) {
+        QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getDayBegin(), DateStrUtil.getDayEnd());
+        queryWrapper.eq("status", 1);
+        List<Orders> orderList = ordersService.list(queryWrapper);
+        Integer count = 0; // 获取今天成功交易的订单数量
+        BigDecimal money = new BigDecimal(0.00); // 获取今天成功交易的订单交易额
+        for (Orders orders : orderList) {
+            money = money.add(new BigDecimal(orders.getMoney().toString())); // 统计今天的交易额
+            count++; // 统计成功交易的订单数量
+        }
 
-        QueryWrapper queryWrapper = getQueryWrapper(StartTime,EndTime);
-
-        //查询当天所有支付记录
-        List<Orders> ordersList = service.list(queryWrapper);
-
-        // 今天的收款金额
-        Map map = RmbUtil.getRmbCount(ordersList);
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", count);
+        map.put("money", money.setScale(2, BigDecimal.ROUND_HALF_DOWN));
 
         return map;
     }
 
-    private QueryWrapper getQueryWrapper(String StartTime, String EndTime) {
-        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
+    /**
+     * 获取昨天的交易订单
+     *
+     * @return
+     */
+    public static Map<String, Object> getYesterDayOrder(OrdersService ordersService) {
+        QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getStartDayTime(-1), DateStrUtil.getEndDayTime(-1));
         queryWrapper.eq("status", 1);
 
-        if (StartTime != null || EndTime != null) {
-            //查询条件为时间范围
-            queryWrapper.apply("UNIX_TIMESTAMP(create_time) >= UNIX_TIMESTAMP('" + StartTime + "')");
-            queryWrapper.apply("UNIX_TIMESTAMP(create_time) < UNIX_TIMESTAMP('" + EndTime + "')");
+        List<Orders> orderList = ordersService.list(queryWrapper);
+        Integer count = 0; // 获取昨天成功交易的订单数量
+        BigDecimal money = new BigDecimal(0.00); // 获取今天成功交易的订单交易额
+        for (Orders orders : orderList) {
+            money = money.add(new BigDecimal(orders.getMoney().toString())); // 统计今天的交易额
+            count++; // 统计昨天成功交易的订单数量
         }
 
-        return queryWrapper;
+        Map<String, Object> map = new HashMap<>();
+        map.put("YesterDayCount", count);
+        map.put("YesterDayMoney", money.setScale(2, BigDecimal.ROUND_HALF_DOWN));
+
+        return map;
     }
 
-    public Map getPayTypeCount(String StartTime, String EndTime) {
+    /**
+     * 获取昨天的交易订单
+     *
+     * @return
+     */
+    public static Map<String, Object> getSevenDaysOrder(OrdersService ordersService) {
 
-        QueryWrapper queryWrapper = getQueryWrapper(StartTime,EndTime);
+        QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getStartDayTime(-7), DateStrUtil.getEndDayTime(-0));
+        queryWrapper.eq("status", 1);
 
-        // 查询支付宝
-        List<Orders> list = ordersService.list(queryWrapper); // 已付款
+        List<Orders> orderList = ordersService.list(queryWrapper);
 
-        Integer alipayCount = 0;
-        Integer wxCount = 0;
-        for (Orders orders : list) {
-            String payType = orders.getPayType(); // 支付类型
-            if (payType.equals("mqpay_alipay") || payType.equals("alipay") || payType.equals("yungouos_alipay") || payType.equals("codepay_alipay") || payType.equals("zlianpay_alipay")) {
-                alipayCount++;
-            } else if (payType.equals("codepay_wxpay") || payType.equals("yungouos_wxpay") || payType.equals("mqpay_wxpay") || payType.equals("zlianpay_wxpay")) {
-                wxCount++;
+        Integer count = 0; // 获取近七天成功交易的订单数量
+        BigDecimal money = new BigDecimal(0.00); // 获取今天成功交易的订单交易额
+        for (Orders orders : orderList) {
+            money = money.add(new BigDecimal(orders.getMoney().toString())); // 统计今天的交易额
+            count++; // 统计近七天成功交易的订单数量
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("SevenDaysCount", count);
+        map.put("SevenDaysMoney", money.setScale(2, BigDecimal.ROUND_HALF_DOWN));
+
+        return map;
+    }
+
+    public static Map<String, BigDecimal> getTimeDayList(Date StartTime, Date EndTime, OrdersService ordersService) {
+        QueryWrapper queryWrapper = getQueryWrapper(StartTime, EndTime);
+        queryWrapper.eq("status", 1);
+
+        //查询当天所有支付记录
+        List<Orders> ordersList = ordersService.list(queryWrapper);
+        BigDecimal bigWxpay = new BigDecimal(0.00);
+        BigDecimal bigAlipay = new BigDecimal(0.00);
+        for (Orders orders : ordersList) {
+
+            System.out.println(orders);
+
+            if (orders.getPayType().equals("mqpay_wxpay") || orders.getPayType().equals("codepay_wxpay") || orders.getPayType().equals("zlianpay_wxpay") || orders.getPayType().equals("yungouos_wxpay") || orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("jiepay_wxpay")) { // 微信
+                bigWxpay = bigWxpay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+            } else if (orders.getPayType().equals("mqpay_alipay") || orders.getPayType().equals("codepay_alipay") || orders.getPayType().equals("zlianpay_alipay") || orders.getPayType().equals("yungouos_alipay") || orders.getPayType().equals("xunhupay_alipay") || orders.getPayType().equals("jiepay_alipay")) { // 支付宝
+                bigAlipay = bigAlipay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             }
         }
 
-        Map<String,Integer> map = new HashMap<>();
-        map.put("alipayCount",alipayCount);
-        map.put("wxCount",wxCount);
-
+        Map<String, BigDecimal> map = new HashMap<>();
+        map.put("wxpay", bigWxpay);
+        map.put("alipay", bigAlipay);
         return map;
+    }
+
+    public static Map<String, Integer> getTimeDayCount(Date StartTime, Date EndTime, OrdersService ordersService) {
+        QueryWrapper queryWrapper = getQueryWrapper(StartTime, EndTime);
+        queryWrapper.eq("status", 1);
+
+        //查询当天所有支付记录
+        List<Orders> ordersList = ordersService.list(queryWrapper);
+        Integer wxpay = 0;
+        Integer alipay = 0;
+        for (Orders orders : ordersList) {
+            if (orders.getPayType().equals("mqpay_wxpay") || orders.getPayType().equals("codepay_wxpay") || orders.getPayType().equals("zlianpay_wxpay") || orders.getPayType().equals("yungouos_wxpay") || orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("jiepay_wxpay")) { // 微信
+                wxpay++;
+            } else if (orders.getPayType().equals("mqpay_alipay") || orders.getPayType().equals("codepay_alipay") || orders.getPayType().equals("zlianpay_alipay") || orders.getPayType().equals("yungouos_alipay") || orders.getPayType().equals("xunhupay_alipay") || orders.getPayType().equals("jiepay_alipay")) { // 支付宝
+                alipay++;
+            }
+        }
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("wxpay", wxpay);
+        map.put("alipay", alipay);
+        return map;
+    }
+
+    /**
+     * 根据时间查询今天的数据
+     *
+     * @param StartTime 今天开始的时间
+     * @param EndTime   今天结束的时间
+     * @return queryWrapper
+     */
+    public static QueryWrapper getQueryWrapper(Date StartTime, Date EndTime) {
+        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String DayStartTime = formatter.format(StartTime);
+        String DayEndTime = formatter.format(EndTime);
+
+        //查询条件为时间范围
+        queryWrapper.apply("UNIX_TIMESTAMP(create_time) >= UNIX_TIMESTAMP('" + DayStartTime + "')");
+        queryWrapper.apply("UNIX_TIMESTAMP(create_time) < UNIX_TIMESTAMP('" + DayEndTime + "')");
+
+        return queryWrapper;
     }
 
 }

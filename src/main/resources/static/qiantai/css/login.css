@@ -1,15 +1,35 @@
-.ew-banner {
-    background: url(../images/banner_1.png) 50% no-repeat #4181ff;
-    max-width: 100vw;
-    overflow: hidden;
-    color: #333;
+body {
+    background-image: url("../images/bg-login.jpg");
+    background-repeat: no-repeat;
     background-size: cover;
+    min-height: 100vh;
+}
+
+body:before {
+    content: "";
+    background-color: rgba(0, 0, 0, .2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.login-wrapper {
+    max-width: 420px;
+    padding: 20px;
+    margin: 0 auto;
+    position: relative;
+    box-sizing: border-box;
+    z-index: 2;
 }
 
 .login-wrapper > .layui-form {
     padding: 25px 30px;
     background-color: #fff;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.19);
     box-sizing: border-box;
+    border-radius: 2px;
 }
 
 .login-wrapper > .layui-form > h2 {
@@ -19,16 +39,16 @@
     margin-bottom: 25px;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item {
+.login-wrapper > .layui-form > .layui-form-item {
     margin-bottom: 25px;
     position: relative;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item:last-child {
+.login-wrapper > .layui-form > .layui-form-item:last-child {
     margin-bottom: 0;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item > .layui-input {
+.login-wrapper > .layui-form > .layui-form-item > .layui-input {
     height: 46px;
     line-height: 46px;
     border-radius: 2px !important;
@@ -50,11 +70,11 @@
     text-align: center;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item.login-captcha-group {
+.login-wrapper > .layui-form > .layui-form-item.login-captcha-group {
     padding-right: 135px;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item.login-captcha-group > .login-captcha {
+.login-wrapper > .layui-form > .layui-form-item.login-captcha-group > .login-captcha {
     height: 46px;
     width: 120px;
     cursor: pointer;
@@ -66,24 +86,24 @@
     top: 0;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item > .layui-form-checkbox {
+.login-wrapper > .layui-form > .layui-form-item > .layui-form-checkbox {
     margin: 0 !important;
     padding-left: 25px;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item > .layui-form-checkbox > .layui-icon {
+.login-wrapper > .layui-form > .layui-form-item > .layui-form-checkbox > .layui-icon {
     width: 15px !important;
     height: 15px !important;
 }
 
 .login-wrapper > .layui-form .layui-btn-fluid {
-    height: 45px;
-    line-height: 45px;
+    height: 48px;
+    line-height: 48px;
     font-size: 16px;
     border-radius: 2px !important;
 }
 
-.login-wrapper > .ew-show > .layui-form > .layui-form-item.login-oauth-group > a > .layui-icon {
+.login-wrapper > .layui-form > .layui-form-item.login-oauth-group > a > .layui-icon {
     font-size: 26px;
 }
 
@@ -96,6 +116,14 @@
 }
 
 @media screen and (min-height: 550px) {
+    .login-wrapper {
+        margin: -250px auto 0;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
 
     .login-copyright {
         position: absolute;
@@ -111,5 +139,5 @@
 }
 
 .layui-link {
-    color: #4282ff !important;
+    color: #5FB878 !important;
 }
