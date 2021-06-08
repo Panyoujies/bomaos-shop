@@ -99,6 +99,7 @@ public class DashboardController extends BaseController {
         model.addAttribute("wxpayList", JSON.toJSONString(wxpayList));
         model.addAttribute("alipayList", JSON.toJSONString(alipayList));
 
+        model.addAttribute("user", getLoginUser());
         return "dashboard/workplace.html";
     }
 
