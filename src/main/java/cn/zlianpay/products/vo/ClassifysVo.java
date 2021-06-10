@@ -45,4 +45,9 @@ public class ClassifysVo {
      * 商品数量
      */
     private Integer productsMember;
+
+    /**
+     * 索引
+     */
+    private Integer andIncrement;
 }

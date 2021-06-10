@@ -36,6 +36,13 @@
     background-size: cover;
 }
 
+.product-info {
+    display: none !important;
+}
+.product-info1 {
+    display: block !important;
+}
+
 @media screen and (max-width: 750px) {
     .buy-btn-group {
         position: fixed;
@@ -49,7 +56,6 @@
     }
 
     .card-shows {
-        padding: 10px 10px;
         margin-bottom: 80px !important;
     }
 
@@ -78,6 +84,13 @@
     .ew-footer {
         display: none !important;
     }
+
+    .product-info1 {
+        display: none !important;
+    }
+    .product-info {
+        display: block !important;
+    }
 }
 
 .layui-form-label {
@@ -88,6 +101,7 @@
     font-weight: 400;
     line-height: 20px;
     text-align: left;
+    font-size: 15px;
 }
 
 .layui-input-block {

@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Controller
@@ -61,11 +62,15 @@ public class IndexController {
     @RequestMapping({"/","/index"})
     public String IndexView(Model model) {
         List<Classifys> classifysList = classifysService.list(new QueryWrapper<Classifys>().eq("status", 1));
+
+        AtomicInteger index = new AtomicInteger(0);
         List<ClassifysVo> classifysVoList = classifysList.stream().map((classifys) -> {
             ClassifysVo classifysVo = new ClassifysVo();
             BeanUtils.copyProperties(classifys, classifysVo);
             int count = productsService.count(new QueryWrapper<Products>().eq("classify_id", classifys.getId()).eq("status", 1));
             classifysVo.setProductsMember(count);
+            int andIncrement = index.getAndIncrement();
+            classifysVo.setAndIncrement(andIncrement); // 索引
             return classifysVo;
         }).collect(Collectors.toList());
         model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));

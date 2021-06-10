@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
+    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
+              description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/product.css"/>
 </head>
 <body>
@@ -14,15 +15,19 @@
     <div class="layui-row layui-col-space15">
         <!-- 左 -->
         <div class="layui-col-sm12 layui-col-md8">
+
             <div class="layui-card"
                  style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                <div class="layui-card-header"
-                     style="font-size: 18px; font-weight: 600; display: block !important;">商品介绍:
+                <div class="layui-card-header" style="padding-left: 45px; font-size: 18px; font-weight: 600; display: block !important;">
+                    <embed class="svg" style="top: 13px; position: absolute; left: 15px;"
+                           src="${ctxPath}/qiantai/images/spjs.svg" type="image/svg+xml">
+                    商品介绍
                 </div>
-                <div class="layui-card-body" style="padding: 20px 20px; font-size: 17px; font-weight: 600;">
-                    <div class="layui-row layui-col-space15 goods-info-group">
+                <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
+                    <div class="layui-row layui-col-space15">
                         <div class="layui-col-md4">
-                            <img style="width: 100%; height: auto; border-radius: 10px" src="${ctxPath}/file/${products.imageLogo!}">
+                            <img style="border-radius: 3px; display: inline; max-width: 100%; max-height: 100%; bottom: 0"
+                                 src="${ctxPath}/file/${products.imageLogo!}">
                         </div>
                         <div class="layui-col-md8">
                             ${products.pdInfo!}
@@ -30,52 +35,66 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-card order-show">
-                <div class="layui-row layui-col-space15 goods-info-group">
-                    <div class="layui-col-md12 goods-info">
-                        <div style="padding: 0px;">
-                            <table class="layui-table order-info-tb" style="margin: 0;" lay-size="lg">
-                                <tbody>
-                                <tr>
-                                    <th width="120">商品分类：</th>
-                                    <td colspan="3">
-                                        ${classifyName!}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th width="120">商品名称：</th>
-                                    <td colspan="3">
-                                        <div class="goods">
-                                            <div class="goods-type-ali active" data-id="${products.id!}">
-                                                ${products.name!}
+
+            <div class="layui-card"
+                 style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card-header" style="padding-left: 45px; font-size: 18px; font-weight: 600; display: block !important;">
+                    <embed class="svg" style="top: 13px; position: absolute; left: 15px; width: 20px; height: 20px;"
+                           src="${ctxPath}/qiantai/images/spmc.svg" type="image/svg+xml">
+                    商品详情
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
+                    <div class="layui-row layui-col-space15 goods-info-group">
+                        <div class="layui-col-md12 goods-info">
+                            <div style="padding: 0px;">
+                                <table class="layui-table order-info-tb" style="margin: 0;" lay-size="lg">
+                                    <colgroup>
+                                        <col width="120">
+                                        <col>
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>商品分类：</th>
+                                        <td>
+                                            ${classifyName!}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>商品名称：</th>
+                                        <td>
+                                            <div class="goods">
+                                                <div class="goods-type-ali active" data-id="${products.id!}">
+                                                    ${products.name!}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th width="120">商品价格：</th>
-                                    <td colspan="3">
-                                        <span class="small" style="color: #e26e5f">￥</span>
-                                        <span style="font-size: 20px; color: #e26e5f"
-                                              id="goodsprice">${products.price!}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th width="120">商品库存：</th>
-                                    <td colspan="3" id="cardsCount"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>商品价格：</th>
+                                        <td>
+                                            <span class="small" style="color: #e26e5f">￥</span>
+                                            <span style="font-size: 20px; color: #e26e5f"
+                                                  id="goodsprice">${products.price!}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>商品库存：</th>
+                                        <td id="cardsCount"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="layui-col-sm12 layui-col-md4">
             <div class="layui-card card-shows" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
 
-                <div class="layui-card-header" style="padding-left: 40px; letter-spacing: 1.5px; font-weight: 600;">
+                <div class="layui-card-header" style="padding-left: 45px; font-size: 18px; font-weight: 600; display: block !important;">
                     <embed class="svg" style="top: 13px; position: absolute; left: 15px;"
                            src="${ctxPath}/qiantai/images/spxq.svg" type="image/svg+xml">
                     购买信息
@@ -85,14 +104,14 @@
 
                     <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
                         <div class="layui-form-item" style="margin-top: 15px">
-                            <label class="layui-form-label layui-form-required">购买信息:</label>
+                            <label class="layui-form-label layui-form-required">购买信息</label>
                             <div class="layui-input-block">
                                 <input name="contact" id="contact" class="layui-input" placeholder="输入购买信息用于查询"/>
                             </div>
                         </div>
                         <!-- 优惠券类型 -->
                         <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">邮箱提醒:</label>
+                            <label class="layui-form-label layui-form-required">邮箱提醒</label>
                             <div class="layui-input-inline" style="width: auto;">
                                 <input type="hidden" name="type" value="0">
                                 <input type="checkbox" lay-verify="required"
@@ -113,7 +132,7 @@
                         </div>
 
                         <div class="layui-form-item" style="margin-top: 15px">
-                            <label class="layui-form-label layui-form-required">购买数量:</label>
+                            <label class="layui-form-label layui-form-required">购买数量</label>
                             <div class="layui-input-block">
                                 <input name="number" type="number" id="number" value="1" class="layui-input"
                                        placeholder="输入购买数量"/>
@@ -151,12 +170,11 @@
                     <div class="buy-btn-group">
                         <span class="price">
                             <span class="small">￥</span>
-                            <span id="goodsprice2">0.00</span> 元
+                            <span id="goodsprice2" style="font-size: 29px; font-weight: bold;">0.00</span>
                         </span>
                         <button id="btnPay" class="layui-btn layui-btn-warm layui-btn-lg btn-group-show"
-                                style="width: auto; border-radius: 3px; margin-left: 0px; float: right; background-color: #f97c73;">
-                            <i
-                                    class="layui-icon layui-icon-cart"></i> 立即支付
+                                style="float: right; border-radius: 50px !important; color: #fff !important; height: initial !important; line-height: 45px !important; font-size: 15px !important; padding: 0 18px !important; -webkit-box-shadow: 0 5px 6px 0 rgb(73 105 230 / 22%) !important; background: linear-gradient(0deg, #2a62ff, #716ffe) !important;">
+                            <i class="layui-icon layui-icon-cart"></i> 立即支付
                         </button>
                     </div>
                 </div>
@@ -178,15 +196,15 @@
         var notice = layui.notice;
         var product1 = {};
 
-        $(document).ready(function(e) {
-            $("#formBasForm #number").keyup(function(e) {
+        $(document).ready(function (e) {
+            $("#formBasForm #number").keyup(function (e) {
                 if (product1 != null) {
                     $("#goodsprice2").text($(this).val() * product1.price);
                 } else {
                     layer.msg("请选择商品再试！")
                 }
             });
-            $("#formBasForm button").change(function(e) {
+            $("#formBasForm button").change(function (e) {
             });
         });
 
