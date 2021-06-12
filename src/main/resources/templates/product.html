@@ -62,19 +62,14 @@
                                     <tr>
                                         <th>商品名称：</th>
                                         <td>
-                                            <div class="goods">
-                                                <div class="goods-type-ali active" data-id="${products.id!}">
-                                                    ${products.name!}
-                                                </div>
-                                            </div>
+                                            <span>${products.name!}</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>商品价格：</th>
                                         <td>
                                             <span class="small" style="color: #e26e5f">￥</span>
-                                            <span style="font-size: 20px; color: #e26e5f"
-                                                  id="goodsprice">${products.price!}</span>
+                                            <span style="font-size: 20px; color: #e26e5f" id="goodsprice">${products.price!}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -187,7 +182,6 @@
 <:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
 <!-- js部分 -->
 <:include file="./common/qiantaijs.html"/>
-<script type="text/javascript" src="${ctxPath}/assets/js/backend-bundle.min.js"></script>
 <script>
     layui.use(['layer', 'form', 'notice'], function () {
         var $ = layui.jquery;
@@ -203,8 +197,6 @@
                 } else {
                     layer.msg("请选择商品再试！")
                 }
-            });
-            $("#formBasForm button").change(function (e) {
             });
         });
 
@@ -228,7 +220,7 @@
         });
 
         $.post('/getProductById', {
-            id: $('.goods>div.active').data('id')
+            id: '${products.id!}'
         }, function (res) {
             if (0 === res.code) {
                 var product = res.data;

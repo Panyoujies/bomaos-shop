@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
+    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
+              description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/search.css"/>
 </head>
 <body>
 <!-- header -->
 <:include file="./common/header_hd.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
-<!-- banner -->
-<div class="ew-banner">
-    <div class="layui-container" style="text-align: center;padding-bottom: 80px; padding-top: 30px;">
-        <h2 style="font-size: 25px; color: #fff;margin-bottom: 10px;">订单查询</h2>
-        <h3 style="color: #fff;">轻松查询订单,即刻享受卡密自动交易</h3>
-        <h3 style="color: #fff;">订单号开头为TUD,或者用下单时填写的联系方式查询</h3>
+<!-- goods-card -->
+<div class="layui-container body-card" style="margin-bottom: 15px;">
+    <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+        <div class="layui-card-body" style="padding: 20px 20px; text-align: center">
+            <h2 style="font-size: 25px; margin-bottom: 10px; font-weight: 600;">订单查询</h2>
+            <h3>轻松查询订单,即刻享受卡密自动交易</h3>
+            <h3>订单号开头为TUD,或者用下单时填写的联系方式查询</h3>
+        </div>
     </div>
 </div>
 
-<div class="layui-container body-card" style="margin-bottom: 15px; margin-top: -55px;">
+<div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="search-show">
         <form class="layui-form toolbar">
-            <div class="layui-form-item" style="background-color: #fff; padding: 10px; margin-bottom: 0px;">
-                <div class="layui-inline">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md9">
                     <input type="text" name="contact" class="layui-input" lay-verify="required"
                            placeholder="请输入TUD开头订单号/联系方式/流水号" autocomplete="off" class="layui-input">
                 </div>
-                <div class="layui-inline layui-shows">
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
                     <button class="layui-btn layui-btn-show" lay-filter="goodsTbSearch" lay-submit>
                         <i class="layui-icon">&#xe615;</i>
                         查询订单
@@ -47,14 +50,34 @@
 
 <!-- footer -->
 <:include file="./common/footer.html" websiteName="${website.websiteName}"/>
+
+<!-- 项目模板 -->
+<script type="text/html" id="orderItem">
+    <div class="row" {{#  if(d.andIncrement === 0){ }}style="border-bottom: 1px solid #e3e3e3;{{#  } else { }}style="border-top: 1px solid #e3e3e3;{{#  } }}">
+        <a href="/search/order/{{d.member}}" target="_blank">
+            <div class="row-bd">
+                <div class="center">
+                    <h3>订单日期： {{d.createTime}}</h3>
+                    <ul>
+                        <li><label>付款方式：</label> {{d.payType}}</li>
+                        <li><label>订单号：</label><span> {{d.member}}</span></li>
+                        <li><label>订单状态：</label> {{d.status}}</li>
+                    </ul>
+                </div>
+                <div class="right">金额：{{d.money}}</div>
+            </div>
+        </a>
+    </div>
+</script>
 <!-- js部分 -->
 <:include file="./common/qiantaijs.html"/>
 
 <script>
-    layui.use(['layer', 'form', 'util', 'admin'], function () {
+    layui.use(['layer', 'form', 'util', 'admin', 'dataGrid'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var layer = layui.layer;
+        var dataGrid = layui.dataGrid;
 
         /* 表格搜索 */
         form.on('submit(goodsTbSearch)', function (data) {
@@ -67,56 +90,21 @@
                 if (0 === res.code) {
                     var list = res.data;
                     var cardListHtml = '';
-
-                    if (list == null || list.length == 0) {
-                        cardListHtml += '        <div class="no-content">\n' +
-                            '            <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
-                            '            <p class="user-no-contents">没有查询到该订单</p>\n' +
-                            '        </div>';
-                    }
-
-                    for (let i = 0; i < list.length; i++) {
-                        var payName;
-                        if (list[i].payType == "codepay_alipay" || list[i].payType == "mqpay_alipay" || list[i].payType == "zlianpay_alipay" || list[i].payType == "yungouos_alipay" || list[i].payType == "xunhupay_alipay" || list[i].payType == "jiepay_alipay") {
-                            payName = "支付宝";
-                        } else if (list[i].payType == "codepay_wxpay" || list[i].payType == "mqpay_wxpay" || list[i].payType == "zlianpay_wxpay" || list[i].payType == "yungouos_wxpay" || list[i].payType == "xunhupay_wxpay" || list[i].payType == "jiepay_wxpay") {
-                            payName = "微信";
-                        }
-
-                        var status;
-                        if (list[i].status == 1) {
-                            status = '<span style="color: #00a65a">付款成功</span>';
-                        } else {
-                            status = '没有付款';
-                        }
-
-                        var border = '';
-                        if (i == 0) {
-                            border = '';
-                        } else {
-                            border = 'style="border-top: 1px solid #f2f2f2;"';
-                        }
-
-                        cardListHtml += '<div class="row" ' + border + '>' +
-                            '<a href="/search/order/'+ list[i].member +'" target="_blank">' +
-                            '<div class="row-bd">' +
-                            '<div class="center">' +
-                            '<h3>订单日期：' + list[i].createTime + '</h3>' +
-                            '<ul>' +
-                            '<li><label>付款方式：</label>' + payName + '</li>' +
-                            '<li><label>订单号：</label><span>' + list[i].member + '</span></li>' +
-                            '<li><label>订单状态：</label>' + status + '</li>' +
-                            '</ul>' +
-                            '</div>' +
-                            '<div class="right">金额：' + list[i].money + '</div>' +
-                            '</div>' +
-                            '</a>' +
+                    if (list.length != 0) {
+                        dataGrid.render({
+                            elem: '#search-card',
+                            templet: '#orderItem',
+                            data: list
+                        });
+                    } else {
+                        cardListHtml = '' +
+                            '<div class="no-content">\n' +
+                            '    <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
+                            '    <p class="user-no-contents">没有查询到该订单</p>\n' +
                             '</div>';
 
+                        $("#search-card").html(cardListHtml);
                     }
-
-                    $("#search-card").html(cardListHtml);
-
                 } else {
                     layer.msg(res.msg)
                 }

@@ -97,3 +97,26 @@
     position: absolute;
     left: 0;
 }
+
+.layui-icon-screen-show {
+    width: 33px;
+    height: 33px;
+    line-height: 33px;
+    font-size: 16px;
+    color: #909399;
+    position: absolute;
+    left: 0;
+    top: 6px;
+    text-align: center;
+}
+
+.screen-input {
+    width: 160px;
+    font-size: 14px;
+    height: 33px;
+    margin-top: 6px;
+    border-radius: 5px;
+    font-weight: normal;
+    padding-left: 33px;
+    background-color: #f0f0f0;
+}

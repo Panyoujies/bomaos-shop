@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -222,5 +223,20 @@ public class IndexController {
         model.addAttribute("website", website);
 
         return "payState.html";
+    }
+
+    @ResponseBody
+    @GetMapping("/getProductSearchList")
+    public JsonResult getProductSearchList(Integer classifyId, String content) {
+        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("classify_id", classifyId).like("name", content));
+        List<ProductsVo> productsVoList = productsList.stream().map((products) -> {
+            ProductsVo productsVo = new ProductsVo();
+            BeanUtils.copyProperties(products, productsVo);
+            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+            productsVo.setCardMember(count);
+            productsVo.setPrice(products.getPrice().toString());
+            return productsVo;
+        }).collect(Collectors.toList());
+        return JsonResult.ok("查询成功！").setData(productsVoList);
     }
 }

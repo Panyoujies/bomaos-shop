@@ -5,6 +5,7 @@ import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.*;
+import cn.zlianpay.orders.vo.OrderVos;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.utils.RequestParamsUtil;
 import cn.zlianpay.common.core.web.*;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -112,7 +114,9 @@ public class OrdersController extends BaseController {
     @OperLog(value = "管理", desc = "分页查询")
     @ResponseBody
     @RequestMapping("/pageAll")
-    public PageResult<Orders> pageall(HttpServletRequest request) {
+    public JsonResult pageall(HttpServletRequest request) {
+        PageParam<Orders> pageParam = new PageParam<>(request);
+
         Map parameterMap = RequestParamsUtil.getParameterMap(request);
         String contact = (String) parameterMap.get("contact");
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
@@ -121,8 +125,31 @@ public class OrdersController extends BaseController {
                 .or().eq("pay_no", contact)
                 .orderByDesc("create_time");
 
-        List<Orders> ordersList = ordersService.list(wrapper);
-        return new PageResult<>(ordersList, ordersList.size() + 1);
+        List<Orders> ordersList = ordersService.page(pageParam, wrapper).getRecords();
+
+        AtomicInteger index = new AtomicInteger(0);
+        List<OrderVos> orderVosList = ordersList.stream().map((orders) -> {
+            OrderVos orderVos = new OrderVos();
+            BeanUtils.copyProperties(orders, orderVos);
+            if (orderVos.getPayType().equals("codepay_alipay") || orderVos.getPayType().equals("mqpay_alipay") || orderVos.getPayType().equals("zlianpay_alipay") || orderVos.getPayType().equals("yungouos_alipay") || orderVos.getPayType().equals("xunhupay_alipay") || orderVos.getPayType().equals("jiepay_alipay")) {
+                orderVos.setPayType("支付宝");
+            } else if (orderVos.getPayType().equals("codepay_wxpay") || orderVos.getPayType().equals("mqpay_wxpay") || orderVos.getPayType().equals("zlianpay_wxpay") || orderVos.getPayType().equals("yungouos_wxpay") || orderVos.getPayType().equals("xunhupay_wxpay") || orderVos.getPayType().equals("jiepay_wxpay")) {
+                orderVos.setPayType("微信");
+            }
+
+            if (orders.getStatus() == 1) {
+                orderVos.setStatus("<span style=\"color: #00a65a\">付款成功</span>");
+            } else {
+                orderVos.setStatus("<span style=\"color: #00a65a\">未付款</span>");
+            }
+
+            int andIncrement = index.getAndIncrement();
+            orderVos.setAndIncrement(andIncrement); // 索引
+
+            return orderVos;
+        }).collect(Collectors.toList());
+
+        return JsonResult.ok("查询成功！").setData(orderVosList);
     }
 
     /**

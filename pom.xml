@@ -5,7 +5,7 @@
 
     <groupId>cn.zlianpay</groupId>
     <artifactId>zlianpay-faka</artifactId>
-    <version>1.0.3-RELEASE</version>
+    <version>1.0.4-RELEASE</version>
     <!-- 这里packaging改成war -->
     <packaging>war</packaging>
 

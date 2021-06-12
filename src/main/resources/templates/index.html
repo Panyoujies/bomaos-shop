@@ -38,6 +38,10 @@
         <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 45px; display: block !important;">
             <img src="${ctxPath}/qiantai/images/product.svg" style="top: 10px; position: absolute; left: 15px; margin-right: 20px;">
             选择商品
+            <div class="pull-right" style="position: relative;">
+                <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
+                <input id="screen-product" placeholder="请输入商品名称" class="layui-input screen-input" lay-verify="required" required/>
+            </div>
         </div>
         <div class="layui-card-body" style="padding: 15px 15px;">
             <div class="layui-row layui-col-space15 product-type" id="goodsList">
@@ -51,7 +55,7 @@
 
 <!-- 项目模板 -->
 <script type="text/html" id="classifyItem">
-    <div class="layui-col-sm3">
+    <div class="layui-col-xs6 layui-col-sm6 layui-col-md3">
         <div class="project-list-item {{#  if(d.andIncrement === 0){ }}active{{#  } }} " data-id="{{d.id}}" lay-filter="classifySubmit" lay-submit>
             <div class="project-list-item-body">
                 <div style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 5px;">
@@ -65,7 +69,7 @@
 
 <!-- 项目模板 -->
 <script type="text/html" id="productItem">
-    <div class="layui-col-sm3">
+    <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
         <div class="project-list-item"
              style="background-image: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)), url(${ctxPath}/file/{{d.imageLogo}});background-repeat: no-repeat;background-size: cover;background-position: 100% 100%;"
              data-id="{{d.id}}" lay-filter="productSubmit" lay-submit>
@@ -84,7 +88,6 @@
 
 <!-- js部分 -->
 <:include file="./common/qiantaijs.html"/>
-<script type="text/javascript" src="${ctxPath}/qiantai/js/backend-bundle.min.js"></script>
 <script>
     layui.use(['layer', 'form', 'notice', 'dataGrid'], function () {
         var $ = layui.jquery;
@@ -111,7 +114,7 @@
             ins = dataGrid.render({
                 elem: '#classifyList',
                 templet: '#classifyItem',
-                data: list,
+                data: list
             });
         } else {
             classifyHtml = '' +
@@ -145,7 +148,7 @@
                     dataGrid.render({
                         elem: '#goodsList',
                         templet: '#productItem',
-                        data: list,
+                        data: list
                     });
                 } else {
                     goodsHtml = '' +
@@ -176,7 +179,7 @@
                         dataGrid.render({
                             elem: '#goodsList',
                             templet: '#productItem',
-                            data: list,
+                            data: list
                         });
                     } else {
                         goodsHtml = '' +
@@ -210,6 +213,41 @@
                 } else {
                     layer.msg(res.msg, {icon: 2})
                 }
+            });
+        });
+
+        $(document).ready(function (e) {
+            $("#screen-product").keyup(function (e) {
+                var classifyId = $('.classify-type>div .project-list-item.active').data('id');
+                var content = $(this).val(); // 获取到搜索框输入的内容
+                console.log(content)
+                $.get('/getProductSearchList', {
+                    classifyId: classifyId,
+                    content: content
+                }, function (res) {
+                    if (0 === res.code) {
+                        var list = res.data;
+                        var goodsHtml = '';
+                        if (list.length != 0) {
+                            dataGrid.render({
+                                elem: '#goodsList',
+                                templet: '#productItem',
+                                data: list
+                            });
+                        } else {
+                            goodsHtml = '' +
+                                '<div style="text-align: center; padding: 30px;">' +
+                                '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
+                                '       <img src="/qiantai/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                                '       <span>暂无商品</span>' +
+                                '   </div>' +
+                                '</div>';
+                            $("#goodsList").html(goodsHtml);
+                        }
+                    } else {
+                        layer.msg(res.msg, {icon: 2})
+                    }
+                });
             });
         });
 
