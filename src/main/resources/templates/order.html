@@ -135,8 +135,14 @@
             </div>
 
             <!-- 使用说明 -->
-            <div class="layui-card order-show" style="margin-bottom: 15px">
-                <span style="color: #e26e5f">使用说明：</span> ${goods.pdInfo!}
+            <div class="layui-card" style="margin-bottom: 15px">
+                <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
+                    <img src="${ctxPath}/qiantai/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
+                    使用说明
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px;">
+                    ${goods.pdInfo!}
+                </div>
             </div>
         </div>
     </div>

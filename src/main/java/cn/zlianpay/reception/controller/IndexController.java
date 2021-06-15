@@ -228,7 +228,7 @@ public class IndexController {
     @ResponseBody
     @GetMapping("/getProductSearchList")
     public JsonResult getProductSearchList(Integer classifyId, String content) {
-        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("classify_id", classifyId).like("name", content));
+        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("classify_id", classifyId).eq("status", 1).like("name", content));
         List<ProductsVo> productsVoList = productsList.stream().map((products) -> {
             ProductsVo productsVo = new ProductsVo();
             BeanUtils.copyProperties(products, productsVo);

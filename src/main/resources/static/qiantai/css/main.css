@@ -61,7 +61,7 @@ body {
 }
 
 .layui-btn {
-    background-color: #1890ff;
+    background-color: #34caa0;
     box-sizing: border-box
 }
 
@@ -588,7 +588,7 @@ body .layui-util-face .layui-layer-content {
     padding: 0;
     background-color: transparent;
     position: absolute;
-    right: 20px;
+    right: 15px;
     top: 0
 }
 
@@ -2213,8 +2213,9 @@ a.icon-text > .layui-icon {
 }
 
 .layui-btn:not(.layui-btn-primary) {
-    background-color: #4282ff;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, .03)
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e6e6e6;
 }
 
 .layui-input:focus, .layui-textarea:focus, xm-select:hover {

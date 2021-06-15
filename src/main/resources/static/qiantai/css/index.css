@@ -13,14 +13,13 @@
 /** 项目列表样式 */
 .project-list-item {
     background-color: #f8f8f8;
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all .2s;
 }
 
 .project-list-item:hover {
-    box-shadow: 0 2px 10px rgb(29 122 255 / 15%);
+    box-shadow: 0 2px 10px rgb(65 65 65 / 20%);
 }
 
 .project-list-item .project-list-item-cover {
@@ -42,6 +41,7 @@
 
 .project-list-item .project-list-item-text {
     overflow: hidden;
+    font-size: 15px;
 }
 
 .project-list-item .project-list-item-desc {
@@ -73,8 +73,9 @@
 
 /** // 项目列表样式结束 */
 .classify-type > div .project-list-item.active {
-    background: #448bff linear-gradient(45deg, #448bff, #44e9ff);
-    color: #FFFFFF;
+    background: #40cda5 linear-gradient(45deg, #39cca2, #4bb1ff);
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 1px rgb(0 0 0 / 20%);
 }
 
 .classify-theme {
@@ -106,7 +107,7 @@
     color: #909399;
     position: absolute;
     left: 0;
-    top: 6px;
+    top: 7px;
     text-align: center;
 }
 
@@ -119,4 +120,15 @@
     font-weight: normal;
     padding-left: 33px;
     background-color: #f0f0f0;
+}
+
+.project-list-item-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #fff;
+    text-shadow: 0 1px 1px rgb(0 0 0 / 20%);
 }
