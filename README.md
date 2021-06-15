@@ -39,3 +39,20 @@
 - 支付配置
 - 网站设置
 - 。。。。。
+
+## 系统截图
+- 电脑版
+-
+![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_1.png)
+
+![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_2.png)
+
+![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_3.png)
+
+- 手机版
+
+![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_4.png)
+
+![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_5.png)
+
+![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_6.png)
