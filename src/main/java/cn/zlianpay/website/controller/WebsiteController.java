@@ -44,7 +44,6 @@ public class WebsiteController extends BaseController {
     public PageResult<Website> page(HttpServletRequest request) {
         PageParam<Website> pageParam = new PageParam<>(request);
         return new PageResult<>(websiteService.page(pageParam, pageParam.getWrapper()).getRecords(), pageParam.getTotal());
-        //return websiteService.listPage(pageParam);  // 使用关联查询
     }
 
     /**
@@ -57,8 +56,6 @@ public class WebsiteController extends BaseController {
     public JsonResult list(HttpServletRequest request) {
         PageParam<Website> pageParam = new PageParam<>(request);
         return JsonResult.ok().setData(websiteService.list(pageParam.getOrderWrapper()));
-        //List<Website> records = websiteService.listAll(pageParam.getNoPageParam());  // 使用关联查询
-        //return JsonResult.ok().setData(pageParam.sortRecords(records));
     }
 
     /**
@@ -70,11 +67,6 @@ public class WebsiteController extends BaseController {
     @RequestMapping("/get")
     public JsonResult get() {
         return JsonResult.ok().setData(websiteService.getById(1));
-		// 使用关联查询
-        //PageParam<Website> pageParam = new PageParam<>();
-		//pageParam.put("id", id);
-        //List<Website> records = websiteService.listAll(pageParam.getNoPageParam());
-        //return JsonResult.ok().setData(pageParam.getOne(records));
     }
 
     /**

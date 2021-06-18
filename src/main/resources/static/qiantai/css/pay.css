@@ -40,7 +40,7 @@
 /** top-text */
 .top-text {
     color: #666;
-    font-size: 14px;
+    font-size: 15px;
     position: relative;
     padding: 10px 0 20px 0;
 }
@@ -54,10 +54,10 @@
 }
 
 .top-text .top-text-price {
-    font-size: 13px;
+    font-size: 15px;
     position: absolute;
-    right: 25px;
-    top: 18px;
+    right: 0px;
+    top: 40px;
 }
 
 .top-text .top-text-price .goods-money {

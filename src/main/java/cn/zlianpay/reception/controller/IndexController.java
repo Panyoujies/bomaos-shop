@@ -5,6 +5,7 @@ import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.settings.vo.PaysVo;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.orders.entity.Orders;
@@ -76,12 +77,6 @@ public class IndexController {
         }).collect(Collectors.toList());
         model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
 
-        /**
-         * 查出启用的支付驱动列表
-         */
-        List<Pays> paysList = paysService.list(new QueryWrapper<Pays>().eq("enabled", 1));
-        model.addAttribute("paysList", paysList);
-
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
 
@@ -119,12 +114,20 @@ public class IndexController {
         model.addAttribute("products", products);
         model.addAttribute("classifyName", classifys.getName());
 
+        AtomicInteger index = new AtomicInteger(0);
         /**
          * 查出启用的支付驱动列表
          */
         List<Pays> paysList = paysService.list(new QueryWrapper<Pays>().eq("enabled", 1));
+        List<PaysVo> paysVoList = paysList.stream().map((pays) -> {
+            PaysVo paysVo = new PaysVo();
+            BeanUtils.copyProperties(pays, paysVo);
+            int andIncrement = index.getAndIncrement();
+            paysVo.setAndIncrement(andIncrement); // 索引
+            return paysVo;
+        }).collect(Collectors.toList());
 
-        model.addAttribute("paysList", paysList);
+        model.addAttribute("paysList", paysVoList);
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);

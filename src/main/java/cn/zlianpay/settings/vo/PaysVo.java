@@ -71,4 +71,9 @@ public class PaysVo {
      */
     private Date updatedAt;
 
+    /**
+     * 索引
+     */
+    private Integer andIncrement;
+
 }

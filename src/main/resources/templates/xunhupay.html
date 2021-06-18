@@ -8,7 +8,7 @@
 <body>
 
 <!-- header -->
-<:include file="./common/header_hd.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
 <div class="layui-container body-card">
 
@@ -116,9 +116,10 @@
                 layer.confirm('是否打开支付宝APP支付？', {
                     title: '温馨提示',
                     shade: .1
-            }, function () {
-                location.href = '${result!}';
-            });
+                }, function () {
+                    var tempwindow = window.open('_blank');
+                    tempwindow.location = '${result!}';
+                });
             }
         </:if>
     });

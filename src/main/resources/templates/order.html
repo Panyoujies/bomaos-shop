@@ -4,27 +4,6 @@
 
     <:include file="./common/title.html" websiteName="${website.websiteName} - 订单详情" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
     <style>
-        .layer-pay-rstips {
-            padding: 25px 25px;
-        }
-
-        .layer-pay-rstips > p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .layer-pay-rstips .layui-btn-fluid {
-            margin: 15px 0 0 0;
-            border-radius: 0;
-        }
-
-        .layer-pay-rstips .layui-btn-primary.layui-btn-fluid {
-            background-color: transparent;
-            border: 1px solid rgba(111, 121, 122, 0.3);
-            box-sizing: border-box;
-            color: #727272;
-        }
-
         .order-show {
             margin: 0 auto;
             background-color: #fff;
@@ -38,15 +17,12 @@
             padding-bottom: 8px;
         }
 
-        .user-info-list-item > .layui-icon {
-            position: absolute;
-        }
     </style>
     <script type="text/javascript" src="${ctxPath}/qiantai/js/clipboard.min.js"></script>
 </head>
 <body>
 <!-- header -->
-<:include file="./common/header_hd.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
 <!-- goods-card -->
 <div class="layui-container body-card">

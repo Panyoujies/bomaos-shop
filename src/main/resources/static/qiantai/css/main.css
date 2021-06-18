@@ -364,23 +364,22 @@ input.layui-disabled, input.layui-disabled:hover {
 
 .layui-layer.layui-layer-admin {
     box-shadow: 1px 1px 50px rgba(0, 0, 0, .3) !important;
-    border: none !important
+    border: none !important;
+    border-radius: 5px;
 }
 
 .layui-layer.layui-layer-admin .layui-layer-title {
-    background-color: #fff;
     color: #333;
     height: 50px;
     line-height: 50px;
-    border: 0
 }
 
 .layui-layer-dialog.layui-layer-admin .layui-layer-content {
-    padding: 10px 20px 20px 20px
+    padding: 20px 20px 20px 20px
 }
 
 .layui-layer.layui-layer-admin .layui-layer-setwin {
-    top: 15px
+    top: 17px
 }
 
 .layui-layer.layui-layer-admin .layui-layer-setwin a {
@@ -1557,30 +1556,27 @@ body .layui-util-face .layui-layer-content {
     padding: 25px 0px 15px 0px
 }
 
-.pay-type-group > div {
-     color: #666;
-     font-size: 16px;
-     margin-right: 15px;
-     display: inline-block;
-     border: 2px solid #ddd;
-     padding: 10px 20px 10px 20px;
-     background-repeat: no-repeat;
-     background-size: 33px 33px;
-     background-position: 15px 5px;
-     position: relative;
-     cursor: pointer;
+.pay-type-group .layui-row .layui-col-md6 > div {
+    color: #666;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    padding: 10px 20px 10px 20px;
+    background-repeat: no-repeat;
+    background-size: 33px 33px;
+    background-position: 15px 5px;
+    position: relative;
+    cursor: pointer;
     text-align: center;
-    border-radius: 5px;
-    margin-top: 15px;
- }
+    border-radius: 5px
+}
 
-.pay-type-group > div.active {
+.pay-type-group .layui-row .layui-col-md6 > div.active {
     border: 2px solid rgb(51, 105, 255);
     color: rgb(51, 105, 255);
     border-radius: 5px;
 }
 
-.pay-type-group > div.pay-type-wexin.active:before {
+.pay-type-group .layui-row .layui-col-md6 > div.pay-type-wexin.active:before {
     border-color: #40ba49 #40ba49 transparent transparent
 }
 
@@ -2215,7 +2211,7 @@ a.icon-text > .layui-icon {
 .layui-btn:not(.layui-btn-primary) {
     border-width: 1px;
     border-style: solid;
-    border-color: #e6e6e6;
+    border-color: #d7d7d7;
 }
 
 .layui-input:focus, .layui-textarea:focus, xm-select:hover {

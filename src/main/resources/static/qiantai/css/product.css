@@ -71,12 +71,6 @@
         display: none !important;
     }
 
-    .pay-type-group > div {
-        margin-right: 0px;
-        display: block;
-        margin-top: 15px;
-    }
-
     .pay-type-group {
         padding: 10px 0px 10px 0px !important;
     }

@@ -8,7 +8,7 @@
 <body>
 
 <!-- header -->
-<:include file="./common/header_hd.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
 <div class="layui-container body-card">
 
@@ -190,18 +190,19 @@
          * 判断是否是支付宝，如果是则使用
          */
         <:if test="${type==2}">
-    // 判断是否是移动设备
-    var device = layui.device();
-    if (device.android || device.ios)
-        {
-            layer.confirm('是否打开支付宝APP支付？', {
-                title: '温馨提示',
-                shade: .1
-            }, function () {
-                location.href = '${result!}';
-            });
-        }
-    </:if>
+            // 判断是否是移动设备
+            var device = layui.device();
+            if (device.android || device.ios)
+            {
+                layer.confirm('是否打开支付宝APP支付？', {
+                    title: '温馨提示',
+                    shade: .1
+                }, function () {
+                    var tempwindow = window.open('_blank');
+                    tempwindow.location = '${result!}';
+                });
+            }
+        </:if>
     });
 </script>
 </body>

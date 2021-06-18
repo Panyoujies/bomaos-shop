@@ -429,6 +429,7 @@
         var insTb = tableX.render({
             elem: '#ordersTable',
             url: '/orders/orders/page',
+            limit: 5,
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
@@ -465,7 +466,7 @@
                         }
                     }
                 },
-                {field: 'money', title: '商品总价'},
+                {field: 'price', title: '商品单价'},
                 {
                     field: 'status', title: '支付状态', templet: function (res) {
                         switch (res.status) {
