@@ -33,7 +33,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -128,6 +130,21 @@ public class IndexController {
         }).collect(Collectors.toList());
 
         model.addAttribute("paysList", paysVoList);
+
+        if (products.getIsWholesale() == 1) {
+            String wholesale = products.getWholesale();
+            String[] wholesales = wholesale.split("\\n");
+
+            List<Map<String, String>> list = new ArrayList<>();
+            for (String s : wholesales) {
+                String[] split = s.split("=");
+                Map<String, String> map = new HashMap<>();
+                map.put("number", split[0]);
+                map.put("money", split[1]);
+                list.add(map);
+            }
+            model.addAttribute("wholesaleList", list);
+        }
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);

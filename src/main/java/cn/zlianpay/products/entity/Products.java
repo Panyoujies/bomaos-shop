@@ -80,4 +80,14 @@ public class Products implements Serializable {
      * 商品logo
      */
     private String imageLogo;
+
+    /**
+     * 批发功能
+     */
+    private Integer isWholesale;
+
+    /**
+     * 批发配置
+     */
+    private String wholesale;
 }

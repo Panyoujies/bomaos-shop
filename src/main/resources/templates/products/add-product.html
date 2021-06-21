@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <:include file="../common/css.html" title="发送邮件"/>
+    <:include file="../common/css.html" title="添加商品"/>
     <style>
         .layui-upload-img {
             height: 120px;
@@ -49,6 +49,30 @@
                                lay-verify="required" required/>
                     </div>
                 </div>
+
+                <!-- 批发价配置 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">批发配置</label>
+                    <div class="layui-input-inline" style="width: auto;">
+                        <input type="hidden" name="isWholesale" value="0"> <!-- 默认未开启 -->
+                        <input type="checkbox" lay-verify="required"
+                               lay-filter="isWholesale"
+                               id="isWholesale"
+                               value="1"
+                               name="isWholesale"
+                               lay-skin="switch"
+                               lay-text="开启|关闭">
+                    </div>
+                </div>
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="wholesale" style="display:none;">
+                    <div class="layui-input-block" id="inputWholesale">
+                        <textarea name="wholesale" placeholder="请输入关键字" class="layui-textarea"
+                                  lay-verType="tips" lay-verify="required" required></textarea>
+                        <div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>
+                    </div>
+                </div>
+
                 <div class="layui-form-item" style="margin-top: 15px">
                     <label class="layui-form-label layui-form-required">商品图片:</label>
                     <div class="layui-input-block" style="width: auto">
@@ -171,6 +195,22 @@
                 if (n == 100) {
                     layer.msg('上传完毕', {icon: 1});
                 }
+            }
+        });
+
+        //监听指定开关
+        form.on('switch(isWholesale)', function (data) {
+            // 使用
+            if (this.checked == true) {
+                layer.msg("请输入批发配置", {icon: 1});
+                $("#wholesale").attr("style", "display:block;");
+                $("#inputWholesale").html(
+                    '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea" lay-verType="tips" lay-verify="required" required></textarea>' +
+                    '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
+                );
+            } else {  // 不使用
+                $("#wholesale").attr("style", "display:none;");
+                $("#inputWholesale").html(null);
             }
         });
 

@@ -34,6 +34,12 @@
     padding: 20px;
 }
 
+.project-list-item-body > span {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
 .project-list-item .project-list-item-body > h2 {
     font-size: 18px;
     margin-bottom: 5px;

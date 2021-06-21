@@ -106,7 +106,20 @@ public class OrderController extends BaseController {
         String goodsName = products.getName(); // 订单主题
         String cloudPayid = orders.getCloudPayid();
 
-        BigDecimal bigDecimal = orders.getPrice().multiply(new BigDecimal(orders.getNumber()));
+        BigDecimal bigDecimal = new BigDecimal(0.00);
+        // 判断是不是批发商品
+        if (products.getIsWholesale() == 1) {
+            String wholesale = products.getWholesale();
+            String[] split = wholesale.split("\\n");
+            for (String s : split) {
+                String[] split1 = s.split("=");
+                if (orders.getNumber() >= Integer.parseInt(split1[0])) {
+                    bigDecimal = new BigDecimal(split1[1]).multiply(new BigDecimal(orders.getNumber()));
+                }
+            }
+        } else {
+            bigDecimal = orders.getPrice().multiply(new BigDecimal(orders.getNumber()));
+        }
         String price = bigDecimal.toString();
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
