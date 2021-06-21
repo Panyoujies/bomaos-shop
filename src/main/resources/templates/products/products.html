@@ -32,7 +32,7 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="productsTbBar">
     <a class="layui-btn layui-btn-xs layui-btn-normal" href="${ctxPath}/product/{{d.link}}" target="_blank">商品链接</a>
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a ew-href="${ctxPath}/products/products/editProduct/{{d.id}}" class="layui-btn layui-btn-primary layui-btn-xs" ew-title="编辑商品">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs"
        data-dropdown="#productsTbDelDrop{{d.LAY_INDEX}}" no-shade="true">删除</a>
     <div class="dropdown-menu-nav dropdown-popconfirm dropdown-top-right layui-hide"

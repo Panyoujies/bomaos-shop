@@ -4,6 +4,7 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.web.*;
 import cn.zlianpay.products.service.ProductsService;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.utils.StringUtil;
 import cn.zlianpay.common.core.web.*;
@@ -54,6 +55,15 @@ public class ProductsController extends BaseController {
         List<Classifys> classifysList = classifysService.listAll(null);
         model.addAttribute("classifysList", classifysList);
         return "products/add-product.html";
+    }
+
+    @RequiresPermissions("products:products:view")
+    @RequestMapping("/editProduct/{productId}")
+    public String editView(Model model, @PathVariable("productId") Integer productId) {
+        List<Classifys> classifysList = classifysService.listAll(null);
+        model.addAttribute("classifysList", classifysList);
+        model.addAttribute("productId", productId);
+        return "products/edit-product.html";
     }
 
     /**
