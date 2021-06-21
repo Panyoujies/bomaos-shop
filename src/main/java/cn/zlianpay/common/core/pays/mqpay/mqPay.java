@@ -45,28 +45,22 @@ public class mqPay {
 
         Map<String, Object> getOrder = new HashMap<>();
         getOrder.put("orderId", cloudPayid);
-
         String getOrder1 = HttpUtil.post(create_url + "/getOrder", getOrder);
-
         JSONObject jsonObject1 = JSONObject.parseObject(getOrder1);
-
-        System.out.println(jsonObject1);
-
         String httppostjson = "";
         if (jsonObject1.get("code").toString().equals("-1")) { // 云端没有就创建
             httppostjson = HttpUtil.post(create_url + "/createOrder", paramMap);
         } else if (jsonObject1.get("code").toString().equals("1")) { // 有的话直接查询
             httppostjson = getOrder1;
         }
+
         JSONObject jsonObject = JSONObject.parseObject(httppostjson);
         String code = jsonObject.get("code").toString();
         String msg = jsonObject.get("msg").toString();
-        System.out.println(jsonObject);
+
         Map<String,String> map = new HashMap<>();
         if (code.equals("-1") && msg.equals("监控端状态异常，请检查")) {
             map.put("code", "0"); // 0 为监控错误
-        } else if (code.equals("1") && msg.equals("额度不足、无法创建订单，请充值额度后再试")) {
-            map.put("code", "2"); // 2 额度不足
         } else {
             JSONObject object = JSONObject.parseObject(jsonObject.get("data").toString());
             System.out.println(object.toJSONString());
