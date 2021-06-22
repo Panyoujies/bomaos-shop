@@ -46,11 +46,17 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">排序:</label>
                     <div class="layui-input-block">
-                        <input name="sort" placeholder="请输入排序" class="layui-input" value="1000"
-                               lay-verify="required" required/>
+                        <input name="sort" placeholder="请输入排序" class="layui-input" value="1000" lay-verify="required" required/>
                     </div>
                 </div>
-
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">限制购买:</label>
+                    <div class="layui-input-block">
+                        <input name="restricts" placeholder="请输入限制购买数量" class="layui-input" value="0"
+                               lay-verify="required" required/>
+                        <div class="layui-word-aux">值为0时表示没有无限制</div>
+                    </div>
+                </div>
                 <!-- 批发价配置 -->
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">批发模式</label>

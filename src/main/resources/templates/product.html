@@ -20,9 +20,6 @@
                      style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
                     <img src="${ctxPath}/qiantai/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
                     商品介绍
-                    <:if test="${products.isWholesale == 1}">
-                        <span class="layui-badge layui-badge-yellow pull-right" style="top: 13px;">折扣</span>
-                    </:if>
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
                     <div class="layui-row layui-col-space15">
@@ -43,6 +40,12 @@
                      style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
                     <img src="${ctxPath}/qiantai/images/details.svg" style="top: 10px; position: absolute; left: 15px;">
                     商品详情
+                    <:if test="${products.restricts >= 1}">
+                        <span class="layui-badge layui-badge-red pull-right" style="top: 13px; margin-left: 10px;">限购: ${products.restricts!}</span>
+                    </:if>
+                    <:if test="${products.isWholesale == 1}">
+                        <span class="layui-badge layui-badge-yellow pull-right" style="top: 13px; margin-left: 10px;">折扣</span>
+                    </:if>
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
                     <div class="layui-row layui-col-space15 goods-info-group">

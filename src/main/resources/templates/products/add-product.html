@@ -49,7 +49,14 @@
                                lay-verify="required" required/>
                     </div>
                 </div>
-
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">限制购买:</label>
+                    <div class="layui-input-block">
+                        <input name="restricts" placeholder="请输入限制购买数量" class="layui-input" value="0"
+                               lay-verify="required" required/>
+                        <div class="layui-word-aux">值为0时表示没有无限制</div>
+                    </div>
+                </div>
                 <!-- 批发价配置 -->
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">批发配置</label>
@@ -64,11 +71,12 @@
                                lay-text="开启|关闭">
                     </div>
                 </div>
+
                 <!-- 重复使用出现，券代码 -->
                 <div class="layui-form-item" id="wholesale" style="display:none;">
                     <div class="layui-input-block" id="inputWholesale">
                         <textarea name="wholesale" placeholder="请输入关键字" class="layui-textarea"
-                                  lay-verType="tips" lay-verify="required" required></textarea>
+                                  lay-verType="tips"></textarea>
                         <div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>
                     </div>
                 </div>

@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/products/products")
 public class ProductsController extends BaseController {
+
     @Autowired
     private ProductsService productsService;
 

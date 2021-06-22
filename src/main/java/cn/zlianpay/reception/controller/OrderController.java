@@ -79,6 +79,11 @@ public class OrderController extends BaseController {
             return JsonResult.error("请选择付款方式！");
         }
 
+        Products products = productsService.getById(goodsId);
+        if (number > products.getRestricts()) {
+            return JsonResult.error("您提交的商品数量超过限制购买的数量！核对后再试。");
+        }
+
         int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId));
         if (count == 0) {
             return JsonResult.error("本商品已售空，请联系店长补货！");

@@ -90,4 +90,9 @@ public class Products implements Serializable {
      * 批发配置
      */
     private String wholesale;
+
+    /**
+     * 限制购买
+     */
+    private Integer restricts;
 }

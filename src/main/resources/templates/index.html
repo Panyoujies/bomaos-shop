@@ -80,7 +80,11 @@
                      style="font-weight: 700; padding-bottom: 5px; color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">¥ {{d.price}}
                 </div>
                 <div class="project-list-item-text" style="color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">库存数量：{{d.cardMember}}</div>
-                {{#  if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{#  } }}
+                <div class="tag">
+                    {{#  if(d.restricts >= 1){ }}<span class="layui-badge">限</span>{{#  } }}
+                    {{#  if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{#  } }}
+                </div>
+
             </div>
         </div>
     </div>

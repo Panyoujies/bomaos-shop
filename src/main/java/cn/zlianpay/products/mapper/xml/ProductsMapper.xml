@@ -47,6 +47,9 @@
                 <if test="page.pageData.wholesale != null">
                     AND a.wholesale LIKE CONCAT('%', #{page.pageData.wholesale}, '%')
                 </if>
+                <if test="page.pageData.restricts != null">
+                    AND a.restricts LIKE CONCAT('%', #{page.pageData.restricts}, '%')
+                </if>
             </if>
         </where>
     </sql>

@@ -56,7 +56,6 @@ public class DashboardController extends BaseController {
         model.addAttribute("SevenDaysCount", SevenDaysCount);
         model.addAttribute("SevenDaysMoney", SevenDaysMoney);
 
-
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
         List<String> dayList = new ArrayList<>(); // 天
         List<BigDecimal> wxpayList = new ArrayList<>(); // 每天微信的总金额
