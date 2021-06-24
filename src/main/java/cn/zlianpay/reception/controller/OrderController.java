@@ -130,76 +130,11 @@ public class OrderController extends BaseController {
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
 
         if (orders.getPayType().equals("mqpay_alipay")) {
-            Map createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
-            Integer type = 2;
-
-            String code = createMqPay.get("code").toString();
-            if (code.equals("1")) {
-                /**
-                 * 先保存云订单id
-                 */
-                Orders orders1 = new Orders();
-                orders1.setId(orders.getId());
-                orders1.setCloudPayid(createMqPay.get("orderId").toString());
-                ordersService.updateById(orders1);
-
-                Map mapTypes = JSON.parseObject(pays.getConfig());
-                String create_url = mapTypes.get("create_url").toString();
-
-                model.addAttribute("url", create_url);
-                model.addAttribute("price", createMqPay.get("reallyPrice"));
-                model.addAttribute("result", createMqPay.get("payUrl").toString());
-                model.addAttribute("orderId", createMqPay.get("orderId").toString());
-                model.addAttribute("getOdId", orders.getId());
-                model.addAttribute("type", type);
-                model.addAttribute("ordersMember", ordersMember);
-
-                model.addAttribute("date", createMqPay.get("date"));
-                model.addAttribute("timeOut", createMqPay.get("timeOut"));
-                model.addAttribute("state", createMqPay.get("state"));
-
-                Website website = websiteService.getById(1);
-                model.addAttribute("website", website);
-
-                return "pay.html";
-            } else if (code.equals("2")) {
-                return "error/1001.html";
-            } else {
-                return "error/1000.html";
-            }
+            String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
+            response.sendRedirect(createMqPay);
         } else if (orders.getPayType().equals("mqpay_wxpay")) {
-            Map createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
-            Integer type = 1;
-            String code = createMqPay.get("code").toString();
-            if (code.equals("1")) {
-                /**
-                 * 先保存云订单id
-                 */
-                Orders orders1 = new Orders();
-                orders1.setId(orders.getId());
-                orders1.setCloudPayid(createMqPay.get("orderId").toString());
-                ordersService.updateById(orders1);
-
-                Map mapTypes = JSON.parseObject(pays.getConfig());
-                model.addAttribute("price", createMqPay.get("reallyPrice"));
-                model.addAttribute("result", createMqPay.get("payUrl").toString());
-                model.addAttribute("getOdId", orders.getId());
-                model.addAttribute("type", type);
-                model.addAttribute("ordersMember", ordersMember);
-
-                model.addAttribute("date", createMqPay.get("date"));
-                model.addAttribute("timeOut", createMqPay.get("timeOut"));
-                model.addAttribute("state", createMqPay.get("state"));
-
-                Website website = websiteService.getById(1);
-                model.addAttribute("website", website);
-
-                return "pay.html";
-            } else if (code.equals("2")) {
-                return "error/1001.html";
-            }  else {
-                return "error/1000.html";
-            }
+            String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
+            response.sendRedirect(createMqPay);
         } else if (orders.getPayType().equals("codepay_wxpay") || orders.getPayType().equals("codepay_alipay")) {
             String url = CodePaysConfig.CodePayConfigInfo(pays, price, ordersMember, productDescription);
             response.sendRedirect(url);
