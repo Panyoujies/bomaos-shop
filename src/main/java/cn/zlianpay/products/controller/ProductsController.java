@@ -143,6 +143,11 @@ public class ProductsController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Products products) {
+
+        if (products.getImageLogo() == null) {
+            return JsonResult.error("商品logo 不能为空！");
+        }
+
         products.setCreatedAt(new Date());
         products.setUpdatedAt(new Date());
         products.setDeletedAt(new Date());
