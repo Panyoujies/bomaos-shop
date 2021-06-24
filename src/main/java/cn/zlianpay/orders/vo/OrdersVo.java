@@ -103,4 +103,15 @@ public class OrdersVo {
      * 卡密列表
      */
     private List<Cards> cardInfo;
+
+
+    /**
+     * 标记为使用优惠券
+     */
+    private Integer isCoupon;
+
+    /**
+     * 优惠券id
+     */
+    private Integer couponId;
 }

@@ -108,4 +108,14 @@ public class Orders implements Serializable {
      */
     private String email;
 
+    /**
+     * 标记为使用优惠券
+     */
+    private Integer isCoupon;
+
+    /**
+     * 优惠券id
+     */
+    private Integer couponId;
+
 }

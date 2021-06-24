@@ -5,6 +5,8 @@ import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.settings.entity.Coupon;
+import cn.zlianpay.settings.service.CouponService;
 import cn.zlianpay.settings.vo.PaysVo;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -63,6 +65,9 @@ public class IndexController {
     @Autowired
     private WebsiteService websiteService;
 
+    @Autowired
+    private CouponService couponService;
+
     @RequestMapping({"/","/index"})
     public String IndexView(Model model) {
         List<Classifys> classifysList = classifysService.list(new QueryWrapper<Classifys>().eq("status", 1));
@@ -95,6 +100,10 @@ public class IndexController {
             int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
             productsVo.setCardMember(count);
             productsVo.setPrice(products.getPrice().toString());
+
+            int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
+            productsVo.setIsCoupon(count1);
+
             return productsVo;
         }).collect(Collectors.toList());
         return JsonResult.ok("ok").setData(productsVoList);
@@ -145,6 +154,9 @@ public class IndexController {
             }
             model.addAttribute("wholesaleList", list);
         }
+
+        int isCoupon = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
+        model.addAttribute("isCoupon", isCoupon);
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);

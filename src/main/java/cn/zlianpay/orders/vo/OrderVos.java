@@ -101,4 +101,15 @@ public class OrderVos {
      * 索引
      */
     private Integer andIncrement;
+
+
+    /**
+     * 标记为使用优惠券
+     */
+    private Integer isCoupon;
+
+    /**
+     * 优惠券id
+     */
+    private Integer couponId;
 }

@@ -53,6 +53,12 @@
                 <if test="page.pageData.createTimeEnd!=null">
                     AND a.create_time &lt;= #{page.pageData.createTimeEnd}
                 </if>
+                <if test="page.pageData.isCoupon != null">
+                    AND a.is_coupon = #{page.pageData.isCoupon}
+                </if>
+                <if test="page.pageData.couponId != null">
+                    AND a.coupon_id = #{page.pageData.couponId}
+                </if>
             </if>
         </where>
     </sql>

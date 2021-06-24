@@ -8,6 +8,8 @@ import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.settings.entity.Coupon;
+import cn.zlianpay.settings.service.CouponService;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.carmi.entity.Cards;
@@ -27,6 +29,7 @@ import cn.zlianpay.website.service.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,12 +63,15 @@ public class OrderController extends BaseController {
     @Autowired
     private WebsiteService websiteService;
 
+    @Autowired
+    private CouponService couponService;
+
     /**
      * 添加
      */
     @ResponseBody
     @RequestMapping("/buy")
-    public JsonResult save(Integer goodsId, String contact, Integer number, String email, String payType, HttpServletRequest request) {
+    public JsonResult save(Integer goodsId, String contact, Integer number, String email, String coupon, String payType, HttpServletRequest request) {
 
         if (StringUtils.isEmpty(goodsId)) {
             return JsonResult.error("商品不能为空");
@@ -92,7 +98,29 @@ public class OrderController extends BaseController {
         }
 
         try {
-            String buy = ordersService.buy(goodsId, contact, number, email, payType, request);
+            Integer couponId = null;
+            if (!StringUtils.isEmpty(coupon)) {
+                QueryWrapper<Coupon> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("product_id", goodsId) // 商品id
+                        .eq("coupon", coupon) // 优惠券代码
+                        .eq("status", 0); // 没有使用的
+
+                Coupon coupon1 = couponService.getOne(queryWrapper);
+                if (!ObjectUtils.isEmpty(coupon1)) { // 判断 coupon1 是否不为空
+                    /**
+                     * 拿到优惠券 entity
+                     */
+                    couponId = coupon1.getId();
+                } else {
+                    /**
+                     * 给前端返回优惠券失效或者为空的信息
+                     */
+                    return JsonResult.error("该优惠券代码已被使用过，或不能使用在本商品，请核对后再试！");
+                }
+            }
+
+            Map<String, String> buy = ordersService.buy(goodsId, contact, number, email, couponId, payType, request);
+
             return JsonResult.ok("订单创建成功！").setCode(200).setData(buy);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,22 +138,7 @@ public class OrderController extends BaseController {
         String ordersMember = orders.getMember(); // 订单号
         String goodsName = products.getName(); // 订单主题
         String cloudPayid = orders.getCloudPayid();
-
-        BigDecimal bigDecimal = new BigDecimal(0.00);
-        // 判断是不是批发商品
-        if (products.getIsWholesale() == 1) {
-            String wholesale = products.getWholesale();
-            String[] split = wholesale.split("\\n");
-            for (String s : split) {
-                String[] split1 = s.split("=");
-                if (orders.getNumber() >= Integer.parseInt(split1[0])) {
-                    bigDecimal = new BigDecimal(split1[1]).multiply(new BigDecimal(orders.getNumber()));
-                }
-            }
-        } else {
-            bigDecimal = orders.getPrice().multiply(new BigDecimal(orders.getNumber()));
-        }
-        String price = bigDecimal.toString();
+        String price = orders.getMoney().toString();
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
 

@@ -101,4 +101,9 @@ public class ProductsVo {
      * 限制购买
      */
     private Integer restricts;
+
+    /**
+     * 优惠券
+     */
+    private Integer isCoupon;
 }

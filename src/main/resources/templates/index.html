@@ -81,10 +81,10 @@
                 </div>
                 <div class="project-list-item-text" style="color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">库存数量：{{d.cardMember}}</div>
                 <div class="tag">
+                    {{#  if(d.isCoupon >= 1){ }}<span class="layui-badge layui-bg-blue">券</span>{{#  } }}
                     {{#  if(d.restricts >= 1){ }}<span class="layui-badge">限</span>{{#  } }}
                     {{#  if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{#  } }}
                 </div>
-
             </div>
         </div>
     </div>
