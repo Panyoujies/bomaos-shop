@@ -68,8 +68,7 @@
                 <!-- 重复使用出现，券代码 -->
                 <div class="layui-form-item" id="wholesale" style="display:none;">
                     <div class="layui-input-block" id="inputWholesale">
-                        <textarea name="wholesale" placeholder="请输入关键字" class="layui-textarea"
-                                  lay-verType="tips" lay-verify="required" required></textarea>
+                        <textarea name="wholesale" placeholder="请输入关键字" class="layui-textarea"></textarea>
                         <div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>
                     </div>
                 </div>
@@ -133,7 +132,7 @@
                 if (res.data.isWholesale == 1) {
                     $("#wholesale").attr("style", "display:block;");
                     $("#inputWholesale").html(
-                        '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea" lay-verType="tips" lay-verify="required" required></textarea>' +
+                        '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
                         '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
                     );
                 }
@@ -229,7 +228,7 @@
                 layer.msg("请输入批发配置", {icon: 1});
                 $("#wholesale").attr("style", "display:block;");
                 $("#inputWholesale").html(
-                    '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea" lay-verType="tips" lay-verify="required" required></textarea>' +
+                    '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
                     '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
                 );
             } else {  // 不使用

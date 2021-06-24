@@ -24,7 +24,7 @@
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-md4">
-                            <img style="border-radius: 3px; display: inline; max-width: 100%; max-height: 100%; bottom: 0"
+                            <img style="border-radius: 3px; display: inline; width: 100%; max-height: 100%; bottom: 0"
                                  src="${products.imageLogo!}">
                         </div>
                         <div class="layui-col-md8">
@@ -45,10 +45,12 @@
                               style="top: 13px; margin-left: 10px; font-weight: 400;">券</span>
                     </:if>
                     <:if test="${products.restricts >= 1}">
-                        <span class="layui-badge layui-badge-red pull-right" style="top: 13px; margin-left: 10px;">限购: ${products.restricts!}</span>
+                        <span class="layui-badge layui-badge-red pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">限购: ${products.restricts!}</span>
                     </:if>
                     <:if test="${products.isWholesale == 1}">
-                        <span class="layui-badge layui-badge-yellow pull-right" style="top: 13px; margin-left: 10px;">折扣</span>
+                        <span class="layui-badge layui-badge-yellow pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">折扣</span>
                     </:if>
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
