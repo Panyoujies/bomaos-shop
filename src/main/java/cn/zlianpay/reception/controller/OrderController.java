@@ -86,8 +86,10 @@ public class OrderController extends BaseController {
         }
 
         Products products = productsService.getById(goodsId);
-        if (number > products.getRestricts()) {
-            return JsonResult.error("您提交的商品数量超过限制购买的数量！核对后再试。");
+        if (products.getRestricts() >= 1) { // 判断是不是限购
+            if (number > products.getRestricts()) { // 判断限购
+                return JsonResult.error("您提交的商品数量超过限制购买的数量！核对后再试。");
+            }
         }
 
         int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId));
