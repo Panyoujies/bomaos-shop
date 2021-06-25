@@ -85,6 +85,11 @@ public class OrdersVo {
     private BigDecimal price;
 
     /**
+     * email 客户邮件
+     */
+    private String email;
+
+    /**
      * 订单创建时间
      */
     private Date createTime;
@@ -114,4 +119,10 @@ public class OrdersVo {
      * 优惠券id
      */
     private Integer couponId;
+
+    /**
+     * 发货类型（0-自动，1-手动）
+     */
+    private Integer shipType;
+
 }

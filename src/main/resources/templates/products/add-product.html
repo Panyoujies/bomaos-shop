@@ -17,7 +17,7 @@
                 添加商品
             </div>
             <div class="layui-card-body">
-                <div class="layui-form-item">
+                <div class="layui-form-item" style="margin-top: 5px">
                     <label class="layui-form-label layui-form-required">商品分类:</label>
                     <div class="layui-input-block">
                         <select name="classifyId" lay-verType="tips" lay-verify="required" required>
@@ -49,6 +49,29 @@
                                lay-verify="required" required/>
                     </div>
                 </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">发货模式:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货" checked>
+                        <input type="radio" name="shipType" lay-filter="shipType" value="1" title="手动发货">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="inventory" style="display: none">
+                    <label class="layui-form-label">库存:</label>
+                    <div class="layui-input-block" id="inputInventory">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="sales" style="display: none">
+                    <label class="layui-form-label">销量:</label>
+                    <div class="layui-input-block" id="inputSales">
+                    </div>
+                </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">限制购买:</label>
                     <div class="layui-input-block">
@@ -57,6 +80,7 @@
                         <div class="layui-word-aux">值为0时表示没有无限制</div>
                     </div>
                 </div>
+
                 <!-- 批发价配置 -->
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">批发配置</label>
@@ -130,6 +154,28 @@
         var form = layui.form;
         var upload = layui.upload;
         var element = layui.element;
+
+        //监听指定开关
+        form.on('radio(shipType)', function (data) {
+            // 使用
+            if (data.value == 1) {
+                $("#inventory").attr("style", "display:block;");
+                $("#inputInventory").html(
+                    '<input name="inventory" placeholder="请输入库存" class="layui-input" value="0"/>' +
+                    '<div class="layui-word-aux">手动发货模式生效</div>'
+                );
+                $("#sales").attr("style", "display:block;");
+                $("#inputSales").html(
+                    '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
+                    '<div class="layui-word-aux">手动发货模式生效</div>'
+                );
+            } else {  // 不使用
+                $("#inventory").attr("style", "display:none;");
+                $("#inputInventory").html(null);
+                $("#sales").attr("style", "display:none;");
+                $("#inputSales").html(null);
+            }
+        });
 
         /* 表单提交 */
         form.on('submit(productsEditSubmit)', function (data) {

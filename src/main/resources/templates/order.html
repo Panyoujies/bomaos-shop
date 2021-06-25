@@ -67,6 +67,12 @@
                     <tr>
                         <th width="120">支付状态：</th>
                         <td colspan="3">
+                            <:if test="${orders.status==3}">
+                                已发货
+                            </:if>
+                            <:if test="${orders.status==2}">
+                                待发货
+                            </:if>
                             <:if test="${orders.status==1}">
                                 已支付
                             </:if>
@@ -97,17 +103,40 @@
             </div>
 
             <div class="layui-card order-show" style="margin-bottom: 15px">
-                <div class="layui-text" style="font-size: 18px; text-align: center; padding: 20px 0;">
-                    <div class="user-info-list-item" id="card-txt">
-                        <:for items="${cardsList}" var="item">
-                            <p>卡密: ${item.cardInfo!}</p>
-                        </:for>
+                <:if test="${orders.shipType == 0}"> <!-- 自动发货 -->
+                    <div class="layui-text" style="font-size: 18px; text-align: center; padding: 20px 0;">
+                        <div class="user-info-list-item" id="card-txt">
+                            <:for items="${cardsList}" var="item">
+                                <p>卡密: ${item.cardInfo!}</p>
+                            </:for>
+                        </div>
                     </div>
-                </div>
-                <div style="margin-top: 10px">
-                    <a id="card-copy" href="#" data-clipboard-target="#card-txt" class="layui-btn" style="width: 100%">复制卡密</a>
-                    <script type="text/javascript"> new ClipboardJS('#card-copy'); </script>
-                </div>
+                    <div style="margin-top: 10px">
+                        <a id="card-copy" href="#" data-clipboard-target="#card-txt" class="layui-btn" style="width: 100%">复制卡密</a>
+                        <script type="text/javascript"> new ClipboardJS('#card-copy'); </script>
+                    </div>
+                </:if>
+                <:if test="${orders.shipType == 1}"> <!-- 自动发货 -->
+                    <:if test="${orders.status == 2}">
+                        <div class="layui-text" style="font-size: 18px; text-align: center; padding: 20px 0;">
+                            <span>本商品需要手动发货，请耐心等待发货哦！</span>
+                        </div>
+                    </:if>
+                    <:if test="${orders.status == 3}">
+                        <div class="layui-text" style="font-size: 18px; text-align: center; padding: 20px 0;">
+                            <div class="user-info-list-item" id="card-txt">
+                                <:for items="${cardsList}" var="item">
+                                    <p>卡密: ${item.cardInfo!}</p>
+                                </:for>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px">
+                            <a id="card-copy" href="#" data-clipboard-target="#card-txt" class="layui-btn" style="width: 100%">复制卡密</a>
+                            <script type="text/javascript"> new ClipboardJS('#card-copy'); </script>
+                        </div>
+                    </:if>
+
+                </:if>
             </div>
 
             <!-- 使用说明 -->

@@ -4,8 +4,11 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
+import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.*;
 import cn.zlianpay.orders.vo.OrderVos;
+import cn.zlianpay.website.entity.Website;
+import cn.zlianpay.website.service.WebsiteService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.utils.RequestParamsUtil;
 import cn.zlianpay.common.core.web.*;
@@ -24,13 +27,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,6 +62,9 @@ public class OrdersController extends BaseController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private WebsiteService websiteService;
 
     @RequiresPermissions("orders:orders:view")
     @RequestMapping()
@@ -102,6 +107,9 @@ public class OrdersController extends BaseController {
                 ordersVo.setPayTime(null);
             }
 
+            // 发货模式
+            ordersVo.setShipType(products.getShipType());
+
             return ordersVo;
         }).collect(Collectors.toList());
 
@@ -139,6 +147,10 @@ public class OrdersController extends BaseController {
 
             if (orders.getStatus() == 1) {
                 orderVos.setStatus("<span style=\"color: #00a65a\">付款成功</span>");
+            } else if (orders.getStatus() == 2) {
+                orderVos.setStatus("<span style=\"color: #ffb671\">待发货</span>");
+            } else if (orders.getStatus() == 3) {
+                orderVos.setStatus("<span style=\"color: #00a65a\">已发货</span>");
             } else {
                 orderVos.setStatus("<span style=\"color: #00a65a\">未付款</span>");
             }
@@ -271,6 +283,75 @@ public class OrdersController extends BaseController {
             return JsonResult.ok("清理未支付的订单成功！");
         }
         return JsonResult.error("没有可以清理的订单！");
+    }
+
+    /**
+     *
+     * @param id 商品id
+     * @param shipInfo 需要发货的内容
+     * @return
+     */
+    @OperLog(value = "商品列表管理", desc = "手动发货", result = true)
+    @RequiresPermissions("orders:orders:update")
+    @ResponseBody
+    @RequestMapping("/sendShip")
+    public JsonResult sendShip(Integer id, String email, String shipInfo) throws MessagingException, IOException {
+
+        System.out.println(id);
+        System.out.println(email);
+        System.out.println(shipInfo);
+
+        /**
+         * 发货成功商品状态 为3
+         */
+
+        /**
+         * 查出订单
+         */
+        Orders orders = ordersService.getById(id);
+        Products products = productsService.getById(orders.getProductId()); // 查出对应的商品
+
+        Cards cards = new Cards();
+        cards.setCardInfo(shipInfo);
+        cards.setCreatedAt(new Date());
+        cards.setProductId(products.getId());
+        cards.setStatus(1); // 默认已使用
+        cards.setUpdatedAt(new Date());
+
+        boolean save = cardsService.save(cards);
+        if (save) {
+            OrderCard orderCard = new OrderCard();
+            orderCard.setCardId(cards.getId());
+            orderCard.setOrderId(orders.getId());
+            orderCard.setCreatedAt(new Date());
+            orderCardService.save(orderCard); // 关联卡密
+        }
+
+        Orders orders1 = new Orders();
+        orders1.setId(orders.getId());
+        orders1.setStatus(3);
+
+        boolean b = ordersService.updateById(orders1);
+        if (b) { // 成功发送邮件
+            boolean email1 = FormCheckUtil.isEmail(email);
+            if (email1) {
+                Website website = websiteService.getById(1);
+                Map<String, Object> map = new HashMap<>();  // 页面的动态数据
+                map.put("title", website.getWebsiteName());
+                map.put("member", orders.getMember());
+                map.put("date", new Date());
+                map.put("info", shipInfo);
+                try {
+                    emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{email});
+                    return JsonResult.ok("发货成功、并且邮件提醒成功");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return JsonResult.ok("发货成功、邮件提醒失败！");
+                }
+            }
+            return JsonResult.ok("发货成功！邮件提醒失败！");
+        }
+        return JsonResult.error("发货失败！");
     }
 
     /**

@@ -148,6 +148,10 @@ public class ProductsController extends BaseController {
             return JsonResult.error("商品logo 不能为空！");
         }
 
+        if (products.getShipType() == null) {
+            return JsonResult.error("发货模式不能为空！");
+        }
+
         products.setCreatedAt(new Date());
         products.setUpdatedAt(new Date());
         products.setDeletedAt(new Date());

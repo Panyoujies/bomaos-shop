@@ -104,6 +104,10 @@ public class IndexController {
             int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
             productsVo.setIsCoupon(count1);
 
+            if (products.getShipType() == 1) {
+                productsVo.setCardMember(products.getInventory());
+            }
+
             return productsVo;
         }).collect(Collectors.toList());
         return JsonResult.ok("ok").setData(productsVoList);
@@ -173,8 +177,13 @@ public class IndexController {
         BeanUtils.copyProperties(products, productsVos);
         productsVos.setId(products.getId());
         productsVos.setPrice(products.getPrice().toString());
-        Integer count = getCardListCount(cardsService, products); // 计算卡密使用情况
-        productsVos.setCardsCount(count.toString());
+
+        if (products.getShipType() == 0) { // 自动发货模式
+            Integer count = getCardListCount(cardsService, products); // 计算卡密使用情况
+            productsVos.setCardsCount(count.toString());
+        } else { // 手动发货模式
+            productsVos.setCardsCount(products.getInventory().toString());
+        }
 
         return JsonResult.ok().setData(productsVos);
     }
@@ -229,6 +238,11 @@ public class IndexController {
         } else {
             ordersVo.setPayType(null);
         }
+
+        /**
+         * 发货模式
+         */
+        ordersVo.setShipType(products.getShipType());
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);

@@ -6,6 +6,7 @@ import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
+import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.JsonResult;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -500,48 +501,72 @@ public class NotifyController {
         Products products = productsService.getById(param);
         if (products == null) return fiald; // 商品没了
 
-        List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-        if (card == null) return fiald;
+        if (products.getShipType() == 0) { // 自动发货的商品
+            List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+            if (card == null) return fiald;
 
-        List<OrderCard> cardList = new ArrayList<>();
-        for (Cards cards : card) {
-            OrderCard orderCard = new OrderCard();
-            orderCard.setCardId(cards.getId());
-            orderCard.setOrderId(member.getId());
-            orderCard.setCreatedAt(new Date());
-            cardList.add(orderCard);
+            List<OrderCard> cardList = new ArrayList<>();
+            for (Cards cards : card) {
+                OrderCard orderCard = new OrderCard();
+                orderCard.setCardId(cards.getId());
+                orderCard.setOrderId(member.getId());
+                orderCard.setCreatedAt(new Date());
+                cardList.add(orderCard);
 
-            Cards cards1 = new Cards();
-            cards1.setId(cards.getId());
-            cards1.setStatus(1);
-            cards1.setUpdatedAt(new Date());
-            // 设置售出的卡密
-            cardsService.updateById(cards1);
+                Cards cards1 = new Cards();
+                cards1.setId(cards.getId());
+                cards1.setStatus(1);
+                cards1.setUpdatedAt(new Date());
+                // 设置售出的卡密
+                cardsService.updateById(cards1);
 
-            if (!StringUtils.isEmpty(member.getEmail())) {
-                if (isEmail(member.getEmail())) {
-                    emailService.sendTextEmail("卡密购买成功", "您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                if (!StringUtils.isEmpty(member.getEmail())) {
+                    if (isEmail(member.getEmail())) {
+                        emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                    }
                 }
             }
+
+            /**
+             * 关联卡密
+             */
+            orderCardService.saveBatch(cardList);
+
+        } else { // 手动发货商品
+            Products products1 = new Products();
+            products1.setId(products.getId());
+            products1.setInventory(products.getInventory() - 1);
+            products1.setSales(products.getSales() + 1);
+
+            productsService.updateById(products1);
         }
 
-        /**
-         * 关联卡密
-         */
-        orderCardService.saveBatch(cardList);
 
         /**
          * 更新订单
          */
         Orders orders = new Orders();
         orders.setId(member.getId());
-        orders.setStatus(1); // 设置已售出
+
+        if (products.getShipType() == 0) {
+            orders.setStatus(1); // 设置已售出
+        } else {
+            orders.setStatus(2); // 手动发货模式 为待处理
+        }
+
         orders.setPayTime(new Date());
         orders.setPayNo(pay_no);
         orders.setPrice(new BigDecimal(price));
         orders.setMoney(new BigDecimal(money));
 
-        ordersService.updateById(orders); // 更新售出
+        boolean b = ordersService.updateById(orders);// 更新售出
+
+        if (b) {
+            boolean email = FormCheckUtil.isEmail(member.getEmail());
+            if (email) {
+                emailService.sendTextEmail("订单提醒", "您的订单号为：" + member.getMember() + " 本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+            }
+        }
 
         return success;
     }

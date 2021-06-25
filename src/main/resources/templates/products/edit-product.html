@@ -49,6 +49,30 @@
                         <input name="sort" placeholder="请输入排序" class="layui-input" value="1000" lay-verify="required" required/>
                     </div>
                 </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">发货模式:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货" checked>
+                        <input type="radio" name="shipType" lay-filter="shipType" value="1" title="手动发货">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="inventory" style="display: none">
+                    <label class="layui-form-label">库存:</label>
+                    <div class="layui-input-block" id="inputInventory">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="sales" style="display: none">
+                    <label class="layui-form-label">销量:</label>
+                    <div class="layui-input-block" id="inputSales">
+                    </div>
+                </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">限制购买:</label>
                     <div class="layui-input-block">
@@ -135,7 +159,21 @@
                         '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
                         '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
                     );
+                };
+
+                if (res.data.shipType == 1) {
+                    $("#inventory").attr("style", "display:block;");
+                    $("#inputInventory").html(
+                        '<input name="inventory" placeholder="请输入库存" class="layui-input" value="0"/>' +
+                        '<div class="layui-word-aux">手动发货模式生效</div>'
+                    );
+                    $("#sales").attr("style", "display:block;");
+                    $("#inputSales").html(
+                        '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
+                        '<div class="layui-word-aux">手动发货模式生效</div>'
+                    );
                 }
+
                 // 回显表单数据
                 form.val('productForm', res.data);
                 $("#pdInfoEditor").html(res.data.pdInfo);
@@ -147,9 +185,6 @@
 
         /* 表单提交 */
         form.on('submit(productsEditSubmit)', function (data) {
-
-
-            console.log(data)
             data.field.pdInfo = tinymce.get('pdInfoEditor').getContent();
             if (layui.admin.util.fullTextIsEmpty(data.field.pdInfo)) {
                 return layer.msg('请输入商品介绍正文', {icon: 2, anim: 6});
@@ -234,6 +269,28 @@
             } else {  // 不使用
                 $("#wholesale").attr("style", "display:none;");
                 $("#inputWholesale").html(null);
+            }
+        });
+
+        //监听指定开关
+        form.on('radio(shipType)', function (data) {
+            // 使用
+            if (data.value == 1) {
+                $("#inventory").attr("style", "display:block;");
+                $("#inputInventory").html(
+                    '<input name="inventory" placeholder="请输入库存" class="layui-input" value="0"/>' +
+                    '<div class="layui-word-aux">手动发货模式生效</div>'
+                );
+                $("#sales").attr("style", "display:block;");
+                $("#inputSales").html(
+                    '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
+                    '<div class="layui-word-aux">手动发货模式生效</div>'
+                );
+            } else {  // 不使用
+                $("#inventory").attr("style", "display:none;");
+                $("#inputInventory").html(null);
+                $("#sales").attr("style", "display:none;");
+                $("#inputSales").html(null);
             }
         });
 

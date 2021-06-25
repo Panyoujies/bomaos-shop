@@ -80,7 +80,7 @@ pre {
 
 body {
     line-height: 24px;
-    font: 14px Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial, sans-serif
+    font: 15px Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial, sans-serif
 }
 
 hr {
@@ -1947,7 +1947,8 @@ a cite {
 
 .layui-text em, .layui-word-aux {
     color: #999 !important;
-    padding: 0 5px !important
+    padding: 0 0px !important;
+    margin-top: 8px;
 }
 
 .layui-btn {
@@ -2349,6 +2350,130 @@ a cite {
 
 .layui-select-disabled .layui-edge {
     border-top-color: #d2d2d2
+}
+
+.layui-form-selbox, .layui-form-selbox *, .layui-form-switch {
+    display: inline-block;
+    vertical-align: middle
+}
+
+.layui-form-selbox {
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 0;
+    -webkit-transition: .1s linear;
+    transition: .1s linear;
+    box-sizing: border-box
+}
+
+.layui-form-selbox span {
+    padding: 0 10px;
+    height: 100%;
+    font-size: 14px;
+    border-radius: 2px;
+    background-color: #d2d2d2;
+    color: #fff;
+    overflow: hidden
+}
+
+.layui-form-selbox:hover span {
+    background-color: #c2c2c2
+}
+
+.layui-form-selbox i {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 28px;
+    border: 1px solid #d2d2d2;
+    border-left: none;
+    border-radius: 0 2px 2px 0;
+    color: #fff;
+    font-size: 20px;
+    text-align: center
+}
+
+.layui-form-selbox:hover i {
+    border-color: #c2c2c2;
+    color: #c2c2c2
+}
+
+.layui-form-selafter, .layui-form-selafter:hover {
+    border-color: #5FB878
+}
+
+.layui-form-selafter span, .layui-form-selafter:hover span {
+    background-color: #5FB878
+}
+
+.layui-form-selafter i, .layui-form-selafter:hover i {
+    color: #5FB878
+}
+
+.layui-form-item .layui-form-selbox {
+    margin-top: 4px
+}
+
+.layui-form-selbox[lay-skin=primary] {
+    height: auto !important;
+    line-height: normal !important;
+    min-width: 18px;
+    min-height: 18px;
+    border: none !important;
+    margin-right: 0;
+    padding-left: 28px;
+    padding-right: 0;
+    background: 0 0
+}
+
+.layui-form-selbox[lay-skin=primary] span {
+    padding-left: 0;
+    padding-right: 15px;
+    line-height: 18px;
+    background: 0 0;
+    color: #666
+}
+
+.layui-form-selbox[lay-skin=primary] i {
+    right: auto;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border: 1px solid #d2d2d2;
+    font-size: 12px;
+    border-radius: 2px;
+    background-color: #fff;
+    -webkit-transition: .1s linear;
+    transition: .1s linear
+}
+
+.layui-form-selbox[lay-skin=primary]:hover i {
+    border-color: #5FB878;
+    color: #fff
+}
+
+.layui-form-selafter[lay-skin=primary] i {
+    border-color: #5FB878 !important;
+    background-color: #5FB878;
+    color: #fff
+}
+
+.layui-selbox-disbaled[lay-skin=primary] span {
+    background: 0 0 !important;
+    color: #c2c2c2
+}
+
+.layui-selbox-disbaled[lay-skin=primary]:hover i {
+    border-color: #d2d2d2
+}
+
+.layui-form-item .layui-form-selbox[lay-skin=primary] {
+    margin-top: 10px
 }
 
 .layui-form-checkbox {
@@ -2988,11 +3113,11 @@ a cite {
 
 .layui-table th {
     text-align: left;
-    font-weight: 400
+    font-weight: bold;
 }
 
 .layui-table tbody tr:hover, .layui-table thead tr, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
-    background-color: #f2f2f2
+    background-color: #fafafa
 }
 
 .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
@@ -3006,7 +3131,7 @@ a cite {
     padding: 9px 15px;
     min-height: 20px;
     line-height: 20px;
-    font-size: 14px
+    font-size: 15px
 }
 
 .layui-table[lay-skin=line] td, .layui-table[lay-skin=line] th {
@@ -3789,11 +3914,11 @@ body .layui-table-tips .layui-layer-content {
     min-width: 100%;
     line-height: 36px;
     padding: 5px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
-    border: 1px solid #d2d2d2;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
+    border: 1px solid #ececec;
     background-color: #fff;
     z-index: 100;
-    border-radius: 2px;
+    border-radius: 6px;
     white-space: nowrap
 }
 

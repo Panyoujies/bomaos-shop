@@ -28,6 +28,7 @@ import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -92,11 +93,19 @@ public class OrderController extends BaseController {
             }
         }
 
-        int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId));
-        if (count == 0) {
-            return JsonResult.error("本商品已售空，请联系店长补货！");
-        } else if (number > count) {
-            return JsonResult.error("商品购买数量不能大于商品剩余数量！");
+        if (products.getShipType() == 0) { // 自动发货模式
+            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId));
+            if (count == 0) {
+                return JsonResult.error("本商品已售空，请联系店长补货！");
+            } else if (number > count) {
+                return JsonResult.error("商品购买数量不能大于商品剩余数量！");
+            }
+        } else { // 手动发货模式
+            if (products.getInventory() == 0) {
+                return JsonResult.error("本商品已售空，请联系店长补货！");
+            } else if (number > products.getInventory()) {
+                return JsonResult.error("商品购买数量不能大于商品剩余数量！");
+            }
         }
 
         try {

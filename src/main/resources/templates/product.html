@@ -126,6 +126,10 @@
                      style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
                     <img src="${ctxPath}/qiantai/images/buy.svg" style="top: 10px; position: absolute; left: 15px;">
                     购买信息
+                    <:if test="${products.shipType == 1}">
+                        <span class="layui-badge layui-badge-yellow pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">手动发货</span>
+                    </:if>
                 </div>
 
                 <div class="layui-card-body" style="padding: 10px 20px;">
@@ -191,7 +195,8 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label layui-form-required">优惠券</label>
                             <div class="layui-input-block">
-                                <input name="coupon" id="coupon" placeholder="输入优惠券代码" class="layui-input" lay-verType="tips"/>
+                                <input name="coupon" id="coupon" placeholder="输入优惠券代码" class="layui-input"
+                                       lay-verType="tips"/>
                             </div>
                         </div>
                     </:if>
@@ -420,15 +425,7 @@
                 product1 = product;
                 $("#goodsprice").text(product.price);
                 $("#goodsprice2").text(product.price);
-
-                if (product.cardsCount == 0) {
-                    $("#cardsCount").text("库存为空");
-                } else if (product.cardsCount <= 150) {
-                    $("#cardsCount").text("库存较少");
-                } else if (product.cardsCount > 150) {
-                    $("#cardsCount").text("库存充足");
-                }
-
+                $("#cardsCount").text(product.cardsCount);
             } else {
                 layer.msg(res.msg, {icon: 2, anim: 6});
             }

@@ -106,4 +106,19 @@ public class ProductsVo {
      * 优惠券
      */
     private Integer isCoupon;
+
+    /**
+     * 发货类型（0-自动，1-手动）
+     */
+    private Integer shipType;
+
+    /**
+     * 商品库存（人工发货类型生效）
+     */
+    private Integer inventory;
+
+    /**
+     * 销量
+     */
+    private Integer sales;
 }

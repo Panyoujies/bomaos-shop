@@ -112,4 +112,9 @@ public class OrderVos {
      * 优惠券id
      */
     private Integer couponId;
+
+    /**
+     * 发货类型（0-自动，1-手动）
+     */
+    private Integer shipType;
 }

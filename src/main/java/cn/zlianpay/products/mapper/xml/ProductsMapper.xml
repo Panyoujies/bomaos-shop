@@ -50,6 +50,15 @@
                 <if test="page.pageData.restricts != null">
                     AND a.restricts LIKE CONCAT('%', #{page.pageData.restricts}, '%')
                 </if>
+                <if test="page.pageData.shipType != null">
+                    AND a.ship_type = #{page.pageData.shipType}
+                </if>
+                <if test="page.pageData.inventory != null">
+                    AND a.inventory = #{page.pageData.inventory}
+                </if>
+                <if test="page.pageData.sales != null">
+                    AND a.sales = #{page.pageData.sales}
+                </if>
             </if>
         </where>
     </sql>
