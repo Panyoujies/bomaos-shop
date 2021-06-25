@@ -109,7 +109,7 @@ public class DashboardController extends BaseController {
      */
     public static Map<String, Object> getOrderList(OrdersService ordersService) {
         QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getDayBegin(), DateStrUtil.getDayEnd());
-        queryWrapper.eq("status", 1);
+        queryWrapper.ge("status", 1);
         List<Orders> orderList = ordersService.list(queryWrapper);
         Integer count = 0; // 获取今天成功交易的订单数量
         BigDecimal money = new BigDecimal(0.00); // 获取今天成功交易的订单交易额
@@ -132,7 +132,7 @@ public class DashboardController extends BaseController {
      */
     public static Map<String, Object> getYesterDayOrder(OrdersService ordersService) {
         QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getStartDayTime(-1), DateStrUtil.getEndDayTime(-1));
-        queryWrapper.eq("status", 1);
+        queryWrapper.ge("status", 1);
 
         List<Orders> orderList = ordersService.list(queryWrapper);
         Integer count = 0; // 获取昨天成功交易的订单数量
@@ -157,7 +157,7 @@ public class DashboardController extends BaseController {
     public static Map<String, Object> getSevenDaysOrder(OrdersService ordersService) {
 
         QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getStartDayTime(-7), DateStrUtil.getEndDayTime(-0));
-        queryWrapper.eq("status", 1);
+        queryWrapper.ge("status", 1);
 
         List<Orders> orderList = ordersService.list(queryWrapper);
 
@@ -177,7 +177,7 @@ public class DashboardController extends BaseController {
 
     public static Map<String, BigDecimal> getTimeDayList(Date StartTime, Date EndTime, OrdersService ordersService) {
         QueryWrapper queryWrapper = getQueryWrapper(StartTime, EndTime);
-        queryWrapper.eq("status", 1);
+        queryWrapper.ge("status", 1);
 
         //查询当天所有支付记录
         List<Orders> ordersList = ordersService.list(queryWrapper);
@@ -202,7 +202,7 @@ public class DashboardController extends BaseController {
 
     public static Map<String, Integer> getTimeDayCount(Date StartTime, Date EndTime, OrdersService ordersService) {
         QueryWrapper queryWrapper = getQueryWrapper(StartTime, EndTime);
-        queryWrapper.eq("status", 1);
+        queryWrapper.ge("status", 1);
 
         //查询当天所有支付记录
         List<Orders> ordersList = ordersService.list(queryWrapper);
