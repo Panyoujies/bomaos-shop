@@ -449,11 +449,9 @@
                         title: '确认信息',
                         btn: ['立即支付', '支付完成'] //按钮
                     }, function () {
-                        var tempwindow = window.open('_blank');
-                        tempwindow.location = '${ctxPath}/pay/' + res.data.member;
+                        window.open('${ctxPath}/pay/' + res.data.member)
                     }, function () {
-                        var tempwindow = window.open('_blank');
-                        tempwindow.location = '${ctxPath}/pay/state/' + res.data.member;
+                        window.open('${ctxPath}/pay/state/' + res.data.member)
                     });
                 } else {
                     layer.alert(res.msg, {title: '错误提示', btn: '知道了', shade: .1, skin: 'layui-layer-admin'});
