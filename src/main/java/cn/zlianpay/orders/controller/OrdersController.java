@@ -107,6 +107,8 @@ public class OrdersController extends BaseController {
                 ordersVo.setPayTime(null);
             }
 
+            ordersVo.setMoney(orders.getMoney().toString());
+
             // 发货模式
             ordersVo.setShipType(products.getShipType());
 

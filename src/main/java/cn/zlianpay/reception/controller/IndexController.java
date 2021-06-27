@@ -239,6 +239,8 @@ public class IndexController {
             ordersVo.setPayType(null);
         }
 
+        ordersVo.setMoney(member.getMoney().toString());
+
         /**
          * 发货模式
          */

@@ -77,7 +77,7 @@ public class OrdersVo {
     /**
      * 付款金额
      */
-    private BigDecimal money;
+    private String money;
 
     /**
      * 提交金额
