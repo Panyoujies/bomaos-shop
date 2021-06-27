@@ -5,9 +5,11 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
+import cn.zlianpay.common.core.pays.payjs.SignUtil;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.reception.dto.NotifyDTO;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
@@ -474,6 +476,54 @@ public class NotifyController {
         }
         String url = "/pay/state/" + this.order_id;
         response.sendRedirect(url);
+    }
+
+    /**
+     * 异步通知
+     * @param notifyDTO
+     * @return
+     */
+    @RequestMapping("/payjs/notify")
+    @ResponseBody
+    public Object payjsNotify(NotifyDTO notifyDTO){
+
+        Map<String,String> notifyData = new HashMap<>();
+        notifyData.put("return_code", notifyDTO.getReturn_code());
+        notifyData.put("total_fee", notifyDTO.getTotal_fee());
+        notifyData.put("out_trade_no", notifyDTO.getOut_trade_no());
+        notifyData.put("payjs_order_id", notifyDTO.getPayjs_order_id());
+        notifyData.put("transaction_id", notifyDTO.getTransaction_id());
+        notifyData.put("time_end", notifyDTO.getTime_end());
+        notifyData.put("openid", notifyDTO.getOpenid());
+        notifyData.put("mchid", notifyDTO.getMchid());
+
+        // options
+        if (notifyDTO.getAttach() != null) {
+            notifyData.put("attach", notifyDTO.getAttach());
+        }
+        if (notifyDTO.getType() != null) {
+            notifyData.put("type", notifyDTO.getType());
+        }
+
+        String key = null;
+        if (notifyDTO.getType() != null) { // 支付宝
+            Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "payjs_alipay"));
+            Map wxMap = JSON.parseObject(wxPays.getConfig());
+            key = wxMap.get("key").toString();
+        } else { // 微信
+            Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "payjs_wxpay"));
+            Map wxMap = JSON.parseObject(wxPays.getConfig());
+            key = wxMap.get("key").toString();
+        }
+
+        String sign = SignUtil.sign(notifyData, key);
+        if(sign.equals(notifyDTO.getSign())){
+            // 验签通过，这里修改订单状态
+            String returnBig = returnBig(notifyDTO.getTotal_fee(), notifyDTO.getTotal_fee(), order_id, notifyDTO.getTransaction_id(), notifyDTO.getAttach(), "success", "failure");
+            return returnBig;
+        } else {
+            return "failure";
+        }
     }
 
     /**

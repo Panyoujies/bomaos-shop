@@ -141,9 +141,21 @@ public class OrdersController extends BaseController {
         List<OrderVos> orderVosList = ordersList.stream().map((orders) -> {
             OrderVos orderVos = new OrderVos();
             BeanUtils.copyProperties(orders, orderVos);
-            if (orderVos.getPayType().equals("codepay_alipay") || orderVos.getPayType().equals("mqpay_alipay") || orderVos.getPayType().equals("zlianpay_alipay") || orderVos.getPayType().equals("yungouos_alipay") || orderVos.getPayType().equals("xunhupay_alipay") || orderVos.getPayType().equals("jiepay_alipay")) {
+            if (orderVos.getPayType().equals("codepay_alipay")
+                    || orderVos.getPayType().equals("mqpay_alipay")
+                    || orderVos.getPayType().equals("zlianpay_alipay")
+                    || orderVos.getPayType().equals("yungouos_alipay")
+                    || orderVos.getPayType().equals("xunhupay_alipay")
+                    || orderVos.getPayType().equals("jiepay_alipay")
+                    || orderVos.getPayType().equals("payjs_alipay")) {
                 orderVos.setPayType("支付宝");
-            } else if (orderVos.getPayType().equals("codepay_wxpay") || orderVos.getPayType().equals("mqpay_wxpay") || orderVos.getPayType().equals("zlianpay_wxpay") || orderVos.getPayType().equals("yungouos_wxpay") || orderVos.getPayType().equals("xunhupay_wxpay") || orderVos.getPayType().equals("jiepay_wxpay")) {
+            } else if (orderVos.getPayType().equals("codepay_wxpay")
+                    || orderVos.getPayType().equals("mqpay_wxpay")
+                    || orderVos.getPayType().equals("zlianpay_wxpay")
+                    || orderVos.getPayType().equals("yungouos_wxpay")
+                    || orderVos.getPayType().equals("xunhupay_wxpay")
+                    || orderVos.getPayType().equals("jiepay_wxpay")
+                    || orderVos.getPayType().equals("payjs_wxpay")) {
                 orderVos.setPayType("微信");
             }
 

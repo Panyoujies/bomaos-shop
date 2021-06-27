@@ -33,6 +33,9 @@
     {{# if(d.driver=='jiepay_wxpay' || d.driver=='jiepay_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="jiepay">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='payjs_wxpay' || d.driver=='payjs_alipay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="payjs">配置修改</a>
+    {{# } }}
 </script>
 
 <!-- mqpay -->
@@ -421,6 +424,71 @@
         </div>
     </form>
 </script>
+
+<!-- payjs -->
+<script type="text/html" id="payjsEditDialog">
+    <form id="payjsEditForm" lay-filter="payjsEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">mch_id:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入mch_id" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="payjsEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
 <!-- 商品状态 -->
 <script type="text/html" id="paysTbStatus">
     <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -443,9 +511,12 @@
             elem: '#paysTable',
             url: 'pays/page',
             page: true,
+            limit: 20,
+            height: 'full-50',
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
+                {field: 'name', title: '名称', width: 100},
                 {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
                 {field: 'enabled', title: '开关', templet: '#paysTbStatus', width: 90},
@@ -467,6 +538,8 @@
             } else if ('xunhupay' === obj.event) {
                 showEditModel(obj.data);
             } else if ('jiepay' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('payjs' === obj.event) {
                 showEditModel(obj.data);
             }
         });
@@ -497,6 +570,10 @@
                 var html = $('#jiepayEditDialog').html();
                 var forms = 'jiepayEditForm';
                 var submit = 'jiepayEditSubmit';
+            }else if (mData.driver == 'payjs_wxpay' || mData.driver == 'payjs_alipay') {
+                var html = $('#payjsEditDialog').html();
+                var forms = 'payjsEditForm';
+                var submit = 'payjsEditSubmit';
             }
 
             admin.open({

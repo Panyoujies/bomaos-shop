@@ -4,6 +4,7 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.pays.codepay.CodePaysConfig;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
+import cn.zlianpay.common.core.pays.payjs.sendPayjs;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.web.BaseController;
@@ -208,6 +209,26 @@ public class OrderController extends BaseController {
         } else if (orders.getPayType().equals("jiepay_wxpay") || orders.getPayType().equals("jiepay_alipay")) {
             String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
             response.sendRedirect(payUtils);
+        } else if (orders.getPayType().equals("payjs_wxpay") || orders.getPayType().equals("payjs_alipay")) {
+            String payjs = "";
+            if (orders.getPayType().equals("payjs_wxpay")) {
+                model.addAttribute("type", 1);
+                payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
+            } else if (orders.getPayType().equals("payjs_alipay")) {
+                model.addAttribute("type", 2);
+                payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
+            }
+
+            model.addAttribute("goodsName", goodsName);
+            model.addAttribute("price", price);
+            model.addAttribute("ordersMember", ordersMember);
+            model.addAttribute("result", JSON.toJSONString(payjs));
+            model.addAttribute("orderId", orders.getId());
+
+            Website website = websiteService.getById(1);
+            model.addAttribute("website", website);
+
+            return "yunpay.html";
         }
 
         Website website = websiteService.getById(1);
