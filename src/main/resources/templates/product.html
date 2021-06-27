@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
-              description="${website.description}" favicon="${website.favicon}"/>
+    <:include file="./common/title.html"
+              websiteName="${products.name!} - ${website.websiteName}"
+              keywords="${website.keywords}"
+              description="${website.description}"
+              favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/product.css"/>
 </head>
 <body>
