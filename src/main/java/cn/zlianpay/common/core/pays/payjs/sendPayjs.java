@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +30,13 @@ public class sendPayjs {
         String key = mapTypes.get("key").toString(); //
         String notifyUrl = mapTypes.get("notify_url").toString() + "/payjs/notify";   //
 
-        Map<String,String> payData = new HashMap<>();
+        BigDecimal bigDecimal = new BigDecimal(price);
+        BigDecimal multiply = bigDecimal.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+        String format = new DecimalFormat("0.##").format(multiply);
+
+        Map<String, Object> payData = new HashMap<>();
         payData.put("mchid", mchId);
-        payData.put("total_fee", price);
+        payData.put("total_fee", format);
         payData.put("out_trade_no", ordersMember); // 订单号 随便输的，自己生成一下就好了
         payData.put("body", goodsName);
         payData.put("attach", goodsDescription);

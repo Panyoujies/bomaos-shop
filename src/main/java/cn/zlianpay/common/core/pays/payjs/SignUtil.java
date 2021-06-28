@@ -11,7 +11,7 @@ import java.util.TreeSet;
 public class SignUtil {
 
     //签名算法
-    public static String sign(Map<String, String> params, String secret){
+    public static String sign(Map<String, Object> params, String secret){
         String sign="";
         StringBuilder sb = new StringBuilder();
         //step1：先对请求参数排序
@@ -23,7 +23,7 @@ public class SignUtil {
         while(it.hasNext())
         {
             String key = it.next();
-            String value = params.get(key);
+            String value = params.get(key).toString();
             sb.append(key).append("=").append(value).append("&");
         }
         sb.append("key=").append(secret);

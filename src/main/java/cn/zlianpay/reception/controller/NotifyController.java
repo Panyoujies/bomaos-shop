@@ -486,8 +486,7 @@ public class NotifyController {
     @RequestMapping("/payjs/notify")
     @ResponseBody
     public Object payjsNotify(NotifyDTO notifyDTO){
-
-        Map<String,String> notifyData = new HashMap<>();
+        Map<String, Object> notifyData = new HashMap<>();
         notifyData.put("return_code", notifyDTO.getReturn_code());
         notifyData.put("total_fee", notifyDTO.getTotal_fee());
         notifyData.put("out_trade_no", notifyDTO.getOut_trade_no());
@@ -519,7 +518,7 @@ public class NotifyController {
         String sign = SignUtil.sign(notifyData, key);
         if(sign.equals(notifyDTO.getSign())){
             // 验签通过，这里修改订单状态
-            String returnBig = returnBig(notifyDTO.getTotal_fee(), notifyDTO.getTotal_fee(), order_id, notifyDTO.getTransaction_id(), notifyDTO.getAttach(), "success", "failure");
+            String returnBig = returnBig(notifyDTO.getTotal_fee(), notifyDTO.getTotal_fee(), notifyDTO.getOut_trade_no(), notifyDTO.getTransaction_id(), notifyDTO.getAttach(), "success", "failure");
             return returnBig;
         } else {
             return "failure";
