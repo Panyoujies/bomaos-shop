@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <:include file="./common/title.html" websiteName="${website.websiteName} - 等待完成支付" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
+    <link rel="stylesheet" href="${ctxPath}/night/css/receipt.css"/>
+</head>
+<body>
+
+<!-- header -->
+<:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+
+<div class="layui-container body-card" style="margin-bottom: 15px;">
+    <div class="layui-card order-show" style="height: 350px;text-align: center;font-size: 25px">
+        <img style="width: 120px;height: 120px;padding-top: 90px" src="${ctxPath}/assets/module/img/ic_loading.gif">
+        <h4 style="font-size: 22px">正在查询订单...</h4>
+    </div>
+</div>
+
+<!-- footer -->
+<:include file="${ctxPath}/common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+
+<!-- js部分 -->
+<:include file="./common/night.html"/>
+
+<script>
+    layui.use(['layer', 'form', 'notice'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var notice = layui.notice;
+
+        // 获取订单状态
+        setInterval(function () {
+            $.get('/order/state/${orderId!}', function (res) {
+                if (res.code == 200 && res.data == 1) {
+                    notice.msg("支付成功", {icon: 1});
+                    setInterval(function () {
+                        location.href = '/search/order/${ordersMember!}';
+                    }, 1000);
+                }
+            }, 'json');
+        }, 1500);
+    });
+</script>
+</body>
+</html>

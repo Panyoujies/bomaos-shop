@@ -11,6 +11,8 @@ import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.service.CouponService;
+import cn.zlianpay.theme.entity.Theme;
+import cn.zlianpay.theme.service.ThemeService;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.carmi.entity.Cards;
@@ -68,6 +70,8 @@ public class OrderController extends BaseController {
     @Autowired
     private CouponService couponService;
 
+    @Autowired
+    private ThemeService themeService;
     /**
      * 添加
      */
@@ -186,8 +190,9 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
-
-            return "yunpay.html";
+			
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+            return "theme/" + theme.getDriver() + "/yunpay.html";
         } else if (orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("xunhupay_alipay")) {
             if (orders.getPayType().equals("xunhupay_wxpay")) {
                 model.addAttribute("type", 1);
@@ -205,7 +210,9 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
-            return "xunhupay.html";
+			
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+            return "theme/" + theme.getDriver() + "/xunhupay.html";
         } else if (orders.getPayType().equals("jiepay_wxpay") || orders.getPayType().equals("jiepay_alipay")) {
             String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
             response.sendRedirect(payUtils);
@@ -228,13 +235,15 @@ public class OrderController extends BaseController {
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
 
-            return "yunpay.html";
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+            return "theme/" + theme.getDriver() + "/yunpay.html";
         }
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-
-        return "pay.html";
+		
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/pay.html";
     }
 
     public static Integer DateToTimestamp(Date time) {

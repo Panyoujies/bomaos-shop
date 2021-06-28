@@ -8,6 +8,8 @@ import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.service.CouponService;
 import cn.zlianpay.settings.vo.PaysVo;
+import cn.zlianpay.theme.entity.Theme;
+import cn.zlianpay.theme.service.ThemeService;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.orders.entity.Orders;
@@ -68,6 +70,9 @@ public class IndexController {
     @Autowired
     private CouponService couponService;
 
+    @Autowired
+    private ThemeService themeService;
+
     @RequestMapping({"/","/index"})
     public String IndexView(Model model) {
         List<Classifys> classifysList = classifysService.list(new QueryWrapper<Classifys>().eq("status", 1));
@@ -87,7 +92,8 @@ public class IndexController {
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
 
-        return "index.html";
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/index.html";
     }
 
     @ResponseBody
@@ -164,8 +170,8 @@ public class IndexController {
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-
-        return "product.html";
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/product.html";
     }
 
     @ResponseBody
@@ -209,8 +215,8 @@ public class IndexController {
     public String search(Model model) {
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-
-        return "search.html";
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/search.html";
     }
 
     @RequestMapping("/search/order/{order}")
@@ -253,7 +259,9 @@ public class IndexController {
         model.addAttribute("orders", ordersVo); // 订单
         model.addAttribute("goods", products);  // 商品
         model.addAttribute("classify", classifys);  // 分类
-        return "order.html";
+
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/order.html";
     }
 
     /**
@@ -269,8 +277,9 @@ public class IndexController {
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-
-        return "payState.html";
+		
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/payState.html";
     }
 
     @ResponseBody

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="${ctxPath}/common/title.html"
+              websiteName="${products.name!} - ${website.websiteName}"
+              keywords="${website.keywords}"
+              description="${website.description}"
+              favicon="${website.favicon}"/>
+    <link rel="stylesheet" href="${ctxPath}/qiantai/css/product.css"/>
+</head>
+<body>
+<!-- header -->
+<:include file="${ctxPath}/common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<!-- goods-card -->
+<div class="layui-container body-card" style="margin-bottom: 15px;">
+    <div class="layui-row layui-col-space15">
+        <!-- 左 -->
+        <div class="layui-col-sm12 layui-col-md8">
+
+            <div class="layui-card"
+                 style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card-header"
+                     style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
+                    <img src="${ctxPath}/qiantai/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
+                    商品介绍
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md4">
+                            <img style="border-radius: 3px; display: inline; width: 100%; max-height: 100%; bottom: 0"
+                                 src="${products.imageLogo!}">
+                        </div>
+                        <div class="layui-col-md8">
+                            ${products.pdInfo!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card"
+                 style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card-header"
+                     style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
+                    <img src="${ctxPath}/qiantai/images/details.svg" style="top: 10px; position: absolute; left: 15px;">
+                    商品详情
+                    <:if test="${isCoupon >= 1}">
+                        <span class="layui-badge layui-badge-blue pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">券</span>
+                    </:if>
+                    <:if test="${products.restricts >= 1}">
+                        <span class="layui-badge layui-badge-red pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">限购: ${products.restricts!}</span>
+                    </:if>
+                    <:if test="${products.isWholesale == 1}">
+                        <span class="layui-badge layui-badge-yellow pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">折扣</span>
+                    </:if>
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px; font-weight: 600;">
+                    <div class="layui-row layui-col-space15 goods-info-group">
+                        <div class="layui-col-md12 goods-info">
+                            <div style="padding: 0px;">
+                                <table class="layui-table order-info-tb" style="margin: 0;" lay-size="lg">
+                                    <colgroup>
+                                        <col width="120">
+                                        <col>
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>商品分类：</th>
+                                        <td>
+                                            ${classifyName!}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>商品名称：</th>
+                                        <td>
+                                            <span>${products.name!}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>商品价格：</th>
+                                        <td>
+                                            <span class="small" style="color: #e26e5f">￥</span>
+                                            <span style="font-size: 20px; color: #e26e5f" id="goodsprice">${products.price!}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>商品库存：</th>
+                                        <td id="cardsCount"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-sm12 layui-col-md4">
+            <:if test="${products.isWholesale == 1}">
+                <div class="layui-card"
+                     style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                    <div class="layui-card-header"
+                         style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
+                        <img src="${ctxPath}/qiantai/images/wholesale.svg"
+                             style="top: 10px; position: absolute; left: 15px;">
+                        批发价格
+                    </div>
+                    <div class="layui-card-body" style="padding: 15px 15px;">
+                        <div style=" border-color: #e6e6e6;border-width: 1px; border-style: solid; border-radius: 2px;">
+                            <:for items="${wholesaleList}" var="item">
+                                <div class="layui-colla-item">
+                                    <div class="layui-colla-title" style="padding: 0 15px 0 15px;">
+                                        购买数量满${item.number}个或以上
+                                        <span class="layui-badge layui-badge-blue pull-right" style="top: 11px;">每个: ￥${item.money}</span>
+                                    </div>
+                                </div>
+                            </:for>
+                        </div>
+                    </div>
+                </div>
+            </:if>
+            <div class="layui-card card-shows" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+
+                <div class="layui-card-header"
+                     style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
+                    <img src="${ctxPath}/qiantai/images/buy.svg" style="top: 10px; position: absolute; left: 15px;">
+                    购买信息
+                    <:if test="${products.shipType == 1}">
+                        <span class="layui-badge layui-badge-yellow pull-right"
+                              style="top: 13px; margin-left: 10px; font-weight: 400;">手动发货</span>
+                    </:if>
+                </div>
+
+                <div class="layui-card-body" style="padding: 10px 20px;">
+
+                    <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
+                        <div class="layui-form-item" style="margin-top: 15px">
+                            <label class="layui-form-label layui-form-required">购买信息</label>
+                            <div class="layui-input-block">
+                                <input name="contact" id="contact" class="layui-input" placeholder="输入购买信息用于查询"/>
+                            </div>
+                        </div>
+                        <!-- 优惠券类型 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-form-required">邮箱提醒</label>
+                            <div class="layui-input-inline" style="width: auto;">
+                                <input type="hidden" name="type" value="0">
+                                <input type="checkbox" lay-verify="required"
+                                       lay-filter="sellType"
+                                       id="sellType"
+                                       value="1"
+                                       name="coupon"
+                                       lay-skin="switch"
+                                       lay-text="开启提醒|关闭提醒">
+                            </div>
+                        </div>
+
+                        <!-- 重复使用出现，券代码 -->
+                        <div class="layui-form-item" id="isEmail" style="display:none;">
+                            <div class="layui-input-block" id="inputEmail">
+                                <input name="email" id="email" placeholder="输入邮箱账号" class="layui-input"
+                                       lay-verType="tips" lay-verify="email"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item" style="margin-top: 15px">
+                            <label class="layui-form-label layui-form-required">购买数量</label>
+                            <div class="layui-input-block">
+                                <!--<input name="number" type="number" id="number" value="1" class="layui-input"
+                                       placeholder="输入购买数量"/>-->
+                                <div class="input-group order-number-box">
+                                    <div class="input-group-prepend sub" style="display: inline-block; float: left;">
+                                        <button class="layui-btn layui-btn-primary"
+                                                style="line-height: unset; padding: 0 10px; border: 2px solid #C9C9C9;"
+                                                type="button">
+                                            <img src="${ctxPath}/qiantai/images/sub.svg" style="width: 25px">
+                                        </button>
+                                    </div>
+                                    <input type="text" id="orderNumber" name="number"
+                                           style="width: 55px; text-align: center; display: inline-block; float: left; margin-left: 5px; margin-right: 5px; border-radius: 0px; padding-left: 0px;"
+                                           class="layui-input" required="" lay-verify="required|order_number" value="1">
+                                    <div class="input-group-append add" style="display: inline-block; float: left;">
+                                        <button class="layui-btn layui-btn-primary"
+                                                style="line-height: unset; padding: 0 10px; border: 2px solid #C9C9C9;"
+                                                type="button">
+                                            <img src="${ctxPath}/qiantai/images/add.svg" style="width: 25px">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <:if test="${isCoupon >= 1}">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-form-required">优惠券</label>
+                            <div class="layui-input-block">
+                                <input name="coupon" id="coupon" placeholder="输入优惠券代码" class="layui-input"
+                                       lay-verType="tips"/>
+                            </div>
+                        </div>
+                    </:if>
+                    <div class="pay-type-group">
+                        <div class="layui-row layui-col-space15">
+                            <:for items="${paysList}" var="item">
+
+                                <:if test="${item.andIncrement == 0}">
+                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay'}">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <div class="pay-type-wexin active" data-id="${item.driver}">
+                                                <svg t="1617264231274" class="icon" viewBox="0 0 1024 1024"
+                                                     version="1.1"
+                                                     xmlns="http://www.w3.org/2000/svg" p-id="2411" width="32"
+                                                     height="32"
+                                                     style=" vertical-align: middle;">
+                                                    <path d="M395.846 603.585c-3.921 1.98-7.936 2.925-12.81 2.925-10.9 0-19.791-5.85-24.764-14.625l-2.006-3.864-78.106-167.913c-0.956-1.98-0.956-3.865-0.956-5.845 0-7.83 5.928-13.68 13.863-13.68 2.965 0 5.928 0.944 8.893 2.924l91.965 64.43c6.884 3.864 14.82 6.79 23.708 6.79 4.972 0 9.85-0.945 14.822-2.926L861.71 282.479c-77.149-89.804-204.684-148.384-349.135-148.384-235.371 0-427.242 157.158-427.242 351.294 0 105.368 57.361 201.017 147.323 265.447 6.88 4.905 11.852 13.68 11.852 22.45 0 2.925-0.957 5.85-2.006 8.775-6.881 26.318-18.831 69.334-18.831 71.223-0.958 2.92-2.013 6.79-2.013 10.75 0 7.83 5.929 13.68 13.865 13.68 2.963 0 5.928-0.944 7.935-2.925l92.922-53.674c6.885-3.87 14.82-6.794 22.756-6.794 3.916 0 8.889 0.944 12.81 1.98 43.496 12.644 91.012 19.53 139.48 19.53 235.372 0 427.24-157.158 427.24-351.294 0-58.58-17.78-114.143-48.467-163.003l-491.39 280.07-2.963 1.98z"
+                                                          fill="#09BB07" p-id="2412"></path>
+                                                </svg>
+                                                ${item.name}
+                                            </div>
+                                        </div>
+                                    </:if>
+                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay'}">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <div class="pay-type-ali active" data-id="${item.driver}">
+                                                <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"
+                                                     version="1.1"
+                                                     xmlns="http://www.w3.org/2000/svg" p-id="1127" width="32"
+                                                     height="32"
+                                                     style=" vertical-align: middle;">
+                                                    <path d="M902.095 652.871l-250.96-84.392s19.287-28.87 39.874-85.472c20.59-56.606 23.539-87.689 23.539-87.689l-162.454-1.339v-55.487l196.739-1.387v-39.227H552.055v-89.29h-96.358v89.294H272.133v39.227l183.564-1.304v59.513h-147.24v31.079h303.064s-3.337 25.223-14.955 56.606c-11.615 31.38-23.58 58.862-23.58 58.862s-142.3-49.804-217.285-49.804c-74.985 0-166.182 30.123-175.024 117.55-8.8 87.383 42.481 134.716 114.728 152.139 72.256 17.513 138.962-0.173 197.04-28.607 58.087-28.391 115.081-92.933 115.081-92.933l292.486 142.041c-11.932 69.3-72.067 119.914-142.387 119.844H266.37c-79.714 0.078-144.392-64.483-144.466-144.194V266.374c-0.074-79.72 64.493-144.399 144.205-144.47h491.519c79.714-0.073 144.396 64.49 144.466 144.203v386.764z m-365.76-48.895s-91.302 115.262-198.879 115.262c-107.623 0-130.218-54.767-130.218-94.155 0-39.34 22.373-82.144 113.943-88.333 91.519-6.18 215.2 67.226 215.2 67.226h-0.047z"
+                                                          fill="#02A9F1" p-id="1128"
+                                                          data-spm-anchor-id="a313x.7781069.0.i1"
+                                                          class="selected"></path>
+                                                </svg>
+                                                ${item.name}
+                                            </div>
+                                        </div>
+                                    </:if>
+                                </:if>
+                                <:if test="${item.andIncrement != 0}">
+                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay'}">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <div class="pay-type-wexin" data-id="${item.driver}">
+                                                <svg t="1617264231274" class="icon" viewBox="0 0 1024 1024"
+                                                     version="1.1"
+                                                     xmlns="http://www.w3.org/2000/svg" p-id="2411" width="32"
+                                                     height="32"
+                                                     style=" vertical-align: middle;">
+                                                    <path d="M395.846 603.585c-3.921 1.98-7.936 2.925-12.81 2.925-10.9 0-19.791-5.85-24.764-14.625l-2.006-3.864-78.106-167.913c-0.956-1.98-0.956-3.865-0.956-5.845 0-7.83 5.928-13.68 13.863-13.68 2.965 0 5.928 0.944 8.893 2.924l91.965 64.43c6.884 3.864 14.82 6.79 23.708 6.79 4.972 0 9.85-0.945 14.822-2.926L861.71 282.479c-77.149-89.804-204.684-148.384-349.135-148.384-235.371 0-427.242 157.158-427.242 351.294 0 105.368 57.361 201.017 147.323 265.447 6.88 4.905 11.852 13.68 11.852 22.45 0 2.925-0.957 5.85-2.006 8.775-6.881 26.318-18.831 69.334-18.831 71.223-0.958 2.92-2.013 6.79-2.013 10.75 0 7.83 5.929 13.68 13.865 13.68 2.963 0 5.928-0.944 7.935-2.925l92.922-53.674c6.885-3.87 14.82-6.794 22.756-6.794 3.916 0 8.889 0.944 12.81 1.98 43.496 12.644 91.012 19.53 139.48 19.53 235.372 0 427.24-157.158 427.24-351.294 0-58.58-17.78-114.143-48.467-163.003l-491.39 280.07-2.963 1.98z"
+                                                          fill="#09BB07" p-id="2412"></path>
+                                                </svg>
+                                                ${item.name}
+                                            </div>
+                                        </div>
+                                    </:if>
+
+                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay'}">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <div class="pay-type-ali" data-id="${item.driver}">
+                                                <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"
+                                                     version="1.1"
+                                                     xmlns="http://www.w3.org/2000/svg" p-id="1127" width="32"
+                                                     height="32"
+                                                     style=" vertical-align: middle;">
+                                                    <path d="M902.095 652.871l-250.96-84.392s19.287-28.87 39.874-85.472c20.59-56.606 23.539-87.689 23.539-87.689l-162.454-1.339v-55.487l196.739-1.387v-39.227H552.055v-89.29h-96.358v89.294H272.133v39.227l183.564-1.304v59.513h-147.24v31.079h303.064s-3.337 25.223-14.955 56.606c-11.615 31.38-23.58 58.862-23.58 58.862s-142.3-49.804-217.285-49.804c-74.985 0-166.182 30.123-175.024 117.55-8.8 87.383 42.481 134.716 114.728 152.139 72.256 17.513 138.962-0.173 197.04-28.607 58.087-28.391 115.081-92.933 115.081-92.933l292.486 142.041c-11.932 69.3-72.067 119.914-142.387 119.844H266.37c-79.714 0.078-144.392-64.483-144.466-144.194V266.374c-0.074-79.72 64.493-144.399 144.205-144.47h491.519c79.714-0.073 144.396 64.49 144.466 144.203v386.764z m-365.76-48.895s-91.302 115.262-198.879 115.262c-107.623 0-130.218-54.767-130.218-94.155 0-39.34 22.373-82.144 113.943-88.333 91.519-6.18 215.2 67.226 215.2 67.226h-0.047z"
+                                                          fill="#02A9F1" p-id="1128"
+                                                          data-spm-anchor-id="a313x.7781069.0.i1"
+                                                          class="selected"></path>
+                                                </svg>
+                                                ${item.name}
+                                            </div>
+                                        </div>
+                                    </:if>
+                                </:if>
+                            </:for>
+                        </div>
+                    </div>
+                    <div class="buy-btn-group">
+                        <span class="price">
+                            <span class="small">￥</span>
+                            <span id="goodsprice2" style="font-size: 29px; font-weight: bold;">0.00</span>
+                        </span>
+                        <button id="btnPay" class="layui-btn layui-btn-warm layui-btn-lg btn-group-show"
+                                style="float: right; border-radius: 50px !important; color: #fff !important; height: initial !important; line-height: 45px !important; font-size: 15px !important; padding: 0 18px !important; -webkit-box-shadow: 0 5px 6px 0 rgb(73 105 230 / 22%) !important; background: linear-gradient(0deg, #2a62ff, #716ffe) !important;">
+                            <i class="layui-icon layui-icon-cart"></i> 立即支付
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+<:include file="${ctxPath}/common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+<!-- js部分 -->
+<:include file="${ctxPath}/common/qiantaijs.html"/>
+<script>
+    layui.use(['layer', 'form', 'notice'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var notice = layui.notice;
+        var product1 = {};
+
+        $(document).ready(function (e) {
+            $("#formBasForm #orderNumber").keyup(function (e) {
+                if (product1 != null) {
+                    if (product1.isWholesale == 1) {
+                        var wholesale = product1.wholesale;
+                        var s = wholesale.split("\n");
+
+                        var price = $(this).val() * product1.price;
+                        $("#goodsprice2").text(price.toFixed(2));
+
+                        for (let i = 0; i < s.length; i++) {
+                            var ss = s[i].split("=");
+                            if ($(this).val() >= ss[0]) {
+                                var price = $(this).val() * ss[1];
+                                $("#goodsprice2").text(price.toFixed(2));
+                            }
+                        }
+                    } else {
+                        var price = $(this).val() * product1.price;
+                        $("#goodsprice2").text(price.toFixed(2));
+                    }
+                } else {
+                    layer.msg("请选择商品再试！")
+                }
+            });
+        });
+
+        //加减商品数量
+        let orderNumber = 1;
+        let numDoc = $("#orderNumber");
+        $('.sub').click(function () {
+            if (orderNumber <= 1) return layer.msg('购买数量不能低于1件');
+            orderNumber--;
+
+            if (product1.isWholesale == 1) {
+                var wholesale = product1.wholesale;
+                var s = wholesale.split("\n");
+
+                var price = orderNumber * product1.price;
+                $("#goodsprice2").text(price.toFixed(2));
+
+                for (let i = 0; i < s.length; i++) {
+                    var ss = s[i].split("=");
+                    if (orderNumber >= ss[0]) {
+                        var price = orderNumber * ss[1];
+                        $("#goodsprice2").text(price.toFixed(2));
+                    }
+                }
+            } else {
+                var price = orderNumber * product1.price;
+                $("#goodsprice2").text(price.toFixed(2));
+            }
+            numDoc.val(orderNumber);
+        })
+        $('.add').click(function () {
+            if (orderNumber >= product1.cardsCount) {
+                return layer.msg('购买数量不能多余库存数量');
+            }
+            orderNumber++;
+            if (product1.isWholesale == 1) {
+                var wholesale = product1.wholesale;
+                var s = wholesale.split("\n");
+
+                var price = orderNumber * product1.price;
+                $("#goodsprice2").text(price.toFixed(2));
+
+                for (let i = 0; i < s.length; i++) {
+                    var ss = s[i].split("=");
+                    if (orderNumber >= ss[0]) {
+                        var price = orderNumber * ss[1];
+                        $("#goodsprice2").text(price.toFixed(2));
+                    }
+                }
+            } else {
+                var price = orderNumber * product1.price;
+                $("#goodsprice2").text(price.toFixed(2));
+            }
+            numDoc.val(orderNumber + '');
+        })
+        numDoc.change(function () {
+            let val = parseInt($(this).val());
+            if (val <= 0) {
+                $(this).val(1);
+                orderNumber = 1;
+                return layer.msg('购买数量不能低于1件');
+            }
+            if (val > product1.cardsCount) {
+                $(this).val(product1.cardsCount);
+                orderNumber = product1.cardsCount;
+                return layer.msg('购买数量不能多余库存数量');
+            }
+            orderNumber = val;
+        })
+
+        // 支付方式点击事件
+        $('.pay-type-group .layui-row .layui-col-md6>div').click(function () {
+            $('.pay-type-group .layui-row .layui-col-md6>div').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // 立即支付
+        $('#btnPay').click(function () {
+            var val = $("#contact").val(); // 购买信息
+            var payType = $('.pay-type-group .layui-row .layui-col-md6>div.active').data('id');
+            var number = $("#orderNumber").val();
+
+            if (val == '' || val == null) {
+                layer.alert('您的购买信息没有输入，请输入后再进行购买！', {title: '错误提示', btn: '知道了', shade: .1, skin: 'layui-layer-admin'});
+            } else {
+                doPay(val);
+            }
+        });
+
+        $.post('/getProductById', {
+            id: '${products.id!}'
+        }, function (res) {
+            if (0 === res.code) {
+                var product = res.data;
+                product1 = product;
+                $("#goodsprice").text(product.price);
+                $("#goodsprice2").text(product.price);
+                $("#cardsCount").text(product.cardsCount);
+            } else {
+                layer.msg(res.msg, {icon: 2, anim: 6});
+            }
+        });
+
+        function doPay(contact) {
+            var number = $("#orderNumber").val() // 购买数量
+            var email = $("#email").val() // 邮箱账号
+            var coupon = $("#coupon").val() // 优惠券
+            var payType = $('.pay-type-group .layui-row .layui-col-md6>div.active').data('id');
+            $.post('/buy', {
+                goodsId: product1.id,
+                contact: contact,
+                number: number,
+                email: email,
+                coupon: coupon,
+                payType: payType
+            }, function (res) {
+                if (res.code == 200) {
+                    layer.confirm(getHtml(res.data), {
+                        title: '确认信息',
+                        btn: ['立即支付', '支付完成'] //按钮
+                    }, function () {
+                        window.open('${ctxPath}/pay/' + res.data.member)
+                    }, function () {
+                        window.open('${ctxPath}/pay/state/' + res.data.member)
+                    });
+                } else {
+                    layer.alert(res.msg, {title: '错误提示', btn: '知道了', shade: .1, skin: 'layui-layer-admin'});
+                }
+            }, 'json');
+        }
+
+        function getHtml(mData) {
+            var html = '' +
+                '<div style="font-size: 15px">' +
+                '   <p>妥善保存以下订单号用于查询</p>' +
+                '   <p>订单号: <br>' + mData.member + '</p>' +
+                '   <table class="layui-table layui-text">' +
+                '       <colgroup>' +
+                '           <col width="100">' +
+                '           <col>' +
+                '       </colgroup>' +
+                '       <tbody>' +
+                '           <tr>' +
+                '               <td>提交金额</td>' +
+                '               <td>' + mData.total_price + '</td>' +
+                '           </tr>' +
+                '           <tr>' +
+                '               <td>支付金额</td>' +
+                '               <td>' + mData.money + '</td>' +
+                '           </tr>' +
+                '       </tbody>' +
+                '   </table>' +
+                '   已提交请尽快完成支付！' +
+                '</div>'
+            return html;
+        }
+
+        //监听指定开关
+        form.on('switch(sellType)', function (data) {
+            // 使用
+            if (this.checked == true) {
+                notice.msg("请输入邮箱账号", {icon: 1});
+                $("#isEmail").attr("style", "display:block;");
+                $("#inputEmail").html(
+                    '<input name="email" id="email" placeholder="请输入邮箱账号" class="layui-input" lay-verType="tips" lay-verify="email"/>'
+                );
+            } else {  // 不使用
+                $("#isEmail").attr("style", "display:none;");
+                $("#inputEmail").html(
+                    ''
+                );
+            }
+        });
+    });
+</script>
+</body>
+</html>
