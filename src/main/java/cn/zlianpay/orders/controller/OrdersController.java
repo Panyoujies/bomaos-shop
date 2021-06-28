@@ -147,7 +147,8 @@ public class OrdersController extends BaseController {
                     || orderVos.getPayType().equals("yungouos_alipay")
                     || orderVos.getPayType().equals("xunhupay_alipay")
                     || orderVos.getPayType().equals("jiepay_alipay")
-                    || orderVos.getPayType().equals("payjs_alipay")) {
+                    || orderVos.getPayType().equals("payjs_alipay")
+                    || orderVos.getPayType().equals("yunfu_alipay")) {
                 orderVos.setPayType("支付宝");
             } else if (orderVos.getPayType().equals("codepay_wxpay")
                     || orderVos.getPayType().equals("mqpay_wxpay")
@@ -155,7 +156,8 @@ public class OrdersController extends BaseController {
                     || orderVos.getPayType().equals("yungouos_wxpay")
                     || orderVos.getPayType().equals("xunhupay_wxpay")
                     || orderVos.getPayType().equals("jiepay_wxpay")
-                    || orderVos.getPayType().equals("payjs_wxpay")) {
+                    || orderVos.getPayType().equals("payjs_wxpay")
+                    || orderVos.getPayType().equals("yunfu_wxpay")) {
                 orderVos.setPayType("微信");
             }
 

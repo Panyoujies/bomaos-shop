@@ -79,6 +79,10 @@ public class PaysController extends BaseController {
                 paysVo.setAppid(configs.get("mchId").toString());
                 paysVo.setKey(configs.get("key").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("yunfu_wxpay") || pays.getDriver().equals("yunfu_alipay")) {
+                paysVo.setAppid(configs.get("appid").toString());
+                paysVo.setKey(configs.get("key").toString());
+                paysVo.setNotifyUrl(configs.get("notify_url").toString());
             }
             return paysVo;
         }).collect(Collectors.toList());
@@ -158,6 +162,10 @@ public class PaysController extends BaseController {
             map.put("apptoken", paysVo.getKey());
         } else if (paysVo.getDriver().equals("payjs_wxpay") || paysVo.getDriver().equals("payjs_alipay")) {
             map.put("mchId", paysVo.getAppid());
+            map.put("key", paysVo.getKey());
+            map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("yunfu_wxpay") || paysVo.getDriver().equals("yunfu_alipay")) {
+            map.put("appid", paysVo.getAppid());
             map.put("key", paysVo.getKey());
             map.put("notify_url", paysVo.getNotifyUrl());
         }

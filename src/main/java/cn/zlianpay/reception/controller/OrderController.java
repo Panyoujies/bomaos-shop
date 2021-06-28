@@ -6,7 +6,9 @@ import cn.zlianpay.common.core.pays.codepay.CodePaysConfig;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.payjs.sendPayjs;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
+import cn.zlianpay.common.core.pays.yunfupay.SendYunfu;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
+import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.settings.entity.Coupon;
@@ -146,7 +148,7 @@ public class OrderController extends BaseController {
 
     @OperLog(value = "支付", desc = "提交支付")
     @RequestMapping(value = "/pay/{member}", produces = "text/html")
-    public String pay(Model model, @PathVariable("member") String member, HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
+    public String pay(Model model, @PathVariable("member") String member, HttpServletResponse response, HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
         Orders orders = ordersService.selectByMember(member);
         Products products = productsService.getById(orders.getProductId());
 
@@ -234,7 +236,28 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
 
+            return "theme/" + theme.getDriver() + "/yunpay.html";
+        } else if (orders.getPayType().equals("yunfu_wxpay") || orders.getPayType().equals("yunfu_alipay")) {
+            String yunfu = "";
+            UserAgentGetter agentGetter = new UserAgentGetter(request);
+            if (orders.getPayType().equals("yunfu_wxpay")) {
+                model.addAttribute("type", 1);
+                yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+            } else if (orders.getPayType().equals("yunfu_alipay")) {
+                model.addAttribute("type", 2);
+                yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+            }
+
+            model.addAttribute("goodsName", goodsName);
+            model.addAttribute("price", price);
+            model.addAttribute("ordersMember", ordersMember);
+            model.addAttribute("result", JSON.toJSONString(yunfu));
+            model.addAttribute("orderId", orders.getId());
+
+            Website website = websiteService.getById(1);
+            model.addAttribute("website", website);
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
         }

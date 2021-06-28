@@ -439,30 +439,22 @@
                 {
                     field: 'payType', title: '支付类型', templet: function (res) {
                         switch (res.payType) {
-                            case 'mqpay_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝</span>';
-                            case 'mqpay_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信</span>';
-                            case 'codepay_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝</span>';
-                            case 'codepay_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信</span>';
-                            case 'zlianpay_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝</span>';
-                            case 'zlianpay_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信</span>';
-                            case 'yungouos_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝</span>';
-                            case 'yungouos_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信</span>';
-                            case 'xunhupay_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝</span>';
-                            case 'xunhupay_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信</span>';
-                            case 'jiepay_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝</span>';
-                            case 'jiepay_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'mqpay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'mqpay_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'codepay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'codepay_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'zlianpay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'zlianpay_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'yungouos_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'yungouos_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'xunhupay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'xunhupay_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'jiepay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'jiepay_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'payjs_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'payjs_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
+                            case 'yunfu_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝</span>';
+                            case 'yunfu_wxpay' : return '<span class="layui-badge layui-badge-green">微信</span>';
                         }
                     }
                 },

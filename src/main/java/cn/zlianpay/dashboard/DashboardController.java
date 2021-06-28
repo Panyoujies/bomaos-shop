@@ -193,7 +193,8 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("yungouos_wxpay")
                     || orders.getPayType().equals("xunhupay_wxpay")
                     || orders.getPayType().equals("jiepay_wxpay")
-                    || orders.getPayType().equals("payjs_wxpay")) { // 微信
+                    || orders.getPayType().equals("payjs_wxpay")
+                    || orders.getPayType().equals("yunfu_wxpay")) { // 微信
                 bigWxpay = bigWxpay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             } else if (orders.getPayType().equals("mqpay_alipay")
                     || orders.getPayType().equals("codepay_alipay")
@@ -201,7 +202,8 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("yungouos_alipay")
                     || orders.getPayType().equals("xunhupay_alipay")
                     || orders.getPayType().equals("jiepay_alipay")
-                    || orders.getPayType().equals("payjs_alipay")) { // 支付宝
+                    || orders.getPayType().equals("payjs_alipay")
+                    || orders.getPayType().equals("yunfu_alipay")) { // 支付宝
                 bigAlipay = bigAlipay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             }
         }
@@ -227,7 +229,8 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("yungouos_wxpay")
                     || orders.getPayType().equals("xunhupay_wxpay")
                     || orders.getPayType().equals("jiepay_wxpay")
-                    || orders.getPayType().equals("payjs_wxpay")) { // 微信
+                    || orders.getPayType().equals("payjs_wxpay")
+                    || orders.getPayType().equals("yunfu_wxpay")) { // 微信
                 wxpay++;
             } else if (orders.getPayType().equals("mqpay_alipay")
                     || orders.getPayType().equals("codepay_alipay")
@@ -235,7 +238,8 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("yungouos_alipay")
                     || orders.getPayType().equals("xunhupay_alipay")
                     || orders.getPayType().equals("jiepay_alipay")
-                    || orders.getPayType().equals("payjs_alipay")) { // 支付宝
+                    || orders.getPayType().equals("payjs_alipay")
+                    || orders.getPayType().equals("yunfu_alipay")) { // 支付宝
                 alipay++;
             }
         }
