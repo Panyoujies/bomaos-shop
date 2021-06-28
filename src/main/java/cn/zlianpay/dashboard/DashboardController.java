@@ -93,10 +93,17 @@ public class DashboardController extends BaseController {
         map1.put("name", "支付宝");
         mapList.add(map1);
 
+        List<Orders> ordersList = ordersService.list(new QueryWrapper<Orders>().ge("status", 1));
+        BigDecimal total_amount = new BigDecimal(0.00); // 获取今天成功交易的订单交易额
+        for (Orders orders : ordersList) {
+            total_amount = total_amount.add(new BigDecimal(orders.getMoney().toString())); // 统计今天的交易额
+        }
+
         model.addAttribute("mapList", JSON.toJSONString(mapList));
         model.addAttribute("dayList", JSON.toJSONString(dayList));
         model.addAttribute("wxpayList", JSON.toJSONString(wxpayList));
         model.addAttribute("alipayList", JSON.toJSONString(alipayList));
+        model.addAttribute("total_amount", total_amount);
 
         model.addAttribute("user", getLoginUser());
         return "dashboard/workplace.html";
