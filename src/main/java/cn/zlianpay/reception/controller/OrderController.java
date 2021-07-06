@@ -2,9 +2,11 @@ package cn.zlianpay.reception.controller;
 
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
+import cn.zlianpay.common.core.pays.alipay.SendAlipay;
 import cn.zlianpay.common.core.pays.codepay.CodePaysConfig;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.payjs.sendPayjs;
+import cn.zlianpay.common.core.pays.wxpay.SendWxPay;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.yunfupay.SendYunfu;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
@@ -12,7 +14,9 @@ import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.settings.entity.Coupon;
+import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.CouponService;
+import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.theme.entity.Theme;
 import cn.zlianpay.theme.service.ThemeService;
 import com.alibaba.fastjson.JSON;
@@ -74,6 +78,10 @@ public class OrderController extends BaseController {
 
     @Autowired
     private ThemeService themeService;
+
+    @Autowired
+    private ShopSettingsService shopSettingsService;
+
     /**
      * 添加
      */
@@ -157,7 +165,7 @@ public class OrderController extends BaseController {
         String goodsName = products.getName(); // 订单主题
         String cloudPayid = orders.getCloudPayid();
         String price = orders.getMoney().toString();
-
+        UserAgentGetter agentGetter = new UserAgentGetter(request);
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
 
         if (orders.getPayType().equals("mqpay_alipay")) {
@@ -192,7 +200,10 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
-			
+
+            ShopSettings shopSettings = shopSettingsService.getById(1);
+            model.addAttribute("isBackground", shopSettings.getIsBackground());
+
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
         } else if (orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("xunhupay_alipay")) {
@@ -212,7 +223,10 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
-			
+
+            ShopSettings shopSettings = shopSettingsService.getById(1);
+            model.addAttribute("isBackground", shopSettings.getIsBackground());
+
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/xunhupay.html";
         } else if (orders.getPayType().equals("jiepay_wxpay") || orders.getPayType().equals("jiepay_alipay")) {
@@ -236,12 +250,15 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
 
+            ShopSettings shopSettings = shopSettingsService.getById(1);
+            model.addAttribute("isBackground", shopSettings.getIsBackground());
+
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
         } else if (orders.getPayType().equals("yunfu_wxpay") || orders.getPayType().equals("yunfu_alipay")) {
             String yunfu = "";
-            UserAgentGetter agentGetter = new UserAgentGetter(request);
+
             if (orders.getPayType().equals("yunfu_wxpay")) {
                 model.addAttribute("type", 1);
                 yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
@@ -258,13 +275,54 @@ public class OrderController extends BaseController {
 
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
+
+            ShopSettings shopSettings = shopSettingsService.getById(1);
+            model.addAttribute("isBackground", shopSettings.getIsBackground());
+
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+            return "theme/" + theme.getDriver() + "/yunpay.html";
+        } else if (pays.getDriver().equals("wxpay")) { // 微信扫码支付
+            String pay = SendWxPay.payNattve(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+            model.addAttribute("type", 1); // 微信支付
+            model.addAttribute("goodsName", goodsName);
+            model.addAttribute("price", price);
+            model.addAttribute("ordersMember", ordersMember);
+            model.addAttribute("result", JSON.toJSONString(pay));
+            model.addAttribute("orderId", orders.getId());
+
+            Website website = websiteService.getById(1);
+            model.addAttribute("website", website);
+
+            ShopSettings shopSettings = shopSettingsService.getById(1);
+            model.addAttribute("isBackground", shopSettings.getIsBackground());
+
+            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+            return "theme/" + theme.getDriver() + "/yunpay.html";
+        } else if (pays.getDriver().equals("alipay")) {
+            String pay = SendAlipay.pay(pays, price, ordersMember, goodsName, productDescription, request);
+            model.addAttribute("type", 2); // 支付宝当面付
+            model.addAttribute("goodsName", goodsName);
+            model.addAttribute("price", price);
+            model.addAttribute("ordersMember", ordersMember);
+            model.addAttribute("result", JSON.toJSONString(pay));
+            model.addAttribute("orderId", orders.getId());
+
+            Website website = websiteService.getById(1);
+            model.addAttribute("website", website);
+
+            ShopSettings shopSettings = shopSettingsService.getById(1);
+            model.addAttribute("isBackground", shopSettings.getIsBackground());
+
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
         }
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-		
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/pay.html";
     }

@@ -63,6 +63,9 @@ public class ProductsController extends BaseController {
     public String editView(Model model, @PathVariable("productId") Integer productId) {
         List<Classifys> classifysList = classifysService.listAll(null);
         model.addAttribute("classifysList", classifysList);
+
+        Products products = productsService.getById(productId);
+        model.addAttribute("products", JSON.toJSONString(products));
         model.addAttribute("productId", productId);
         return "products/edit-product.html";
     }

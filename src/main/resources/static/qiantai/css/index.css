@@ -138,3 +138,30 @@
     color: #fff;
     text-shadow: 0 1px 1px rgb(0 0 0 / 20%);
 }
+
+@media screen and (max-width: 750px) {
+
+    .project-list-item-body {
+        padding: 15px !important;
+    }
+
+    .project-list-item-body .item-title {
+        font-size: 16px !important;
+        font-weight: initial !important;
+    }
+
+    .classify-type {
+        display: flex !important;
+        overflow-x: auto !important;
+    }
+
+    .project-list-item {
+        min-width: 130px;
+    }
+
+    .layui-card-body .zliaan-body-info {
+        overflow-y: auto;
+        max-height: 210px;
+    }
+
+}

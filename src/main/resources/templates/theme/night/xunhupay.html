@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <:include file="./common/title.html" websiteName="${website.websiteName} - 订单付款" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/night/css/pay.css"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/pay.css"/>
     <script src="https://lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
@@ -74,7 +74,7 @@
 <:include file="./common/qiantaijs.html"/>
 <script>
     layui.config({
-        base: '${ctxPath}/night/module/'
+        base: '${ctxPath}/theme/night/module/'
     }).use(['layer', 'QRCode', 'notice'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
@@ -117,8 +117,7 @@
                     title: '温馨提示',
                     shade: .1
                 }, function () {
-                    var tempwindow = window.open('_blank');
-                    tempwindow.location = '${result!}';
+                    window.open(${result!});
                 });
             }
         </:if>

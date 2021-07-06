@@ -3,7 +3,7 @@
 <head>
     <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
               description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/night/css/index.css"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/index.css"/>
 </head>
 <body>
 <!-- header -->
@@ -13,11 +13,13 @@
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
         <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/night/images/notice.svg" style="top: 10px; position: absolute; left: 15px;">
+            <img src="${ctxPath}/theme/night/images/notice.svg" style="top: 10px; position: absolute; left: 15px;">
             购物须知
         </div>
         <div class="layui-card-body">
-            ${website.storeDetails}
+            <div class="zliaan-body-info">
+                ${shop.storeDetails}
+            </div>
         </div>
     </div>
 </div>
@@ -26,7 +28,7 @@
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
         <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/night/images/classifys.svg" style="top: 10px; position: absolute; left: 15px;">
+            <img src="${ctxPath}/theme/night/images/classifys.svg" style="top: 10px; position: absolute; left: 15px;">
             选择分类
         </div>
         <div class="layui-card-body" style="padding: 15px 15px;">
@@ -36,7 +38,7 @@
     </div>
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
         <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/night/images/product.svg" style="top: 10px; position: absolute; left: 15px;">
+            <img src="${ctxPath}/theme/night/images/product.svg" style="top: 10px; position: absolute; left: 15px;">
             选择商品
             <div class="pull-right" style="position: relative;">
                 <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
@@ -57,7 +59,7 @@
     <div class="layui-col-xs6 layui-col-sm6 layui-col-md2">
         <div class="project-list-item {{#  if(d.andIncrement === 0){ }}active{{#  } }} " data-id="{{d.id}}" lay-filter="classifySubmit" lay-submit>
             <div class="project-list-item-body">
-                <div style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 5px;">
+                <div class="item-title" style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 5px;">
                     {{d.name}}
                 </div>
                 <div class="project-list-item-text">商品数量： {{d.productsMember}}</div>
@@ -92,6 +94,8 @@
 
 <!-- js部分 -->
 <:include file="./common/qiantaijs.html"/>
+<script type="text/javascript" src="${ctxPath}/assets/js/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/assets/js/jquery.cookie.js"></script>
 <script>
     layui.use(['layer', 'form', 'notice', 'dataGrid'], function () {
         var $ = layui.jquery;
@@ -103,6 +107,34 @@
         var classifyId;
         var product1;
         var ins;
+        var shopSettingsJson = JSON.parse(JSON.stringify(${shopSettings!}));
+
+        if (shopSettingsJson.isWindow == 1) {
+            var isWindow = $.cookie('isWindow');
+            if ($.cookie("isWindow") != 'yes') {
+                //示范一个公告层
+                layer.open({
+                    type: 1
+                    ,title: false //不显示标题栏
+                    ,closeBtn: false
+                    ,area: '300px;'
+                    ,shade: 0.3
+                    ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    ,btn: ['我知道啦']
+                    ,btnAlign: 'c'
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '<div style="padding: 15px; line-height: 22px; background-color: #313030; color: #fff; font-weight: 300; border-radius: 5px;">' + shopSettingsJson.window + '</div>'
+                    ,success: function(layero){
+                        var btn = layero.find('.layui-layer-btn');
+                        btn.click(function () {
+                            /*var date = new Date();
+                            date.setTime(date.getTime() + (5 * 1000));*/
+                            $.cookie('isWindow', 'yes', { expires: 1 });
+                        })
+                    }
+                });
+            }
+        }
 
         // 支付方式点击事件
         $('.pay-type-group>div').click(function () {
@@ -124,7 +156,7 @@
             classifyHtml = '' +
                 '<div style="text-align: center; padding: 30px;">' +
                 '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #cccccc; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                '       <img src="/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                '       <img src="/theme/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
                 '       <span>暂无分类</span>' +
                 '   </div>' +
                 '</div>';
@@ -158,7 +190,7 @@
                     goodsHtml = '' +
                         '<div style="text-align: center; padding: 30px;">' +
                         '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #cccccc; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                        '       <img src="/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                        '       <img src="/theme/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
                         '       <span>暂无商品</span>' +
                         '   </div>' +
                         '</div>';
@@ -189,7 +221,7 @@
                         goodsHtml = '' +
                             '<div style="text-align: center; padding: 30px;">' +
                             '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #cccccc; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                            '       <img src="/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                            '       <img src="/theme/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
                             '       <span>暂无商品</span>' +
                             '   </div>' +
                             '</div>';
@@ -242,7 +274,7 @@
                             goodsHtml = '' +
                                 '<div style="text-align: center; padding: 30px;">' +
                                 '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #cccccc; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                                '       <img src="/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                                '       <img src="/theme/night/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
                                 '       <span>暂无商品</span>' +
                                 '   </div>' +
                                 '</div>';

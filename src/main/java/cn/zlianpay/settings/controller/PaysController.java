@@ -46,6 +46,8 @@ public class PaysController extends BaseController {
     @RequestMapping("/page")
     public PageResult<PaysVo> page(HttpServletRequest request) {
         PageParam<Pays> pageParam = new PageParam<>(request);
+        pageParam.addOrderDesc("created_at");
+
         List<Pays> paysList = paysService.page(pageParam, pageParam.getWrapper()).getRecords();
         List<PaysVo> collect = paysList.stream().map((pays) -> {
             PaysVo paysVo = new PaysVo();
@@ -82,6 +84,16 @@ public class PaysController extends BaseController {
             } else if (pays.getDriver().equals("yunfu_wxpay") || pays.getDriver().equals("yunfu_alipay")) {
                 paysVo.setAppid(configs.get("appid").toString());
                 paysVo.setKey(configs.get("key").toString());
+                paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("wxpay")) {
+                paysVo.setAppid(configs.get("appId").toString());
+                paysVo.setMchid(configs.get("mchId").toString());
+                paysVo.setKey(configs.get("key").toString());
+                paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("alipay")) {
+                paysVo.setAppid(configs.get("app_id").toString());
+                paysVo.setKey(configs.get("private_key").toString());
+                paysVo.setMpKey(configs.get("alipay_public_key").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
             }
             return paysVo;
@@ -167,6 +179,16 @@ public class PaysController extends BaseController {
         } else if (paysVo.getDriver().equals("yunfu_wxpay") || paysVo.getDriver().equals("yunfu_alipay")) {
             map.put("appid", paysVo.getAppid());
             map.put("key", paysVo.getKey());
+            map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("wxpay")) {
+            map.put("appId", paysVo.getAppid());
+            map.put("mchId", paysVo.getMchid());
+            map.put("key", paysVo.getKey());
+            map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("alipay")) {
+            map.put("app_id", paysVo.getAppid());
+            map.put("private_key", paysVo.getKey());
+            map.put("alipay_public_key", paysVo.getMpKey());
             map.put("notify_url", paysVo.getNotifyUrl());
         }
         String jsonString = JSON.toJSONString(map);

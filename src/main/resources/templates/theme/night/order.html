@@ -18,7 +18,7 @@
         }
 
     </style>
-    <script type="text/javascript" src="${ctxPath}/night/js/clipboard.min.js"></script>
+    <script type="text/javascript" src="${ctxPath}/theme/night/js/clipboard.min.js"></script>
 </head>
 <body>
 <!-- header -->
@@ -29,25 +29,22 @@
     <div class="layui-row layui-col-space15">
         <!-- 左 -->
         <div class="layui-col-sm12 layui-col-md8">
+            <!-- 使用说明 -->
+            <div class="layui-card" style="margin-bottom: 15px">
+                <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
+                    <img src="${ctxPath}/theme/night/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
+                    使用说明
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px;">
+                    <div style="overflow-y: auto; max-height: 200px;">
+                        ${goods.pdInfo!}
+                    </div>
+                </div>
+            </div>
+
             <div class="layui-card order-show">
                 <table class="layui-table order-info-tb" style="margin: 0;" lay-size="lg">
                     <tbody>
-                    <tr>
-                        <th width="120">商品分类：</th>
-                        <td colspan="3">
-                            <div class="classify-type-group">
-                                ${classify.name!}
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th width="120">商品名称：</th>
-                        <td colspan="3">
-                            <div class="goods-type-group">
-                                ${goods.name!}
-                            </div>
-                        </td>
-                    </tr>
                     <tr>
                         <th width="120">联系方式：</th>
                         <td colspan="3">
@@ -102,13 +99,12 @@
                 </div>
             </div>
 
-            <div class="layui-card order-show" style="margin-bottom: 15px">
+            <div class="layui-card order-show">
                 <:if test="${orders.shipType == 0}"> <!-- 自动发货 -->
-                    <div class="layui-text" style="font-size: 18px; text-align: center; padding: 20px 0;">
-                        <div class="user-info-list-item" id="card-txt">
-                            <:for items="${cardsList}" var="item">
-                                <p>卡密: ${item.cardInfo!}</p>
-                            </:for>
+                    <div class="layui-text" style="font-size: 18px;">
+                        <div class="user-info-list-item">
+                            <textarea id="card-txt" placeholder="查看卡密信息" class="layui-textarea" style="background-color: #0e0e0e; color: #fff; height: 150px;"><:for items="${cardsList}" var="item">卡密：${item.cardInfo!}
+</:for></textarea>
                         </div>
                     </div>
                     <div style="margin-top: 10px">
@@ -139,16 +135,6 @@
                 </:if>
             </div>
 
-            <!-- 使用说明 -->
-            <div class="layui-card" style="margin-bottom: 15px">
-                <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-                    <img src="${ctxPath}/night/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
-                    使用说明
-                </div>
-                <div class="layui-card-body" style="padding: 15px 15px;">
-                    ${goods.pdInfo!}
-                </div>
-            </div>
         </div>
     </div>
 </div>

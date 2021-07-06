@@ -188,7 +188,7 @@
                 admin.req('menu/list', function (res) {
                     tbDataList = res.data ? res.data : [];
                     for (var i = 0; i < tbDataList.length; i++) {
-                        tbDataList[i].open = true;
+                        tbDataList[i].open = false;
                     }
                     callback(tbDataList);
                 });

@@ -12,6 +12,23 @@
             <form class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
+                        <label class="layui-form-label">商品:</label>
+                        <div class="layui-input-inline">
+                            <select id="classifyId" lay-verType="tips" lay-verify="required" lay-filter="classifyId"
+                                    required>
+                                <option value="">请选择分类</option>
+                                <:for items="${classifysList}" var="item">
+                                    <option value="${item.id}">${item.name}</option>
+                                </:for>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="margin-left: 10px">
+                            <select name="productId" id="productId" lay-verify="required" lay-filter="productId">
+                                <option value="">请选择商品</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
                         <label class="layui-form-label">卡密:</label>
                         <div class="layui-input-inline">
                             <input name="cardInfo" class="layui-input" placeholder="输入卡密"/>
@@ -97,16 +114,43 @@
                 {type: 'numbers'},
                 {field: 'productName', title: '商品名称'},
                 {field: 'cardInfo', title: '卡密'},
-                {field: 'status', title: '卡密状态', templet: function (res) {
+                {
+                    field: 'status', title: '卡密状态', templet: function (res) {
                         if (res.status == 0) {
                             return "未出售";
                         } else {
                             return '<span style="color: #00a65a">已售出</span>'
                         }
-                    }},
+                    }
+                },
                 {field: 'createdAt', title: '创建时间', sort: true},
                 {title: '操作', toolbar: '#cardsTbBar', align: 'center', minWidth: 200}
             ]]
+        });
+
+        /* 根据分类id查询商品列表 */
+        form.on('select(classifyId)', function (data) {
+            $("#productId").html(
+                '<option value="" >请选择商品</option>'
+            );
+            $.post('/products/products/getProductList', {
+                id: data.value
+            }, function (res) {
+                if (0 === res.code) {
+                    var list = res.data;
+                    var goodsid = document.getElementById("productId");
+                    for (const listElement of list) {
+                        var option = document.createElement("option");
+                        option.setAttribute("value", listElement.id);
+                        option.innerText = listElement.name;
+                        goodsid.appendChild(option);
+                    }
+                    form.render("select")
+                    layer.msg(res.msg, {icon: 1});
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            });
         });
 
         /* 表格搜索 */

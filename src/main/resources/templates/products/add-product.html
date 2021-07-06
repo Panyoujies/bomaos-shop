@@ -115,11 +115,6 @@
                                 <img class="layui-upload-img" id="demo1">
                                 <p id="demoText"></p>
                             </div>
-                            <div style="width: 95px;">
-                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                                    <div class="layui-progress-bar" lay-percent=""></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,7 +148,6 @@
         var layer = layui.layer;
         var form = layui.form;
         var upload = layui.upload;
-        var element = layui.element;
 
         //监听指定开关
         form.on('radio(shipType)', function (data) {
@@ -215,40 +209,24 @@
 
         //常规使用 - 普通图片上传
         var uploadInst = upload.render({
-            elem: '#test1'
-            , url: '${ctxPath}/file/upload' //改成您自己的上传接口
-            , before: function (obj) {
+            elem: '#test1',
+            url: '${ctxPath}/file/upload',
+            before: function (obj) {
                 //预读本地文件示例，不支持ie8
                 obj.preview(function (index, file, result) {
                     $('#demo1').attr('src', result); //图片链接（base64）
                 });
-
-                element.progress('demo', '0%'); //进度条复位
-                layer.msg('上传中', {icon: 16, time: 0});
-            }, done: function (res) {
+            },
+            done: function (res) {
                 //如果上传失败
                 if (res.code > 0) {
                     return layer.msg('上传失败');
                 }
                 //上传成功的一些操作
-                console.log(res)
                 if (res.code == 0) {
                     $("#imageLogo").val("/file/" + res.url);
                 }
-                //……
                 $('#demoText').html(''); //置空上传失败的状态
-            }, error: function () {
-                //演示失败状态，并实现重传
-                var demoText = $('#demoText');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
-            }, progress: function (n, elem, e) { // 进度条
-                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
             }
         });
 

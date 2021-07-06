@@ -10,7 +10,14 @@ import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.reception.dto.NotifyDTO;
+import cn.zlianpay.settings.entity.ShopSettings;
+import cn.zlianpay.settings.service.ShopSettingsService;
+import cn.zlianpay.website.entity.Website;
+import cn.zlianpay.website.service.WebsiteService;
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.demo.trade.config.Configs;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
 import cn.zlianpay.common.core.utils.RequestParamsUtil;
@@ -22,24 +29,25 @@ import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.service.ProductsService;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
+import com.github.wxpay.sdk.WXPayConstants;
+import com.github.wxpay.sdk.WXPayUtil;
+import com.zjiecode.wxpusher.client.WxPusher;
+import com.zjiecode.wxpusher.client.bean.Message;
 import org.apache.commons.codec.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -65,6 +73,22 @@ public class NotifyController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private WebsiteService websiteService;
+
+    @Autowired
+    private ShopSettingsService shopSettingsService;
+
+    /**
+     * 返回成功xml
+     */
+    private String resSuccessXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+
+    /**
+     * 返回失败xml
+     */
+    private String resFailXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[报文为空]]></return_msg></xml>";
 
     @RequestMapping("/mqpay/notifyUrl")
     @ResponseBody
@@ -204,7 +228,7 @@ public class NotifyController {
     }
 
     /**
-     * 吗支付返回接口
+     * 码支付返回接口
      *
      * @param request
      * @param response
@@ -418,6 +442,7 @@ public class NotifyController {
     }
 
     private String order_id;
+
     /**
      * 捷支付通知
      *
@@ -559,6 +584,135 @@ public class NotifyController {
     }
 
     /**
+     * 微信官方异步通知
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/wxpay/notify")
+    @ResponseBody
+    public String wxPayNotify(HttpServletRequest request, HttpServletResponse response){
+        String resXml = "";
+        InputStream inStream;
+        try {
+            inStream = request.getInputStream();
+            ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = inStream.read(buffer)) != -1) {
+                outSteam.write(buffer, 0, len);
+            }
+            System.out.println("wxnotify:微信支付----start----");
+            // 获取微信调用我们notify_url的返回信息
+            String result = new String(outSteam.toByteArray(), "utf-8");
+            System.out.println("wxnotify:微信支付----result----=" + result);
+
+            // 关闭流
+            outSteam.close();
+            inStream.close();
+
+            // xml转换为map
+            Map<String, String> resultMap = WXPayUtil.xmlToMap(result);
+            boolean isSuccess = false;
+            String result_code = resultMap.get("result_code");
+            if ("SUCCESS".equals(result_code)) {
+                Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "wxpay"));
+                Map mapTypes = JSON.parseObject(pays.getConfig());
+                String key = mapTypes.get("key").toString(); // 密钥
+
+                /**
+                 * 签名成功
+                 */
+                if (WXPayUtil.isSignatureValid(resultMap, key)) {
+                    String total_fee = resultMap.get("total_fee");// 订单总金额，单位为分
+                    String out_trade_no = resultMap.get("out_trade_no");// 商户系统内部订单号
+                    String transaction_id = resultMap.get("transaction_id");// 微信支付订单号
+                    String attach = resultMap.get("attach");// 商家数据包，原样返回
+                    String appid = resultMap.get("appid");// 微信分配的小程序ID
+
+                    BigDecimal bigDecimal = new BigDecimal(total_fee);
+                    BigDecimal multiply = bigDecimal.divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                    String money = new DecimalFormat("0.##").format(multiply);
+
+                    String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, resSuccessXml, resFailXml);
+                    resXml = returnBig;
+                    isSuccess = true;
+                } else {
+                    System.out.println("签名判断错误！！");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("wxnotify:支付回调发布异常：" +  e);
+        } finally {
+            try {
+                // 处理业务完毕
+                BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+                out.write(resXml.getBytes());
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                System.out.println("wxnotify:支付回调发布异常:out：" + e);
+            }
+        }
+        return resXml;
+    }
+
+    /**
+     * 支付宝当面付 异步通知
+     * @param request 接收
+     * @return 返回
+     */
+    @RequestMapping("/alipay/notify")
+    @ResponseBody
+    public String alipayNotifyUrl(HttpServletRequest request) {
+
+        String success = "success";
+        String failure = "failure";
+
+        Map<String, String> params = new HashMap<>();
+        Map requestParams = request.getParameterMap();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
+            String name = (String) iter.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+            }
+            params.put(name, valueStr);
+        }
+
+        /**
+         * 非常重要,签名不带，避免签名的sign 不匹配。
+         * 验证回调的正确性,是不是支付宝发的.并且呢还要避免重复通知.
+         */
+        params.remove("sign_type");
+
+        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay"));
+        Map mapTypes = JSON.parseObject(pays.getConfig());
+        String alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
+
+        String returnBig = null;
+        try {
+            boolean alipayRSACheckedV2 = AlipaySignature.rsaCheckV2(params, alipay_public_key, "utf-8", "RSA2");
+            if (alipayRSACheckedV2) {
+                String out_trade_no = params.get("out_trade_no");// 商户订单号
+                String total_amount = params.get("total_amount");// 付款金额
+                String trade_no = params.get("trade_no");// 流水
+                String receipt_amount = params.get("receipt_amount");// 实际支付金额
+                String body = params.get("body");// 状态
+                returnBig = returnBig(receipt_amount, total_amount, out_trade_no, trade_no, body, success, failure);
+            } else {
+                System.out.println("签名错误！！");
+                return failure;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return failure;
+        }
+        return returnBig;
+    }
+
+    /**
      * 业务处理
      * @param money 实收款金额
      * @param price 订单金额
@@ -583,6 +737,9 @@ public class NotifyController {
         Products products = productsService.getById(param);
         if (products == null) return fiald; // 商品没了
 
+        Website website = websiteService.getById(1);
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+
         if (products.getShipType() == 0) { // 自动发货的商品
             List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
             if (card == null) return fiald;
@@ -602,6 +759,15 @@ public class NotifyController {
                 // 设置售出的卡密
                 cardsService.updateById(cards1);
 
+                if (shopSettings.getIsWxpusher() == 1) {
+                    Message message = new Message();
+                    message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                    message.setContentType(Message.CONTENT_TYPE_HTML);
+                    message.setUid(shopSettings.getWxpushUid());
+                    message.setAppToken(shopSettings.getAppToken());
+                    WxPusher.send(message);
+                }
+
                 if (!StringUtils.isEmpty(member.getEmail())) {
                     if (isEmail(member.getEmail())) {
                         emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
@@ -619,6 +785,15 @@ public class NotifyController {
             products1.setId(products.getId());
             products1.setInventory(products.getInventory() - 1);
             products1.setSales(products.getSales() + 1);
+
+            if (shopSettings.getIsWxpusher() == 1) {
+                Message message = new Message();
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContentType(Message.CONTENT_TYPE_HTML);
+                message.setUid(shopSettings.getWxpushUid());
+                message.setAppToken(shopSettings.getAppToken());
+                WxPusher.send(message);
+            }
 
             productsService.updateById(products1);
         }

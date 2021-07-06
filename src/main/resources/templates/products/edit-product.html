@@ -101,16 +101,11 @@
                     <label class="layui-form-label layui-form-required">商品图片:</label>
                     <div class="layui-input-block" style="width: auto">
                         <input id="imageLogo" name="imageLogo" placeholder="商品图片/可使用外链" class="layui-input" lay-verify="required" required/>
-                        <div class="layui-upload" style="margin-top: 10px">`
+                        <div class="layui-upload" style="margin-top: 10px">
                             <button type="button" class="layui-btn" id="test1">上传图片</button>
                             <div class="layui-upload-list">
                                 <img class="layui-upload-img" id="demo1">
                                 <p id="demoText"></p>
-                            </div>
-                            <div style="width: 95px;">
-                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                                    <div class="layui-progress-bar" lay-percent=""></div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -145,61 +140,32 @@
         var layer = layui.layer;
         var form = layui.form;
         var upload = layui.upload;
-        var element = layui.element;
+        var products = JSON.parse(JSON.stringify(${products!}));
 
-        $.get('/products/products/get', {
-            id: ${productId}
-        }, function (res) {
-            if (0 === res.code) {
-                console.log(res.data)
+        if (products.isWholesale == 1) {
+            $("#wholesale").attr("style", "display:block;");
+            $("#inputWholesale").html(
+                '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
+                '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
+            );
+        };
 
-                if (res.data.isWholesale == 1) {
-                    $("#wholesale").attr("style", "display:block;");
-                    $("#inputWholesale").html(
-                        '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
-                        '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
-                    );
-                };
+        if (products.shipType == 1) {
+            $("#inventory").attr("style", "display:block;");
+            $("#inputInventory").html(
+                '<input name="inventory" placeholder="请输入库存" class="layui-input" value="0"/>' +
+                '<div class="layui-word-aux">手动发货模式生效</div>'
+            );
+            $("#sales").attr("style", "display:block;");
+            $("#inputSales").html(
+                '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
+                '<div class="layui-word-aux">手动发货模式生效</div>'
+            );
+        }
 
-                if (res.data.shipType == 1) {
-                    $("#inventory").attr("style", "display:block;");
-                    $("#inputInventory").html(
-                        '<input name="inventory" placeholder="请输入库存" class="layui-input" value="0"/>' +
-                        '<div class="layui-word-aux">手动发货模式生效</div>'
-                    );
-                    $("#sales").attr("style", "display:block;");
-                    $("#inputSales").html(
-                        '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
-                        '<div class="layui-word-aux">手动发货模式生效</div>'
-                    );
-                }
-
-                // 回显表单数据
-                form.val('productForm', res.data);
-                $("#pdInfoEditor").html(res.data.pdInfo);
-                layer.msg(res.msg, {icon: 1});
-            } else {
-                layer.msg(res.msg, {icon: 2, anim: 6});
-            }
-        });
-
-        /* 表单提交 */
-        form.on('submit(productsEditSubmit)', function (data) {
-            data.field.pdInfo = tinymce.get('pdInfoEditor').getContent();
-            if (layui.admin.util.fullTextIsEmpty(data.field.pdInfo)) {
-                return layer.msg('请输入商品介绍正文', {icon: 2, anim: 6});
-            }
-            var loadIndex = layer.load(2);
-            $.post('/products/products/update', data.field, function (res) {
-                layer.close(loadIndex);
-                if (0 === res.code) {
-                    layer.msg(res.msg, {icon: 1});
-                } else {
-                    layer.msg(res.msg, {icon: 2, anim: 6});
-                }
-            });
-            return false;
-        });
+        // 回显表单数据
+        form.val('productForm', products);
+        $('#demo1').attr('src', products.imageLogo); //图片链接
 
         /* 渲染富文本编辑器 */
         tinymce.init({
@@ -214,45 +180,52 @@
             file_picker_types: 'media',
             file_picker_callback: function (callback, value, meta) {
                 layer.msg('演示环境不允许上传', {anim: 6});
+            },
+            init_instance_callback: function (editor) {
+                tinymce.get('pdInfoEditor').setContent(products.pdInfo);
             }
+        });
+
+        /* 表单提交 */
+        form.on('submit(productsEditSubmit)', function (data) {
+            data.field.pdInfo = tinymce.get('pdInfoEditor').getContent();
+            if (layui.admin.util.fullTextIsEmpty(data.field.pdInfo)) {
+                return layer.msg('请输入商品介绍正文', {icon: 2, anim: 6});
+            }
+            var loadIndex = layer.load(2);
+            $.post('/products/products/update', data.field, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    layer.msg(res.msg, {icon: 1, time: 1000}, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            });
+            return false;
         });
 
         //常规使用 - 普通图片上传
         var uploadInst = upload.render({
-            elem: '#test1'
-            , url: '${ctxPath}/file/upload' //改成您自己的上传接口
-            , before: function (obj) {
+            elem: '#test1',
+            url: '${ctxPath}/file/upload',
+            before: function (obj) {
                 //预读本地文件示例，不支持ie8
                 obj.preview(function (index, file, result) {
                     $('#demo1').attr('src', result); //图片链接（base64）
                 });
-
-                element.progress('demo', '0%'); //进度条复位
-                layer.msg('上传中', {icon: 16, time: 0});
-            }, done: function (res) {
+            },
+            done: function (res) {
                 //如果上传失败
                 if (res.code > 0) {
                     return layer.msg('上传失败');
                 }
                 //上传成功的一些操作
-                console.log(res)
                 if (res.code == 0) {
                     $("#imageLogo").val("/file/" + res.url);
                 }
-                //……
                 $('#demoText').html(''); //置空上传失败的状态
-            }, error: function () {
-                //演示失败状态，并实现重传
-                var demoText = $('#demoText');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
-            }, progress: function (n, elem, e) { // 进度条
-                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
             }
         });
 

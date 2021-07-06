@@ -157,7 +157,8 @@ public class OrdersController extends BaseController {
                     || orderVos.getPayType().equals("xunhupay_wxpay")
                     || orderVos.getPayType().equals("jiepay_wxpay")
                     || orderVos.getPayType().equals("payjs_wxpay")
-                    || orderVos.getPayType().equals("yunfu_wxpay")) {
+                    || orderVos.getPayType().equals("yunfu_wxpay")
+                    || orderVos.getPayType().equals("wxpay")) {
                 orderVos.setPayType("微信");
             }
 
@@ -312,14 +313,6 @@ public class OrdersController extends BaseController {
     @ResponseBody
     @RequestMapping("/sendShip")
     public JsonResult sendShip(Integer id, String email, String shipInfo) throws MessagingException, IOException {
-
-        System.out.println(id);
-        System.out.println(email);
-        System.out.println(shipInfo);
-
-        /**
-         * 发货成功商品状态 为3
-         */
 
         /**
          * 查出订单

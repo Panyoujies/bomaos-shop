@@ -20,9 +20,6 @@
 				<if test="page.pageData.websiteLogo != null">
                     AND a.website_logo LIKE CONCAT('%', #{page.pageData.websiteLogo}, '%')
 				</if>
-				<if test="page.pageData.storeDetails != null">
-                    AND a.store_details LIKE CONCAT('%', #{page.pageData.storeDetails}, '%')
-				</if>
 				<if test="page.pageData.contact != null">
                     AND a.contact LIKE CONCAT('%', #{page.pageData.contact}, '%')
 				</if>

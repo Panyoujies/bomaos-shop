@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="商店设置管理"/>
+    <style>
+        .layui-upload-img {
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            商店设置
+        </div>
+        <div class="layui-card-body">
+            <form lay-filter="shopSettingsForm" class="layui-form" >
+                <input name="id" type="hidden"/>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">微信通知:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="isWxpusher" value="1" title="开启" checked>
+                        <input type="radio" name="isWxpusher" value="0" title="关闭">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">AppToken:</label>
+                    <div class="layui-input-block">
+                        <input name="appToken" placeholder="请输入wxpusher AppToken" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商店背景:</label>
+                    <div class="layui-input-block">
+                        <input id="isBackground" name="isBackground" placeholder="请输入全局背景图" class="layui-input"
+                               lay-verify="required" required/>
+                        <div class="layui-upload" style="margin-top: 10px">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">首页弹窗:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="isWindow" lay-filter="isWindow" value="1" title="开启" checked>
+                        <input type="radio" name="isWindow" lay-filter="isWindow" value="0" title="关闭">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">弹窗内容:</label>
+                    <div class="layui-input-block">
+                        <textarea id="window"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商店详情:</label>
+                    <div class="layui-input-block">
+                        <textarea id="storeDetails"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="shopSettingsEditSubmit" lay-submit> 保存设置 </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<:include file="../common/js.html"/>
+<script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
+<script>
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'upload', 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var util = layui.util;
+        var admin = layui.admin;
+        var upload = layui.upload;
+        var shopSettings = JSON.parse(JSON.stringify(${shopSettings!}));
+        form.val('shopSettingsForm', shopSettings);
+        $('#demo1').attr('src', '${ctxPath}' + shopSettings.isBackground);
+
+        /* 渲染富文本编辑器 */
+        tinymce.init({
+            selector: '#window',
+            height: 300,
+            branding: false,
+            language: 'zh_CN',
+            plugins: 'code print preview fullscreen paste searchreplace save autosave link autolink image imagetools media table codesample lists advlist hr charmap emoticons anchor directionality pagebreak quickbars nonbreaking visualblocks visualchars wordcount',
+            toolbar: 'fullscreen preview code | undo redo | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | formatselect fontselect fontsizeselect | link image media emoticons charmap anchor pagebreak codesample | ltr rtl',
+            images_upload_url: '${ctxPath}/file/upload',
+            file_picker_types: 'media',
+            file_picker_callback: function (callback, value, meta) {
+                layer.msg('演示环境不允许上传', {anim: 6});
+            },
+            init_instance_callback: function (editor) {
+                tinymce.get('window').setContent(shopSettings.window);
+            }
+        });
+
+        /* 渲染富文本编辑器 */
+        tinymce.init({
+            selector: '#storeDetails',
+            height: 300,
+            branding: false,
+            language: 'zh_CN',
+            plugins: 'code print preview fullscreen paste searchreplace save autosave link autolink image imagetools media table codesample lists advlist hr charmap emoticons anchor directionality pagebreak quickbars nonbreaking visualblocks visualchars wordcount',
+            toolbar: 'fullscreen preview code | undo redo | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | formatselect fontselect fontsizeselect | link image media emoticons charmap anchor pagebreak codesample | ltr rtl',
+            images_upload_url: '${ctxPath}/file/upload',
+            file_picker_types: 'media',
+            file_picker_callback: function (callback, value, meta) {
+                layer.msg('演示环境不允许上传', {anim: 6});
+            },
+            init_instance_callback: function (editor) {
+                tinymce.get('storeDetails').setContent(shopSettings.storeDetails);
+            }
+        });
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: '${ctxPath}/file/upload',
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                if (res.code == 0) {
+                    $("#isBackground").val("/file/" + res.url);
+                }
+                $('#demoText').html(''); //置空上传失败的状态
+            }
+        });
+
+        /* 表单提交 */
+        form.on('submit(shopSettingsEditSubmit)', function (data) {
+            data.field.window = tinymce.get('window').getContent();
+            if (layui.admin.util.fullTextIsEmpty(data.field.window)) {
+                return layer.msg('请输入首页弹窗内容', {icon: 2, anim: 6});
+            }
+
+            data.field.storeDetails = tinymce.get('storeDetails').getContent();
+            if (layui.admin.util.fullTextIsEmpty(data.field.storeDetails)) {
+                return layer.msg('请输入商店介绍正文', {icon: 2, anim: 6});
+            }
+
+            var loadIndex = layer.load(2);
+            var field = data.field; //获取提交的字段
+            $.post(getPostType(field), field, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    layer.msg(res.msg, {icon: 1, time: 1000}, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+        function getPostType(mData) {
+            if (mData == null) {
+                return "shopSettings/save";
+            } else {
+                return "shopSettings/update";
+            }
+        }
+
+    });
+</script>
+</body>
+</html>

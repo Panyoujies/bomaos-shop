@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <:include file="./common/title.html" websiteName="${website.websiteName} - 等待完成支付" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/night/css/receipt.css"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/receipt.css"/>
 </head>
 <body>
 
@@ -20,7 +20,7 @@
 <:include file="${ctxPath}/common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
 
 <!-- js部分 -->
-<:include file="./common/night.html"/>
+<:include file="./common/qiantaijs.html"/>
 
 <script>
     layui.use(['layer', 'form', 'notice'], function () {

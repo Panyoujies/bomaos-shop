@@ -39,6 +39,12 @@
     {{# if(d.driver=='yunfu_wxpay' || d.driver=='yunfu_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yunfu">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='wxpay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="wxpay">配置修改</a>
+    {{# } }}
+    {{# if(d.driver=='alipay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="alipay">配置修改</a>
+    {{# } }}
 </script>
 
 <!-- mqpay -->
@@ -556,6 +562,150 @@
     </form>
 </script>
 
+<!-- wxpau -->
+<script type="text/html" id="wxpayEditDialog">
+    <form id="wxpayEditForm" lay-filter="wxpayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">appId:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入appId" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">mchId:</label>
+            <div class="layui-input-block">
+                <input name="mchid" placeholder="输入mch_id" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="wxpayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
+<!-- alipay -->
+<script type="text/html" id="alipayEditDialog">
+    <form id="alipayEditForm" lay-filter="alipayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">app_id:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入appId" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">private_key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入private_key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">alipay_public_key:</label>
+            <div class="layui-input-block">
+                <input name="mpKey" placeholder="输入alipay_public_key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="alipayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
 <!-- 商品状态 -->
 <script type="text/html" id="paysTbStatus">
     <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -583,7 +733,13 @@
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
-                {field: 'name', title: '名称', width: 100},
+                {field: 'name', title: '名称', width: 100, templet: function (res) {
+                    if (res.name == '微信') {
+                        return '<span class="layui-badge layui-badge-green">微信</span>'
+                    } else {
+                        return '<span class="layui-badge layui-badge-blue">支付宝</span>'
+                    }}
+                },
                 {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
                 {field: 'enabled', title: '开关', templet: '#paysTbStatus', width: 90},
@@ -609,6 +765,10 @@
             } else if ('payjs' === obj.event) {
                 showEditModel(obj.data);
             } else if ('yunfu' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('wxpay' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('alipay' === obj.event) {
                 showEditModel(obj.data);
             }
         });
@@ -647,6 +807,14 @@
                 var html = $('#yunfuEditDialog').html();
                 var forms = 'yunfuEditForm';
                 var submit = 'yunfuEditSubmit';
+            } else if (mData.driver == 'wxpay') {
+                var html = $('#wxpayEditDialog').html();
+                var forms = 'wxpayEditForm';
+                var submit = 'wxpayEditSubmit';
+            } else if (mData.driver == 'alipay') {
+                var html = $('#alipayEditDialog').html();
+                var forms = 'alipayEditForm';
+                var submit = 'alipayEditSubmit';
             }
 
             admin.open({

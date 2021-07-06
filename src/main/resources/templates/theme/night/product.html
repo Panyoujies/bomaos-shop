@@ -6,7 +6,7 @@
               keywords="${website.keywords}"
               description="${website.description}"
               favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/night/css/product.css"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/product.css"/>
 </head>
 <body>
 <!-- header -->
@@ -21,17 +21,18 @@
                  style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header"
                      style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-                    <img src="${ctxPath}/night/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
+                    <img src="${ctxPath}/theme/night/images/present.svg" style="top: 10px; position: absolute; left: 15px;">
                     商品介绍
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px">
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-md4">
-                            <img style="border-radius: 3px; display: inline; width: 100%; max-height: 100%; bottom: 0"
-                                 src="${products.imageLogo!}">
+                            <div style="border-radius: 3px; width: 100%; height: 200px; max-height: 100%; bottom: 0; background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(${products.imageLogo!}); background-repeat: no-repeat; background-size: cover;"></div>
                         </div>
                         <div class="layui-col-md8">
-                            ${products.pdInfo!}
+                            <div style="overflow-y: auto; max-height: 200px;">
+                                ${products.pdInfo!}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
                  style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header"
                      style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-                    <img src="${ctxPath}/night/images/details.svg" style="top: 10px; position: absolute; left: 15px;">
+                    <img src="${ctxPath}/theme/night/images/details.svg" style="top: 10px; position: absolute; left: 15px;">
                     商品详情
                     <:if test="${isCoupon >= 1}">
                         <span class="layui-badge layui-badge-blue pull-right"
@@ -105,7 +106,7 @@
                      style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                     <div class="layui-card-header"
                          style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-                        <img src="${ctxPath}/night/images/wholesale.svg"
+                        <img src="${ctxPath}/theme/night/images/wholesale.svg"
                              style="top: 10px; position: absolute; left: 15px;">
                         批发价格
                     </div>
@@ -127,7 +128,7 @@
 
                 <div class="layui-card-header"
                      style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-                    <img src="${ctxPath}/night/images/buy.svg" style="top: 10px; position: absolute; left: 15px;">
+                    <img src="${ctxPath}/theme/night/images/buy.svg" style="top: 10px; position: absolute; left: 15px;">
                     购买信息
                     <:if test="${products.shipType == 1}">
                         <span class="layui-badge layui-badge-yellow pull-right"
@@ -177,7 +178,7 @@
                                         <button class="layui-btn layui-btn-primary"
                                                 style="line-height: unset; padding: 0 10px; border: 2px solid #737373;"
                                                 type="button">
-                                            <img src="${ctxPath}/night/images/sub.svg" style="width: 25px">
+                                            <img src="${ctxPath}/theme/night/images/sub.svg" style="width: 25px">
                                         </button>
                                     </div>
                                     <input type="text" id="orderNumber" name="number"
@@ -187,7 +188,7 @@
                                         <button class="layui-btn layui-btn-primary"
                                                 style="line-height: unset; padding: 0 10px; border: 2px solid #737373;"
                                                 type="button">
-                                            <img src="${ctxPath}/night/images/add.svg" style="width: 25px">
+                                            <img src="${ctxPath}/theme/night/images/add.svg" style="width: 25px">
                                         </button>
                                     </div>
                                 </div>
@@ -208,7 +209,7 @@
                             <:for items="${paysList}" var="item">
 
                                 <:if test="${item.andIncrement == 0}">
-                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay'}">
+                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay' || item.driver=='wxpay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-wexin active" data-id="${item.driver}">
                                                 <svg t="1617264231274" class="icon" viewBox="0 0 1024 1024"
@@ -223,7 +224,7 @@
                                             </div>
                                         </div>
                                     </:if>
-                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay'}">
+                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay' || item.driver=='alipay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-ali active" data-id="${item.driver}">
                                                 <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"
@@ -242,7 +243,7 @@
                                     </:if>
                                 </:if>
                                 <:if test="${item.andIncrement != 0}">
-                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay'}">
+                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay' || item.driver=='wxpay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-wexin" data-id="${item.driver}">
                                                 <svg t="1617264231274" class="icon" viewBox="0 0 1024 1024"
@@ -258,7 +259,7 @@
                                         </div>
                                     </:if>
 
-                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay'}">
+                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay' || item.driver=='alipay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-ali" data-id="${item.driver}">
                                                 <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"

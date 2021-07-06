@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <:include file="./common/title.html" websiteName="${website.websiteName} - 订单付款" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/night/css/pay.css"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/pay.css"/>
     <script src="https://lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
@@ -43,8 +43,8 @@
                     </:if>
                 </div>
                 <div class="amount" id="timeOut" style="font-size: 20px;color: red;display: none;"><p>
-                    订单已过期，请您返回网站重新发起支付</p><br></div>
-
+                    订单已过期，请您返回网站重新发起支付</p><br>
+                </div>
                 <div class="qrcode-desc">
                     <img src="https://storage.360buyimg.com/payment-assets/pc/icon/icon-red.png"/>
                     <div>请使用
@@ -72,7 +72,7 @@
 <:include file="./common/qiantaijs.html"/>
 <script>
     layui.config({
-        base: '${ctxPath}/night/module/'
+        base: '${ctxPath}/theme/night/module/'
     }).use(['layer', 'QRCode', 'notice'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
@@ -125,8 +125,7 @@
                     title: '温馨提示',
                     shade: .1
                 }, function () {
-                    var tempwindow = window.open('_blank');
-                    tempwindow.location = '${result!}';
+                    window.open(${result!});
                 });
             }
         </:if>

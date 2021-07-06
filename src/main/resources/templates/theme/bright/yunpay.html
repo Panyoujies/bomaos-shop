@@ -125,8 +125,7 @@
                     title: '温馨提示',
                     shade: .1
                 }, function () {
-                    var tempwindow = window.open('_blank');
-                    tempwindow.location = '${result!}';
+                    window.open(${result!});
                 });
             }
         </:if>

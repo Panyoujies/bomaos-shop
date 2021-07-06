@@ -11,6 +11,7 @@ import cn.zlianpay.products.entity.Classifys;
 import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.service.ClassifysService;
 import cn.zlianpay.products.service.ProductsService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,9 @@ public class CardsController extends BaseController {
 
     @RequiresPermissions("carmi:cards:view")
     @RequestMapping()
-    public String view() {
+    public String view(Model model) {
+        List<Classifys> classifysList = classifysService.listAll(null);
+        model.addAttribute("classifysList", classifysList);
         return "carmi/cards.html";
     }
 

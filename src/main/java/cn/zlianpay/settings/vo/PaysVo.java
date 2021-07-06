@@ -32,6 +32,11 @@ public class PaysVo {
     private String appid;
 
     /**
+     * id
+     */
+    private String mchid;
+
+    /**
      * 密钥
      */
     private String key;

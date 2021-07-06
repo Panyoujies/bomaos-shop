@@ -6,7 +6,9 @@ import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.settings.entity.Coupon;
+import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.CouponService;
+import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.settings.vo.PaysVo;
 import cn.zlianpay.theme.entity.Theme;
 import cn.zlianpay.theme.service.ThemeService;
@@ -73,6 +75,9 @@ public class IndexController {
     @Autowired
     private ThemeService themeService;
 
+    @Autowired
+    private ShopSettingsService shopSettingsService;
+
     @RequestMapping({"/","/index"})
     public String IndexView(Model model) {
         List<Classifys> classifysList = classifysService.list(new QueryWrapper<Classifys>().eq("status", 1));
@@ -91,6 +96,11 @@ public class IndexController {
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+        model.addAttribute("shopSettings", JSON.toJSONString(shopSettings));
+        model.addAttribute("shop", shopSettings);
 
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/index.html";
@@ -170,6 +180,10 @@ public class IndexController {
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/product.html";
     }
@@ -215,6 +229,10 @@ public class IndexController {
     public String search(Model model) {
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/search.html";
     }
@@ -260,6 +278,9 @@ public class IndexController {
         model.addAttribute("goods", products);  // 商品
         model.addAttribute("classify", classifys);  // 分类
 
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/order.html";
     }
@@ -277,7 +298,10 @@ public class IndexController {
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-		
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/payState.html";
     }

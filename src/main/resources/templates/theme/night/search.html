@@ -3,7 +3,7 @@
 <head>
     <:include file="./common/title.html" websiteName="订单查询 - ${website.websiteName}" keywords="${website.keywords}"
               description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/night/css/search.css"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/search.css"/>
 </head>
 <body>
 <!-- header -->
@@ -41,7 +41,7 @@
 <div class="layui-container body-card">
     <div class="odlist" id="search-card">
         <div class="no-content">
-            <img src="${ctxPath}/night/images/error_ic_empty.png" class="no-content-img">
+            <img src="${ctxPath}/theme/night/images/error_ic_empty.png" class="no-content-img">
             <p class="user-no-contents">暂无记录</p>
         </div>
     </div>
@@ -98,7 +98,7 @@
                     } else {
                         cardListHtml = '' +
                             '<div class="no-content">\n' +
-                            '    <img src="${ctxPath}/night/images/error_ic_empty.png" class="no-content-img">\n' +
+                            '    <img src="${ctxPath}/theme/night/images/error_ic_empty.png" class="no-content-img">\n' +
                             '    <p class="user-no-contents">没有查询到该订单</p>\n' +
                             '</div>';
 

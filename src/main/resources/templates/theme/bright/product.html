@@ -27,11 +27,12 @@
                 <div class="layui-card-body" style="padding: 15px 15px">
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-md4">
-                            <img style="border-radius: 3px; display: inline; width: 100%; max-height: 100%; bottom: 0"
-                                 src="${products.imageLogo!}">
+                            <div style="border-radius: 3px; width: 100%; height: 200px; max-height: 100%; bottom: 0; background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(${products.imageLogo!}); background-repeat: no-repeat; background-size: cover;"></div>
                         </div>
                         <div class="layui-col-md8">
-                            ${products.pdInfo!}
+                            <div style="overflow-y: auto; max-height: 200px;">
+                                ${products.pdInfo!}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -208,7 +209,7 @@
                             <:for items="${paysList}" var="item">
 
                                 <:if test="${item.andIncrement == 0}">
-                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay'}">
+                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay' || item.driver=='wxpay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-wexin active" data-id="${item.driver}">
                                                 <svg t="1617264231274" class="icon" viewBox="0 0 1024 1024"
@@ -223,7 +224,7 @@
                                             </div>
                                         </div>
                                     </:if>
-                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay'}">
+                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay' || item.driver=='alipay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-ali active" data-id="${item.driver}">
                                                 <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"
@@ -242,7 +243,7 @@
                                     </:if>
                                 </:if>
                                 <:if test="${item.andIncrement != 0}">
-                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay'}">
+                                    <:if test="${item.driver=='mqpay_wxpay' || item.driver=='zlianpay_wxpay' || item.driver=='codepay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='yunfu_wxpay' || item.driver=='wxpay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-wexin" data-id="${item.driver}">
                                                 <svg t="1617264231274" class="icon" viewBox="0 0 1024 1024"
@@ -258,7 +259,7 @@
                                         </div>
                                     </:if>
 
-                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay'}">
+                                    <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='codepay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='yunfu_alipay' || item.driver=='alipay'}">
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <div class="pay-type-ali" data-id="${item.driver}">
                                                 <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"

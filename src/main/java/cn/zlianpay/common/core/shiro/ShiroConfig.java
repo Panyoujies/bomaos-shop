@@ -50,7 +50,7 @@ public class ShiroConfig {
         Map<String, String> filterChainDefinitions = new LinkedHashMap<>();
         filterChainDefinitions.put("/assets/**", "anon");
         filterChainDefinitions.put("/qiantai/**", "anon");
-        filterChainDefinitions.put("/night/**", "anon");
+        filterChainDefinitions.put("/theme/**", "anon");
         filterChainDefinitions.put("/favicon.ico", "anon");
         filterChainDefinitions.put("/file/**", "anon");
 
@@ -93,6 +93,9 @@ public class ShiroConfig {
         filterChainDefinitions.put("/jiepay/returnUrl", "anon");
         filterChainDefinitions.put("/payjs/notify", "anon");
         filterChainDefinitions.put("/yunfu/notify", "anon");
+        filterChainDefinitions.put("/wxpay/notify", "anon");
+        filterChainDefinitions.put("/alipay/notify", "anon");
+        filterChainDefinitions.put("/wxpusher/callback", "anon");
 
         // api
         filterChainDefinitions.put("/api/**", "anon");

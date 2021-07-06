@@ -1,12 +1,14 @@
 package cn.zlianpay.reception.dto;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @Author chengtianqi
  * @create 2020/8/28 17:13
  */
 @Data
+@ToString
 public class NotifyDTO {
 
     // 1：支付成功
