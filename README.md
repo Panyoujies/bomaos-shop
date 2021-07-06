@@ -23,6 +23,8 @@
 * 捷支付（新增）
 * payjs（已完成测试）可正常使用
 * 云付天下 （新增）
+* 微信扫码支付
+* 支付宝当面付
 * 其他待添加。。
 
 ## 系统介绍
@@ -34,27 +36,21 @@
 - 开发框架：Spring boot
 - 前端UI [layui](https://www.layui.com/).     
 
-- 主要功能
+## 适用场景：
+适用于各种电商、优惠卷、论坛邀请码、充值卡、激活码、注册码、腾讯爱奇艺积分CDK等，支持手动和全自动发货，还有类似1688的分层批发模式。
 
-- 首页商品展示
-- 邮件系统
-- 支付配置
-- 网站设置
-- 。。。。。
+## 功能特色：
+* Layui 开发的白天 - 黑夜 - 炫丽暗黑模板
+* 基于Layui开发的炫丽后台界面
+* 集成了后台多种主题模式
+* 炫丽暗黑界面支持自定义背景图片
+* 炫丽的前台卡片式商品展示
+* 支持无限层级的批发模式
+* 集成了微信订单消息通知以及邮件系统
+* 支持自定义网站标题、关键字、logo、等
+* 支持移动端支付宝唤醒APP支付
+* 集成了大量支付接口【微信官方扫码、支付宝当面付、v免签、云付天下、payjs、捷支付、虎皮椒V3、YunGouOS、值联码支付、码支付、等...】
+* 支持首页公告弹窗展示
+* 集成了强大的优惠券系统
 
-## 系统截图
-- 电脑版
--
-![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_1.png)
-
-![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_2.png)
-
-![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_3.png)
-
-- 手机版
-
-![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_4.png)
-
-![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_5.png)
-
-![首页.png](https://raw.githubusercontent.com/Panyoujies/zlianpay-faka/main/screenshot/screenshot_6.png)
+有问题欢迎入QQ群反馈：940086807
