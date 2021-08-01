@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * MybatisPlus配置
- * Created by wangfan on 2018-02-22 11:29
+ * Created by Panyoujie on 2018-02-22 11:29
  */
 @EnableTransactionManagement
 @Configuration

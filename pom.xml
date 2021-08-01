@@ -5,7 +5,7 @@
 
     <groupId>cn.zlianpay</groupId>
     <artifactId>zlianpay-faka</artifactId>
-    <version>1.1.5-RELEASE</version>
+    <version>1.1.7-RELEASE</version>
     <packaging>war</packaging>
 
     <name>zlianpay-faka</name>
@@ -90,6 +90,7 @@
             <artifactId>hutool-core</artifactId>
             <version>5.5.1</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-poi -->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -131,6 +132,7 @@
             <artifactId>jodconverter</artifactId>
             <version>2.2.1</version>
         </dependency>
+
         <dependency>
             <groupId>com.github.livesense</groupId>
             <artifactId>jodconverter-core</artifactId>
@@ -180,6 +182,12 @@
             <groupId>com.zjiecode</groupId>
             <artifactId>wxpusher-java-sdk</artifactId>
             <version>2.1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>jwtp-spring-boot-starter</artifactId>
+            <version>3.1.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
@@ -247,6 +255,18 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>1.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.4.0</version>
         </dependency>
 
     </dependencies>

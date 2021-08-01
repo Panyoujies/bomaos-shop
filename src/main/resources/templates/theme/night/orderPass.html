@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="./common/title.html" websiteName="${website.websiteName} - 订单详情"
+              keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
+    <style>
+        .order-show {
+            margin: 0 auto;
+            background-color: #141414;
+            padding: 30px;
+            border-radius: 5px;
+            max-width: 500px;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
+        }
+    </style>
+    <script type="text/javascript" src="${ctxPath}/theme/night/js/clipboard.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<!-- goods-card -->
+<div class="layui-container body-card">
+    <div style="text-align: center; padding-bottom: 25px">
+        <h2 style="font-weight: 600; margin-top: 40px; margin-bottom: 10px;">查询该订单需要密码</h2>
+        <h3>请输入密码后查询</h3>
+    </div>
+    <div class="layui-card"
+         style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); max-width: 500px; margin: 0 auto;">
+        <div class="layui-card-header" style="font-size: 18px; color: #fff; font-weight: 600; padding: 0 25px; height: 70px; line-height: 70px; background: url(${ctxPath}/theme/night/images/back_pass.png) no-repeat; background-size: 100% 100%; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+            ${member!}
+        </div>
+        <div class="layui-card-body" style="padding: 50px 30px">
+            <dt style="font-weight: 700;padding: 0 0 5px; margin: 0 0 10px; color: #666;">请输入提取密码：</dt>
+            <form id="searchEditForm" lay-filter="searchEditForm" class="layui-form model-form" style="padding: 0;">
+                <input name="id" value="${orderId!}" type="hidden"/>
+                <div class="layui-form-item">
+                    <input name="password" style="color: #fff" class="layui-input" lay-verify="required" required/>
+                </div>
+                <div class="layui-form-item" style="margin-bottom: 0px;">
+                    <button class="layui-btn" style="width: 100%; border: 1px solid #09AAFF; background: #09AAFF;" lay-filter="searchEditSubmit" lay-submit>提取卡密</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+
+<!-- js部分 -->
+<:include file="./common/qiantaijs.html"/>
+
+<script>
+    layui.use(['layer', 'form', 'util', 'admin', 'dataGrid', 'admin'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var dataGrid = layui.dataGrid;
+        var admin = layui.admin;
+
+        form.on('submit(searchEditSubmit)', function (data) {
+            var loadIndex = layer.load(2);
+            $.post('/api/getOrderToken', data.field, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    window.location.href = '${ctxPath}/api/order?access_token=' + res.data;
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

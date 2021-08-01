@@ -7,7 +7,7 @@ import java.util.*;
 
 /**
  * 常用工具方法
- * Created by wangfan on 2017-6-10 10:10
+ * Created by Panyoujie on 2017-6-10 10:10
  */
 public class CoreUtil {
     private static String[] chars = new String[]{"a", "b", "c", "d", "e", "f",

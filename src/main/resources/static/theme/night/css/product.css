@@ -43,6 +43,19 @@
     display: block !important;
 }
 
+.btn-group-show {
+    float: right;
+    border-radius: 50px !important;
+    color: #fff !important;
+    height: initial !important;
+    line-height: 45px !important;
+    font-size: 15px !important;
+    padding: 0 18px !important;
+    -webkit-box-shadow: 0 5px 6px 0 rgb(73 105 230 / 22%) !important;
+    background: linear-gradient(0deg, #2a62ff, #716ffe) !important;
+    margin-left: 0px !important;
+}
+
 @media screen and (max-width: 750px) {
     .buy-btn-group {
         position: fixed;
@@ -51,12 +64,12 @@
         right: 0;
         background-color: #141414;
         z-index: 1000;
-        padding: 10px 10px 25px 10px;
+        padding: 10px 15px 25px 15px;
         border-top: 1px solid #2e2e2e;
     }
 
     .card-shows {
-        margin-bottom: 85px !important;
+        margin-bottom: 82px !important;
     }
 
     .uuip {
@@ -67,12 +80,8 @@
         display: none !important;
     }
 
-    .layui-card-header {
-        display: none !important;
-    }
-
     .pay-type-group {
-        padding: 10px 0px 10px 0px !important;
+        padding: 15px !important;
     }
 
     .ew-footer {
@@ -146,6 +155,162 @@
     font-weight: 600;
 }
 
+.weui-cells {
+    margin-top: 0;
+    background-color: #1f1f1f;
+    line-height: 1.41176471;
+    font-size: 17px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5px;
+    border: 1px solid #2d2d2d;
+}
+
+.weui-cells .weui-cell {
+    padding: 16px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.weui-cells .weui-cell-bottom {
+    padding: 16px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.weui-cells .weui-cell .weui-cell__bd {
+    min-width: 4em;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.weui-cells .weui-cell .weui-cell__ft {
+    font-weight: normal;
+    text-align: right;
+    color: rgba(0,0,0,0.5);
+    color: var(--weui-FG-1);
+}
+
+.weui-cells .weui-cell-bottom .weui-cell__bd {
+    min-width: 4em;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.weui-cells .weui-cell-bottom .weui-cell__ft {
+    font-weight: normal;
+    text-align: right;
+    color: rgba(0,0,0,0.5);
+    color: var(--weui-FG-1);
+}
+
+.weui-collas {
+    margin-top: 0;
+    background-color: #202020;
+    line-height: 1.41176471;
+    font-size: 14px;
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5px;
+    border: 1px solid #2d2d2d;
+}
+
+.weui-collas .weui-colla {
+    padding: 8px 15px 8px 15px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.weui-collas .weui-colla .weui-colla__bd {
+    min-width: 4em;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.weui-collas .weui-colla .weui-colla__ft {
+    font-weight: normal;
+    text-align: right;
+    color: rgba(0,0,0,0.5);
+    color: var(--weui-FG-1);
+}
+
+.weui-collas .weui-colla-bottom .weui-colla__bd {
+    min-width: 4em;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.weui-collas .weui-colla-bottom .weui-colla__ft {
+    font-weight: normal;
+    text-align: right;
+    color: rgba(0,0,0,0.5);
+    color: var(--weui-FG-1);
+}
+
+.order-number-box {
+    flex: 1 1 auto;
+    margin: 0px;
+    display: flex;
+}
+
+.order-number-box input {
+    color: #989898;
+    text-align: center;
+    margin: 0px;
+    display: block;
+    padding: 0px;
+}
+
+.order-number-box .sub {
+    margin: 0px;
+    display: block;
+    padding: 0px 8px 0px 0px;
+}
+
+.order-number-box .sub button {
+    line-height: unset;
+    padding: 0 10px;
+    border: 2px solid #2f2f2f;
+    border-radius: 5px;
+    background-color: #2f2f2f;
+}
+
+.order-number-box .add {
+    flex: 1 1 0%;
+    margin: 0px;
+    display: block;
+    padding: 0px 0px 0px 8px;
+}
+
+.order-number-box .add button {
+    line-height: unset;
+    padding: 0 10px;
+    border: 2px solid #2f2f2f;
+    border-radius: 5px;
+    background-color: #2f2f2f;
+}
+
 @media screen and (max-width: 1200px) {
     .buy-btn-group .layui-btn {
         width: 45% !important;
@@ -153,3 +318,4 @@
         min-width: 130px;
     }
 }
+

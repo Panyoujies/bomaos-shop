@@ -77,3 +77,10 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
 
+## 0是 redisTokenStore ，1是 jdbcTokenStore ，默认是0
+jwtp:
+  store-type: 1
+  ## 拦截路径，默认是/**
+  path: /api/**
+  ## 单个用户最大token数，默认-1不限制
+  max-token: 10

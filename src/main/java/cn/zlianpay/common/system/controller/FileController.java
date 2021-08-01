@@ -3,20 +3,33 @@ package cn.zlianpay.common.system.controller;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.common.core.utils.FileUploadUtil;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * 文件服务器
- * Created by wangfan on 2018-12-24 16:10
+ * Created by Panyoujie on 2018-12-24 16:10
  */
 @Controller
 @RequestMapping("/file")
@@ -46,6 +59,72 @@ public class FileController {
     @PostMapping("/upload/base64")
     public JsonResult uploadBase64(String base64, HttpServletRequest request) {
         return FileUploadUtil.upload(base64, request);
+    }
+
+    @ResponseBody
+    @GetMapping("/enQrcode")
+    public void enQrcode(HttpServletResponse resp, String url) throws IOException {
+        if (url != null && !"".equals(url)) {
+            ServletOutputStream stream = null;
+            try {
+                int width = 240;//图片的宽度
+                int height = 240;//高度
+
+                /*
+                 * 定义二维码的参数
+                 */
+                HashMap hashMap = new HashMap();
+                // 设置二维码字符编码
+                hashMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+                // 设置二维码纠错等级
+                hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+                // 设置二维码边距
+                hashMap.put(EncodeHintType.MARGIN, 1);
+
+                stream = resp.getOutputStream();
+                QRCodeWriter writer = new QRCodeWriter();
+                BitMatrix m = writer.encode(url, BarcodeFormat.QR_CODE, height, width, hashMap);
+                MatrixToImageWriter.writeToStream(m, "png", stream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (stream != null) {
+                    stream.flush();
+                    stream.close();
+                }
+            }
+        }
+    }
+
+    @PostMapping("/import")
+    @ResponseBody
+    public void importZip(@RequestParam("file") MultipartFile file) throws IOException {
+        ZipInputStream zipInputStream = new ZipInputStream(file.getInputStream(), Charset.forName("gbk"));
+        ZipEntry zipEntry;
+        while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+            if (!zipEntry.isDirectory()) {
+                // do nothing
+                String name = zipEntry.getName();
+                long size = zipEntry.getSize();
+                byte[] extra = zipEntry.getExtra();
+                if (size == -1) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    while (true) {
+                        int bytes = zipInputStream.read();
+                        if (bytes == -1) break;
+                        baos.write(bytes);
+                    }
+                    baos.close();
+                    System.out.println(new String(baos.toByteArray()));
+                } else {
+                    byte[] bytes = new byte[(int) zipEntry.getSize()];
+                    zipInputStream.read(bytes, 0, (int) zipEntry.getSize());
+                    System.out.println(new String(bytes));
+                }
+            }
+        }
+        zipInputStream.closeEntry();
+        zipInputStream.close();
     }
 
     /**

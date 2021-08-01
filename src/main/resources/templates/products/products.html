@@ -49,62 +49,6 @@
         </div>
     </div>
 </script>
-<!-- 表单弹窗 -->
-<script type="text/html" id="productsEditDialog">
-    <form id="productsEditForm" lay-filter="productsEditForm" class="layui-form model-form">
-        <input name="id" type="hidden"/>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">商品分类:</label>
-            <div class="layui-input-block">
-                <select name="classifyId" lay-verType="tips" lay-verify="required" required>
-                    <option value="">请选择分类</option>
-                    <:for items="${classifysList}" var="item">
-                        <option value="${item.id}">${item.name}</option>
-                    </:for>
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">商品名称:</label>
-            <div class="layui-input-block">
-                <input name="name" placeholder="请输入商品名称" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">商品金额:</label>
-            <div class="layui-input-block">
-                <input name="price" type="number" placeholder="请输入商品金额" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">排序:</label>
-            <div class="layui-input-block">
-                <input name="sort" placeholder="请输入排序" class="layui-input" value="1000"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">商品详情:</label>
-            <div class="layui-input-block">
-                <textarea name="pdInfo" placeholder="请输入商品详情" class="layui-textarea"
-                          lay-verType="tips" lay-verify="required" required></textarea>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">商品状态:</label>
-            <div class="layui-input-block">
-                <input type="radio" name="status" value="1" title="上架" checked>
-                <input type="radio" name="status" value="0" title="下架">
-            </div>
-        </div>
-        <div class="layui-form-item text-right">
-            <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit>保存</button>
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
-        </div>
-    </form>
-</script>
 <!-- 商品状态 -->
 <script type="text/html" id="productsTbStatus">
     <input type="checkbox" lay-filter="productsTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -127,7 +71,6 @@
             url: 'products/page',
             page: true,
             toolbar: ['<p>',
-                '<button lay-event="add" class="layui-btn layui-btn-sm icon-btn"><i class="layui-icon">&#xe654;</i>添加商品</button>&nbsp;',
                 '<button lay-event="del" class="layui-btn layui-btn-sm layui-btn-danger icon-btn"><i class="layui-icon">&#xe640;</i>删除商品</button>',
                 '</p>'].join(''),
             cellMinWidth: 100,
@@ -167,18 +110,14 @@
 
         /* 表格工具条点击事件 */
         table.on('tool(productsTable)', function (obj) {
-            if ('edit' === obj.event) { // 修改
-                showEditModel(obj.data);
-            } else if ('del' === obj.event) { // 删除
+            if ('del' === obj.event) { // 删除
                 doDel(obj);
             }
         });
 
         /* 表格头工具栏点击事件 */
         table.on('toolbar(productsTable)', function (obj) {
-            if ('add' === obj.event) { // 添加
-                showEditModel();
-            } else if ('del' === obj.event) { // 删除
+            if ('del' === obj.event) { // 删除
                 var checkRows = table.checkStatus('productsTable');
                 if (0 === checkRows.data.length) {
                     return layer.msg('请选择要删除的数据', {icon: 2, anim: 6});
@@ -189,34 +128,6 @@
                 doDel({ids: ids});
             }
         });
-
-        /* 显示表单弹窗 */
-        function showEditModel(mData) {
-            admin.open({
-                type: 1,
-                title: (mData ? '修改' : '添加') + '商品',
-                content: $('#productsEditDialog').html(),
-                success: function (layero, dIndex) {
-                    // 回显表单数据
-                    form.val('productsEditForm', mData);
-                    // 表单提交事件
-                    form.on('submit(productsEditSubmit)', function (data) {
-                        var loadIndex = layer.load(2);
-                        $.post(mData ? 'products/update' : 'products/save', data.field, function (res) {
-                            layer.close(loadIndex);
-                            if (0 === res.code) {
-                                layer.close(dIndex);
-                                layer.msg(res.msg, {icon: 1});
-                                insTb.reload({page: {curr: 1}});
-                            } else {
-                                layer.msg(res.msg, {icon: 2, anim: 6});
-                            }
-                        });
-                        return false;
-                    });
-                }
-            });
-        }
 
         /* 删除 */
         function doDel(obj) {

@@ -21,10 +21,8 @@ public class SignUtil {
         sb.deleteCharAt(sb.length()-1);
         // 拼接上密钥
         sb.append(privateKey);
-        System.out.println(sb);
         // 调用 Hutool 的 加密工具 进行 MD5 加密
         String s = SecureUtil.md5(sb.toString());
-        System.out.println(s);
         return s;
     }
 

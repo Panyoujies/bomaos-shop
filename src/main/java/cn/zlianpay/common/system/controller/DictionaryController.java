@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 /**
  * 字典管理
- * Created by wangfan on 2020-03-14 11:29:03
+ * Created by Panyoujie on 2020-03-14 11:29:03
  */
 @Controller
 @RequestMapping("/sys/dict")

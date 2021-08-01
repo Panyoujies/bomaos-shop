@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * 字典
- * Created by wangfan on 2020-03-14 11:29:03
+ * Created by Panyoujie on 2020-03-14 11:29:03
  */
 @TableName("sys_dictionary")
 public class Dictionary implements Serializable {

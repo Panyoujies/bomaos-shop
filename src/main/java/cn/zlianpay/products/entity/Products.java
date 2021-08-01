@@ -110,4 +110,9 @@ public class Products implements Serializable {
      * 销量
      */
     private Integer sales;
+
+    /**
+     * 是否开启密码查询
+     */
+    private Integer isPassword;
 }

@@ -61,7 +61,6 @@ body {
 }
 
 .layui-btn {
-    background-color: #34caa0;
     box-sizing: border-box
 }
 
@@ -567,7 +566,7 @@ body .layui-util-face .layui-layer-content {
     right: 0;
     background-color: #fff;
     z-index: 1000;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+    border: 1px solid #1d1d1d;
 }
 
 .ew-header .layui-logo {
@@ -809,7 +808,7 @@ body .layui-util-face .layui-layer-content {
         cursor: pointer;
         display: block;
         padding: 0 3px;
-        color: #666
+        color: #ffffff
     }
 
     .ew-header .nav-toggle > i {
@@ -1487,8 +1486,10 @@ body .layui-util-face .layui-layer-content {
 }
 
 .buy-btn-group {
-    padding-bottom: 10px;
-    padding-top: 20px;
+    padding: 15px;
+    border-top: 1px solid #2d2d2d;
+    background: linear-gradient(0deg, #141414, #1d1d1d);
+    border-radius: 0 0 5px 5px;
 }
 
 .buy-btn-group .layui-btn {
@@ -1553,14 +1554,16 @@ body .layui-util-face .layui-layer-content {
 }
 
 .pay-type-group {
-    padding: 25px 0px 15px 0px
+    padding: 15px;
+    border-top: 1px solid #2d2d2d;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > div {
     color: #666;
     font-size: 16px;
-    border: 2px solid #ddd;
-    padding: 10px 20px 10px 20px;
+    background-color: #202020;
+    border: 2px solid #4c4c4c;
+    padding: 10px;
     background-repeat: no-repeat;
     background-size: 33px 33px;
     background-position: 15px 5px;
@@ -1570,14 +1573,28 @@ body .layui-util-face .layui-layer-content {
     border-radius: 5px
 }
 
-.pay-type-group .layui-row .layui-col-md6 > div.active {
-    border: 2px solid rgb(51, 105, 255);
-    color: rgb(51, 105, 255);
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-ali.active {
+    border: 2px solid rgb(2, 168, 241);
+    color: rgb(2, 168, 241);
+    border-radius: 5px;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin.active {
+    border: 2px solid rgb(63, 183, 72);
+    color: rgb(63, 183, 72);
     border-radius: 5px;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > div.pay-type-wexin.active:before {
     border-color: #40ba49 #40ba49 transparent transparent
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin {
+    color: rgb(63, 183, 72) !important;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-ali {
+    color: rgb(2, 168, 241) !important;
 }
 
 .coupon-group {
@@ -2211,7 +2228,7 @@ a.icon-text > .layui-icon {
 .layui-btn:not(.layui-btn-primary) {
     border-width: 1px;
     border-style: solid;
-    border-color: #5d5d5d;
+    border-color: #4282ff;
 }
 
 .layui-input:focus, .layui-textarea:focus, xm-select:hover {
@@ -2373,37 +2390,50 @@ div.tagsinput span.tag {
 }
 
 .layui-badge-green {
-    color: #52c41a;
-    background: #f6ffed;
-    border: 1px solid #b7eb8f
+    color: #49aa19;
+    background: #162312;
+    border: 1px solid #274916
 }
 
 .layui-badge-blue {
-    color: #1890ff;
-    background: #e6f7ff;
-    border: 1px solid #91d5ff
+    color: #177ddc;
+    background: #111d2c;
+    border: 1px solid #15395b;
 }
 
 .layui-badge-red {
     color: #f5222d;
-    background: #fff1f0;
-    border: 1px solid #ffa39e
+    background: #2a1215;
+    border: 1px solid #58181c;
 }
 
 .layui-badge-yellow {
-    color: #faad14;
-    background: #fffbe6;
-    border: 1px solid #ffe58f
+    color: #d89614;
+    background: #2b2111;
+    border: 1px solid #594214;
 }
 
 .layui-badge-gray {
-    color: #8c8c8c;
-    background: #fafafa;
-    border: 1px solid #ccc
+    color: #909399;
+    background: #2a2b2b;
+    border: 1px solid #58595c
 }
 
 .layui-badge {
     height: 20px;
-    line-height: 19px;
+    line-height: 17.5px;
     box-sizing: border-box
+}
+
+.layui-card-header {
+    font-size: 18px;
+    font-weight: 600;
+    padding-left: 48px;
+    display: block !important;
+}
+
+.layui-card-header img {
+    top: 10px;
+    position: absolute;
+    left: 14px;
 }

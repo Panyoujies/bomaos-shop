@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * shiro框架配置
- * Created by wangfan on 2017-04-28 09:45
+ * Created by Panyoujie on 2017-04-28 09:45
  */
 @Configuration
 public class ShiroConfig {
@@ -63,6 +63,7 @@ public class ShiroConfig {
         filterChainDefinitions.put("/search/order/**", "anon");
         filterChainDefinitions.put("/orders/orders/pageAll", "anon");
         filterChainDefinitions.put("/getProductSearchList", "anon");
+        filterChainDefinitions.put("/file/enQrcode", "anon");
 
         /**
          * 商品

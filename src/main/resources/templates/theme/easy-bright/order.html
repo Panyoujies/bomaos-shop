@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <:include file="./common/title.html" websiteName="${website.websiteName} - 订单详情"
+              keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
+    <style>
+        .order-show {
+            margin: 0 auto;
+            background-color: rgb(255 255 255 / 50%);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .user-info-list-item {
+            position: relative;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            background-color: rgb(255 255 255 / 40%);
+            line-height: 1.41176471;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 5px;
+            border: 1px solid rgb(255 255 255 / 40%);
+        }
+
+        .weui-cells .weui-cell {
+            padding: 16px;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            border-bottom: 1px solid rgb(255 255 255 / 40%);
+        }
+
+        .weui-cells .weui-cell-bottom {
+            padding: 16px;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .weui-cells .weui-cell .weui-cell__bd {
+            min-width: 4em;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        .weui-cells .weui-cell .weui-cell__ft {
+            font-weight: normal;
+            text-align: right;
+            color: rgba(0,0,0,0.5);
+            color: var(--weui-FG-1);
+        }
+
+        .weui-cells .weui-cell-bottom .weui-cell__bd {
+            min-width: 4em;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        .weui-cells .weui-cell-bottom .weui-cell__ft {
+            font-weight: normal;
+            text-align: right;
+            color: rgba(0,0,0,0.5);
+            color: var(--weui-FG-1);
+        }
+
+        p {
+            height: 20px;
+            line-height: 20px;
+            margin-bottom: 2px;
+        }
+
+        .card-info-list {
+            text-align: left;
+            background-color: rgb(255 255 255 / 40%);
+            padding: 10px;
+            overflow-y: auto;
+            height: 215px;
+            max-height: 215px;
+            border-radius: 5px;
+            border: 1px solid rgb(255 255 255 / 40%);
+        }
+
+        .reset {
+            flex: 1 1 auto;
+            display: flex;
+            margin: 0px;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .reset-left {
+            flex: 1 1 0%;
+            margin: 0px;
+            display: block;
+        }
+
+        .reset-right {
+            flex: 1 1 0%;
+            margin: 0px;
+            display: block;
+            margin-left: 5px !important;
+        }
+    </style>
+    <script type="text/javascript" src="${ctxPath}/theme/easy-bright/js/clipboard.min.js"></script>
+</head>
+<body style="background: url(${isBackground}) fixed no-repeat; background-position: center center; background-size: cover;">
+<!-- header -->
+<:include file="./common/header.html" websiteName="${website.websiteName}"
+          websiteLogo="${website.websiteLogo}"/>
+
+<!-- goods-card -->
+<div class="layui-container body-card">
+    <div class="layui-row layui-col-space15">
+        <!-- 左 -->
+        <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+            <div class="layui-card order-show">
+
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">联系方式</div>
+                        <div class="weui-cell__ft">${orders.email!orders.contact}</div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">订单号</div>
+                        <div class="weui-cell__ft">${orders.member!}</div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">支付状态</div>
+                        <div class="weui-cell__ft">
+                            <:if test="${orders.status==3}">
+                                已发货
+                            </:if>
+                            <:if test="${orders.status==2}">
+                                待发货
+                            </:if>
+                            <:if test="${orders.status==1}">
+                                已支付
+                            </:if>
+                            <:if test="${orders.status==0}">
+                                未支付
+                            </:if>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">支付时间</div>
+                        <div class="weui-cell__ft">${orders.payTime!}</div>
+                    </div>
+                    <div class="weui-cell-bottom">
+                        <div class="weui-cell__bd">付款金额</div>
+                        <div class="weui-cell__ft">${orders.money!} 元</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 左 -->
+        <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+            <div class="layui-card order-show">
+                <:if test="${orders.shipType == 0}">
+                    <:if test="${orders.status == 0}">
+                        <div style="font-size: 18px; text-align: center; height: 285px; line-height: 285px;">
+                            <span>订单还未付款！</span>
+                        </div>
+                    </:if>
+
+                    <!-- 自动发货 -->
+                    <:if test="${orders.status == 1}">
+                        <div class="layui-text" style="font-size: 18px;">
+                            <div class="user-info-list-item">
+                                    <textarea id="card-txt" placeholder="查看卡密信息" class="layui-textarea"
+                                              style="height: 237px;"><:for items="${cardsList}" var="item">${item!}</:for></textarea>
+                            </div>
+                        </div>
+                        <div class="reset">
+                            <a id="card-copy1" href="#" data-clipboard-target="#card-txt" class="reset-left layui-btn">复制卡密</a>
+                            <!--<:if test="${orders.shipType == 0}">
+                                <button class="reset-right layui-btn" lay-filter="qrcodeSubmit" lay-submit>生成二维码</button>
+                            </:if>-->
+                            <script type="text/javascript"> new ClipboardJS('#card-copy1'); </script>
+                        </div>
+                    </:if>
+                </:if>
+                <:if test="${orders.shipType == 1}">
+                    <:if test="${orders.status == 0}">
+                        <div style="font-size: 18px; text-align: center; height: 285px; line-height: 285px;">
+                            <span>订单还未付款！</span>
+                        </div>
+                    </:if>
+                    <!-- 自动发货 -->
+                    <:if test="${orders.status == 2}">
+                        <div class="layui-text"
+                             style="font-size: 18px; text-align: center; height: 285px; line-height: 285px;">
+                            <span>本商品需要手动发货，请耐心等待发货哦！</span>
+                        </div>
+                    </:if>
+                    <:if test="${orders.status == 3}">
+                        <div class="layui-text"
+                             style="font-size: 18px; text-align: center; height: 237px; line-height: 237px;">
+                            <div class="user-info-list-item card-info-list" id="card-txt">
+                                <:for items="${cardsList}" var="item">
+                                    ${item!}
+                                </:for>
+                            </div>
+                        </div>
+                        <div class="reset">
+                            <a id="card-copy" href="#" data-clipboard-target="#card-txt" class="reset-left layui-btn">复制卡密</a>
+                            <!--<:if test="${orders.shipType == 0}">
+                                <button class="reset-right layui-btn" lay-filter="qrcodeSubmit" lay-submit>生成二维码</button>
+                            </:if>-->
+                            <script type="text/javascript"> new ClipboardJS('#card-copy'); </script>
+                        </div>
+                    </:if>
+
+                </:if>
+            </div>
+        </div>
+
+        <!-- 左 -->
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <!-- 使用说明 -->
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <img src="${ctxPath}/theme/easy-bright/images/present.svg">
+                    使用说明
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px;">
+                    <div style="overflow-y: auto; max-height: 200px;">
+                        ${goods.pdInfo!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="ordersInfoDialog">
+    <div id="imgView"
+         style="padding: 10px; border-radius: 5px;">
+    </div>
+</script>
+
+<!-- footer -->
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+
+<!-- js部分 -->
+<:include file="./common/qiantaijs.html"/>
+<script>
+    layui.use(['layer', 'form', 'QRCode', 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var QRCode = layui.QRCode;
+        var admin = layui.admin;
+
+        /* 生成二维码 - 仅支持自动发货的商品 */
+        form.on('submit(qrcodeSubmit)', function () {
+            var content = $('#card-txt').val();
+            layer.open({
+                type: 1
+                ,title: '查看二维码'
+                ,offset: 'auto'
+                ,id: 'layerDemo' + 'auto'
+                ,content: shows(content)
+                ,btn: '关闭窗口'
+                ,btnAlign: 'c' //按钮居中
+                ,shade: 0 //不显示遮罩
+                ,yes: function(){
+                    layer.closeAll();
+                }
+            });
+        });
+
+        function shows(mData) {
+            html = '<div id="payQrCode" style="width: 260px; height: 260px; text-align: center">' +
+                '<img style="margin-top: 10px" src="/file/enQrcode?url='+ mData +'">' +
+                '</div>';
+            return html;
+        }
+
+    })
+</script>
+</body>
+</html>

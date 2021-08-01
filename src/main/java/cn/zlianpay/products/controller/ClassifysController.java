@@ -48,8 +48,9 @@ public class ClassifysController extends BaseController {
     @RequestMapping("/page")
     public PageResult<ClassifysVo> page(HttpServletRequest request) {
         PageParam<Classifys> pageParam = new PageParam<>(request);
-        List<Classifys> records = classifysService.page(pageParam, pageParam.getWrapper()).getRecords();
+        pageParam.addOrderAsc("sort");
 
+        List<Classifys> records = classifysService.page(pageParam, pageParam.getWrapper()).getRecords();
         List<ClassifysVo> classifysVoList = records.stream().map((classifys) -> {
             ClassifysVo classifysVo = new ClassifysVo();
             BeanUtils.copyProperties(classifys, classifysVo);

@@ -15,6 +15,7 @@
         <div class="layui-card-body" style="padding: 20px 20px; text-align: center">
             <h2 style="font-size: 25px; margin-bottom: 10px; font-weight: 600;">订单查询</h2>
             <h3>轻松查询订单,即刻享受卡密自动交易</h3>
+            <h3>浏览器缓存订单只保存七天、请尽快提取卡密</h3>
             <h3>订单号开头为TUD,或者用下单时填写的联系方式查询</h3>
         </div>
     </div>
@@ -26,11 +27,11 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-xs12 layui-col-sm8 layui-col-md9">
                     <input type="text" name="contact" class="layui-input" lay-verify="required"
-                           placeholder="请输入TUD开头订单号/联系方式/流水号" autocomplete="off" class="layui-input">
+                           placeholder="请输入TUD开头订单号/电子邮件/流水号" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-col-xs12 layui-col-sm4 layui-col-md3">
                     <button class="layui-btn layui-btn-show" lay-filter="goodsTbSearch" lay-submit>
-                        <i class="layui-icon">&#xe615;</i>
+                        <i class="layui-icon" style="font-size: 22px">&#xe615;</i>
                         查询订单
                     </button>
                 </div>
@@ -48,11 +49,11 @@
 </div>
 
 <!-- footer -->
-<:include file="${ctxPath}/common/footer.html" websiteName="${website.websiteName}"/>
+<:include file="${ctxPath}/common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
 
 <!-- 项目模板 -->
 <script type="text/html" id="orderItem">
-    <div class="row" {{#  if(d.andIncrement === 0){ }}style="border-bottom: 1px solid #e3e3e3;{{#  } else { }}style="border-top: 1px solid #e3e3e3;{{#  } }}">
+    <div class="row" {{#  if(d.andIncrement == 0){ }} {{#  } else { }}style="border-top: 1px solid #e3e3e3;"{{#  } }}>
         <a href="/search/order/{{d.member}}" target="_blank">
             <div class="row-bd">
                 <div class="center">
@@ -68,6 +69,7 @@
         </a>
     </div>
 </script>
+
 <!-- js部分 -->
 <:include file="${ctxPath}/common/qiantaijs.html"/>
 
@@ -77,6 +79,33 @@
         var form = layui.form;
         var layer = layui.layer;
         var dataGrid = layui.dataGrid;
+        var ordersListJson = JSON.parse('${ordersList!}').map(function (d) {
+            return {
+                id: d.id,
+                andIncrement: d.andIncrement,
+                member: d.member,
+                createTime: d.createTime,
+                payType: d.payType,
+                status: d.status,
+                money: d.money}
+        });
+
+        if (ordersListJson.length != 0) {
+            dataGrid.render({
+                elem: '#search-card',
+                templet: '#orderItem',
+                data: ordersListJson
+            });
+        } else {
+            var cardListHtml = '' +
+                '<div class="no-content">\n' +
+                '    <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
+                '    <p class="user-no-contents">没有查询到该订单</p>\n' +
+                '</div>';
+
+            $("#search-card").html(cardListHtml);
+        }
+
 
         /* 表格搜索 */
         form.on('submit(goodsTbSearch)', function (data) {

@@ -54,7 +54,6 @@ public class sendPayjs {
 
         // 请求payjs获取二维码
         String result = HttpsUtils.sendPost(PayjsConfig.nativeUrl, JSON.toJSONString(payData),null);
-        System.out.println(result);
         JSONObject jsonObject = JSON.parseObject(result);
         String code_url = jsonObject.get("code_url").toString(); // 获取付款二维码
 

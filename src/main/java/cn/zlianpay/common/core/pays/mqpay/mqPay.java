@@ -29,7 +29,7 @@ public class mqPay {
         String notifyUrl = notify_url + "/mqpay/notifyUrl";
         String returnUrl = notify_url + "/mqpay/returnUrl";
 
-        String jsSign =  md5(payId+param+type+price+key);
+        String jsSign =  md5(payId + param + type + price + key);
         String url = create_url + "/createOrder?payId="+ payId +"&type="+ type +"&price="+ price + "&notifyUrl=" + notifyUrl + "&returnUrl=" + returnUrl + "&sign="+ jsSign +"&param="+ param +"&isHtml=1";
 
         return url;

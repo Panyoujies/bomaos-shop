@@ -60,11 +60,6 @@ body {
     padding-right: 0 !important
 }
 
-.layui-btn {
-    background-color: #34caa0;
-    box-sizing: border-box
-}
-
 .layui-btn-primary {
     color: #666;
     border-color: #ccc;
@@ -1487,8 +1482,10 @@ body .layui-util-face .layui-layer-content {
 }
 
 .buy-btn-group {
-    padding-bottom: 10px;
-    padding-top: 20px;
+    padding: 15px;
+    border-top: 1px solid #eaeaea;
+    background: linear-gradient(0deg, #fbfbfb, #f7f7f7);
+    border-radius: 0 0 5px 5px;
 }
 
 .buy-btn-group .layui-btn {
@@ -1553,14 +1550,16 @@ body .layui-util-face .layui-layer-content {
 }
 
 .pay-type-group {
-    padding: 25px 0px 15px 0px
+    padding: 15px;
+    border-top: 1px solid #eeeeee;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > div {
     color: #666;
     font-size: 16px;
     border: 2px solid #ddd;
-    padding: 10px 20px 10px 20px;
+    padding: 10px;
+    background-color: #fafafa;
     background-repeat: no-repeat;
     background-size: 33px 33px;
     background-position: 15px 5px;
@@ -1570,14 +1569,28 @@ body .layui-util-face .layui-layer-content {
     border-radius: 5px
 }
 
-.pay-type-group .layui-row .layui-col-md6 > div.active {
-    border: 2px solid rgb(51, 105, 255);
-    color: rgb(51, 105, 255);
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-ali.active {
+    border: 2px solid rgb(2, 168, 241);
+    color: rgb(2, 168, 241);
+    border-radius: 5px;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin.active {
+    border: 2px solid rgb(63, 183, 72);
+    color: rgb(63, 183, 72);
     border-radius: 5px;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > div.pay-type-wexin.active:before {
     border-color: #40ba49 #40ba49 transparent transparent
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin {
+    color: rgb(63, 183, 72) !important;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-ali {
+    color: rgb(2, 168, 241) !important;
 }
 
 .coupon-group {
@@ -2211,7 +2224,7 @@ a.icon-text > .layui-icon {
 .layui-btn:not(.layui-btn-primary) {
     border-width: 1px;
     border-style: solid;
-    border-color: #d7d7d7;
+    border-color: #4282ff;
 }
 
 .layui-input:focus, .layui-textarea:focus, xm-select:hover {
@@ -2404,6 +2417,19 @@ div.tagsinput span.tag {
 
 .layui-badge {
     height: 20px;
-    line-height: 19px;
+    line-height: 17.5px;
     box-sizing: border-box
+}
+
+.layui-card-header {
+    font-size: 18px;
+    font-weight: 600;
+    padding-left: 48px;
+    display: block !important;
+}
+
+.layui-card-header img {
+    top: 10px;
+    position: absolute;
+    left: 14px;
 }

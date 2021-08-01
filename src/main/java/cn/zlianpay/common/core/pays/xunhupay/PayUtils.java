@@ -59,8 +59,6 @@ public class PayUtils extends BaseController {
 
 		String response = HttpUtils.httppostjson(url, JSON.toJSONString(sortParams));
         JSONObject jsonObject = JSONObject.parseObject(response);
-
-		System.out.println(jsonObject.toJSONString());
         Map map1 = null;
 		try {
             Integer errcode = (Integer) jsonObject.get("errcode");

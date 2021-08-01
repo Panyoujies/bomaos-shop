@@ -51,8 +51,6 @@ public class SendYunfu {
             JSONObject returnData = JSON.parseObject(return_data);
             String url = returnData.get("url").toString();
             Object h5 = returnData.get("h5");
-            System.out.println(return_data);
-
             return url;
         } else {
 

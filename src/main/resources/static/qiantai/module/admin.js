@@ -156,13 +156,13 @@ layui.define(["layer", "element"], function (b) {
             a.open({
                 id: "pswForm",
                 type: 2,
-                title: "淇敼瀵嗙爜",
+                title: "修改密码",
                 area: ["360px", "287px"],
                 content: e ? e : "page/tpl/tpl-password.html"
             })
         }, logout: function () {
             var e = d(this).data("url");
-            c.confirm("纭畾瑕侀€€鍑虹櫥褰曞悧锛�", {title: "娓╅Θ鎻愮ず", skin: "layui-layer-admin", shade: 0.1}, function () {
+            c.confirm("确定要退出登录吗？", {title: "温馨提示", skin: "layui-layer-admin", shade: 0.1}, function () {
                 location.replace(e ? e : "/")
             })
         }, open: function () {

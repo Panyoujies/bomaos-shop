@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * 字典项
- * Created by wangfan on 2020-03-14 11:29:04
+ * Created by Panyoujie on 2020-03-14 11:29:04
  */
 @TableName("sys_dictionary_data")
 public class DictionaryData implements Serializable {

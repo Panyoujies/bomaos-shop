@@ -59,6 +59,9 @@
                 <if test="page.pageData.couponId != null">
                     AND a.coupon_id = #{page.pageData.couponId}
                 </if>
+                <if test="page.pageData.password != null">
+                    AND a.password LIKE CONCAT('%', #{page.pageData.password}, '%')
+                </if>
             </if>
         </where>
     </sql>

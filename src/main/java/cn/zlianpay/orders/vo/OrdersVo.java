@@ -125,4 +125,9 @@ public class OrdersVo {
      */
     private Integer shipType;
 
+
+    /**
+     * 订单密码
+     */
+    private String password;
 }

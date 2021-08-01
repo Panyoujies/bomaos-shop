@@ -7,13 +7,14 @@
 </head>
 <body>
 <!-- header -->
-<:include file="${ctxPath}/common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+<:include file="${ctxPath}/common/header.html" websiteName="${website.websiteName}"
+          websiteLogo="${website.websiteLogo}"/>
 
 <!-- goods-card -->
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/qiantai/images/notice.svg" style="top: 10px; position: absolute; left: 15px;">
+        <div class="layui-card-header">
+            <img src="${ctxPath}/qiantai/images/notice.svg">
             购物须知
         </div>
         <div class="layui-card-body">
@@ -27,8 +28,8 @@
 <!-- goods-card -->
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/qiantai/images/classifys.svg" style="top: 10px; position: absolute; left: 15px;">
+        <div class="layui-card-header">
+            <img src="${ctxPath}/qiantai/images/classifys.svg">
             选择分类
         </div>
         <div class="layui-card-body" style="padding: 15px 15px;">
@@ -37,12 +38,13 @@
         </div>
     </div>
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/qiantai/images/product.svg" style="top: 10px; position: absolute; left: 15px;">
+        <div class="layui-card-header">
+            <img src="${ctxPath}/qiantai/images/product.svg">
             选择商品
             <div class="pull-right" style="position: relative;">
                 <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
-                <input id="screen-product" placeholder="请输入商品名称" class="layui-input screen-input" lay-verify="required" required/>
+                <input id="screen-product" placeholder="请输入商品名称" class="layui-input screen-input" lay-verify="required"
+                       required/>
             </div>
         </div>
         <div class="layui-card-body" style="padding: 15px 15px;">
@@ -57,12 +59,17 @@
 <!-- 项目模板 -->
 <script type="text/html" id="classifyItem">
     <div class="layui-col-xs6 layui-col-sm6 layui-col-md2">
-        <div class="project-list-item {{#  if(d.andIncrement === 0){ }}active{{#  } }} " data-id="{{d.id}}" lay-filter="classifySubmit" lay-submit>
+        <div class="project-list-item {{#  if(d.andIncrement === 0){ }}active{{#  } }} " data-id="{{d.id}}"
+             lay-filter="classifySubmit" lay-submit>
             <div class="project-list-item-body">
-                <div class="item-title" style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 5px;">
+                <div class="item-title"
+                     style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 5px;">
                     {{d.name}}
                 </div>
-                <div class="project-list-item-text">商品数量： {{d.productsMember}}</div>
+                <div class="project-list-item-text">
+                    商品数量： {{d.productsMember}}
+
+                </div>
             </div>
         </div>
     </div>
@@ -75,17 +82,21 @@
              style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url({{d.imageLogo}}); background-repeat: no-repeat; background-size: cover;"
              data-id="{{d.id}}" lay-filter="productSubmit" lay-submit>
             <div class="project-list-item-body">
-                <div class="project-list-item-title" style="padding-bottom: 5px; font-weight: 700; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
+                <div class="project-list-item-title"
+                     style="padding-bottom: 5px; font-weight: 700; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
                     {{d.name}}
                 </div>
                 <div class="project-list-item-text"
-                     style="font-weight: 700; padding-bottom: 5px; color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">¥ {{d.price}}
+                     style="font-weight: 700; padding-bottom: 5px; color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
+                    ¥ {{d.price}}
                 </div>
-                <div class="project-list-item-text" style="color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">库存数量：{{d.cardMember}}</div>
+                <div class="project-list-item-text" style="color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
+                    库存数量：{{d.cardMember}}
+                </div>
                 <div class="tag">
-                    {{#  if(d.isCoupon >= 1){ }}<span class="layui-badge layui-bg-blue">券</span>{{#  } }}
-                    {{#  if(d.restricts >= 1){ }}<span class="layui-badge">限</span>{{#  } }}
-                    {{#  if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{#  } }}
+                    {{# if(d.isCoupon >= 1){ }}<span class="layui-badge layui-bg-blue">券</span>{{# } }}
+                    {{# if(d.restricts >= 1){ }}<span class="layui-badge">限</span>{{# } }}
+                    {{# if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{# } }}
                 </div>
             </div>
         </div>
@@ -114,28 +125,29 @@
             if ($.cookie("isWindow") != 'yes') {
                 //示范一个公告层
                 layer.open({
-                    type: 1
-                    ,title: false //不显示标题栏
-                    ,closeBtn: false
-                    ,area: '300px;'
-                    ,shade: 0.4
-                    ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                    ,btn: ['我知道啦']
-                    ,btnAlign: 'c'
-                    ,moveType: 1 //拖拽模式，0或者1
-                    ,content: '<div style="padding: 15px; line-height: 22px; background-color: #fdfdfd; color: #444444; font-weight: 300; border-radius: 5px;">' + shopSettingsJson.window + '</div>'
-                    ,success: function(layero){
+                    type: 1,
+                    title: '站点公告',
+                    closeBtn: false,
+                    area: '300px;',
+                    shade: 0.4,
+                    id: 'LAY_layuipro',
+                    btn: ['我知道啦'],
+                    btnAlign: 'c',
+                    moveType: 1,
+                    content: '<div style="padding: 15px; line-height: 22px; background-color: #fdfdfd; color: #444444; font-weight: 300; border-radius: 5px;">' + shopSettingsJson.window + '</div>',
+                    success: function (layero) {
                         var btn = layero.find('.layui-layer-btn');
                         btn.click(function () {
                             /*var date = new Date();
                             date.setTime(date.getTime() + (5 * 1000));*/
-                            $.cookie('isWindow', 'yes', { expires: 1 });
+                            $.cookie('isWindow', 'yes', {expires: 1});
                         })
                     }
                 });
             }
         }
-        // 支付方式点击事件
+
+        // 分类点击事件
         $('.pay-type-group>div').click(function () {
             $('.pay-type-group>div').removeClass('active');
             $(this).addClass('active');

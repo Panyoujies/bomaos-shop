@@ -1,4 +1,4 @@
-f.project-list-item.uuids {
+.uuids {
     height: auto;
     padding-bottom: 100px;
     padding-top: 100px;
@@ -118,7 +118,7 @@ f.project-list-item.uuids {
 }
 
 .screen-input {
-    width: 160px;
+    width: 250px;
     font-size: 14px;
     height: 33px;
     margin-top: 6px;
@@ -165,4 +165,7 @@ f.project-list-item.uuids {
         max-height: 210px;
     }
 
+    .screen-input {
+        width: 160px;
+    }
 }

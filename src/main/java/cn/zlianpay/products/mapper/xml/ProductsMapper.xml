@@ -59,6 +59,9 @@
                 <if test="page.pageData.sales != null">
                     AND a.sales = #{page.pageData.sales}
                 </if>
+                <if test="page.pageData.isPassword != null">
+                    AND a.is_password = #{page.pageData.isPassword}
+                </if>
             </if>
         </where>
     </sql>

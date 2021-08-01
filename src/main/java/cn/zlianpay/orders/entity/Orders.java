@@ -118,4 +118,9 @@ public class Orders implements Serializable {
      */
     private Integer couponId;
 
+
+    /**
+     * 订单密码
+     */
+    private String password;
 }

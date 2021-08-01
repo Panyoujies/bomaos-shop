@@ -124,7 +124,6 @@ public class NotifyController {
             String number = StringUtil.getRandomNumber(6);
             String payNo = date + seconds + number;
             String big = returnBig(money, price, payId, payNo, param, "success", "fiald");
-            System.out.println(big);
             return big; // 通知成功
         } else {
             return "fiald";
@@ -290,9 +289,6 @@ public class NotifyController {
         String sign1 = ZlianPay.createSign(params, secret_key);
         if (sign1.equals(sign)) {
             String big = returnBig(money, money, out_trade_no, trade_no, name, "success", "final");
-
-            System.out.println(big);
-
             return big;
         } else {
             return "签名错误！！";
@@ -355,8 +351,6 @@ public class NotifyController {
     @ResponseBody
     @RequestMapping("/yungouos/notify")
     public String notify(HttpServletRequest request) throws NoSuchAlgorithmException {
-
-        System.out.println("1111111111111111");
         Map<String, String> params = RequestParamsUtil.getParameterMap(request);
         String payNo = params.get("payNo");
         String code = params.get("code");
@@ -636,7 +630,6 @@ public class NotifyController {
 
                     String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, resSuccessXml, resFailXml);
                     resXml = returnBig;
-                    isSuccess = true;
                 } else {
                     System.out.println("签名判断错误！！");
                 }
@@ -769,7 +762,7 @@ public class NotifyController {
                 }
 
                 if (!StringUtils.isEmpty(member.getEmail())) {
-                    if (isEmail(member.getEmail())) {
+                    if (FormCheckUtil.isEmail(member.getEmail())) {
                         emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
                     }
                 }
@@ -783,8 +776,8 @@ public class NotifyController {
         } else { // 手动发货商品
             Products products1 = new Products();
             products1.setId(products.getId());
-            products1.setInventory(products.getInventory() - 1);
-            products1.setSales(products.getSales() + 1);
+            products1.setInventory(products.getInventory() - member.getNumber());
+            products1.setSales(products.getSales() + member.getNumber());
 
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
@@ -794,7 +787,9 @@ public class NotifyController {
                 message.setAppToken(shopSettings.getAppToken());
                 WxPusher.send(message);
             }
-
+            if (FormCheckUtil.isEmail(member.getEmail())) {
+                emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+            }
             productsService.updateById(products1);
         }
 
@@ -814,16 +809,7 @@ public class NotifyController {
         orders.setPayNo(pay_no);
         orders.setPrice(new BigDecimal(price));
         orders.setMoney(new BigDecimal(money));
-
         boolean b = ordersService.updateById(orders);// 更新售出
-
-        if (b) {
-            boolean email = FormCheckUtil.isEmail(member.getEmail());
-            if (email) {
-                emailService.sendTextEmail("订单提醒", "您的订单号为：" + member.getMember() + " 本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
-            }
-        }
-
         return success;
     }
 
@@ -902,9 +888,6 @@ public class NotifyController {
         if (mySign.length() != 32) {
             mySign = "0" + mySign;
         }
-
-        System.out.println(mySign);
-
         return mySign;
     }
 

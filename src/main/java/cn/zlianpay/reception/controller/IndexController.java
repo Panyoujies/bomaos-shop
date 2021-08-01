@@ -5,6 +5,8 @@ import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.orders.vo.OrderVos;
+import cn.zlianpay.reception.dto.SearchDTO;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.CouponService;
@@ -32,11 +34,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,9 +84,14 @@ public class IndexController {
     @Autowired
     private ShopSettingsService shopSettingsService;
 
-    @RequestMapping({"/","/index"})
+    @RequestMapping({"/", "/index"})
     public String IndexView(Model model) {
-        List<Classifys> classifysList = classifysService.list(new QueryWrapper<Classifys>().eq("status", 1));
+
+        QueryWrapper<Classifys> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", 1);
+        queryWrapper.orderByAsc("sort");
+
+        List<Classifys> classifysList = classifysService.list(queryWrapper);
 
         AtomicInteger index = new AtomicInteger(0);
         List<ClassifysVo> classifysVoList = classifysList.stream().map((classifys) -> {
@@ -108,13 +119,27 @@ public class IndexController {
 
     @ResponseBody
     @RequestMapping("/getProductList")
-    public JsonResult getProductList(Integer classifyId){
-        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("classify_id", classifyId).eq("status", 1));
+    public JsonResult getProductList(Integer classifyId) {
+
+        /**
+         * 条件构造器
+         * 根据分类id查询商品
+         * 状态为开启
+         * asc 排序方式
+         */
+        QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("classify_id", classifyId);
+        queryWrapper.eq("status", 1);
+        queryWrapper.orderByAsc("sort");
+
+        List<Products> productsList = productsService.list(queryWrapper);
         List<ProductsVo> productsVoList = productsList.stream().map((products) -> {
             ProductsVo productsVo = new ProductsVo();
             BeanUtils.copyProperties(products, productsVo);
             int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
             productsVo.setCardMember(count);
+            int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
+            productsVo.setSellCardMember(count2);
             productsVo.setPrice(products.getPrice().toString());
 
             int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
@@ -122,6 +147,7 @@ public class IndexController {
 
             if (products.getShipType() == 1) {
                 productsVo.setCardMember(products.getInventory());
+                productsVo.setSellCardMember(products.getSales());
             }
 
             return productsVo;
@@ -131,6 +157,7 @@ public class IndexController {
 
     /**
      * 商品购买页面
+     *
      * @param model
      * @param link
      * @return
@@ -165,9 +192,12 @@ public class IndexController {
             String[] wholesales = wholesale.split("\\n");
 
             List<Map<String, String>> list = new ArrayList<>();
+            AtomicInteger atomicInteger = new AtomicInteger(0);
             for (String s : wholesales) {
                 String[] split = s.split("=");
                 Map<String, String> map = new HashMap<>();
+                Integer andIncrement = atomicInteger.getAndIncrement();
+                map.put("id", andIncrement.toString());
                 map.put("number", split[0]);
                 map.put("money", split[1]);
                 list.add(map);
@@ -210,6 +240,7 @@ public class IndexController {
 
     /**
      * 计算卡密使用情况
+     *
      * @param cardsService
      * @param products
      * @return
@@ -226,7 +257,132 @@ public class IndexController {
     }
 
     @RequestMapping("/search")
-    public String search(Model model) {
+    public String search(Model model, HttpServletRequest request) {
+
+        Cookie[] cookies = request.getCookies();
+        if (!ObjectUtils.isEmpty(cookies)) {
+            for (Cookie cookie : cookies) {
+                String cookieName = cookie.getName();
+                if ("BROWSER_ORDERS_CACHE".equals(cookieName)) {
+                    String cookieValue = cookie.getValue();
+                    boolean contains = cookieValue.contains("=");
+                    if (contains) {
+                        String[] split = cookieValue.split("=");
+                        List<SearchDTO> ordersList = new ArrayList<>();
+                        AtomicInteger index = new AtomicInteger(0);
+                        for (String s : split) {
+                            Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", s));
+
+                            if (ObjectUtils.isEmpty(member)) {
+                                continue;
+                            }
+
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
+                            String date = df.format(member.getCreateTime());// new Date()为获取当前系统时间，也可使用当前时间戳
+
+                            SearchDTO searchDTO = new SearchDTO();
+                            searchDTO.setId(member.getId().toString());
+                            Integer andIncrement = (Integer) index.getAndIncrement();
+                            searchDTO.setAndIncrement(andIncrement.toString());
+                            searchDTO.setCreateTime(date);
+                            searchDTO.setMoney(member.getMoney().toString());
+                            if (member.getPayType().equals("codepay_alipay")
+                                    || member.getPayType().equals("mqpay_alipay")
+                                    || member.getPayType().equals("zlianpay_alipay")
+                                    || member.getPayType().equals("yungouos_alipay")
+                                    || member.getPayType().equals("xunhupay_alipay")
+                                    || member.getPayType().equals("jiepay_alipay")
+                                    || member.getPayType().equals("payjs_alipay")
+                                    || member.getPayType().equals("yunfu_alipay")
+                                    || member.getPayType().equals("alipay")) {
+                                searchDTO.setPayType("支付宝");
+                            } else if (member.getPayType().equals("codepay_wxpay")
+                                    || member.getPayType().equals("mqpay_wxpay")
+                                    || member.getPayType().equals("zlianpay_wxpay")
+                                    || member.getPayType().equals("yungouos_wxpay")
+                                    || member.getPayType().equals("xunhupay_wxpay")
+                                    || member.getPayType().equals("jiepay_wxpay")
+                                    || member.getPayType().equals("payjs_wxpay")
+                                    || member.getPayType().equals("yunfu_wxpay")
+                                    || member.getPayType().equals("wxpay")) {
+                                searchDTO.setPayType("微信");
+                            }
+                            if (member.getStatus() == 1) {
+                                searchDTO.setStatus("付款成功");
+                            } else if (member.getStatus() == 2) {
+                                searchDTO.setStatus("待发货");
+                            } else if (member.getStatus() == 3) {
+                                searchDTO.setStatus("已发货");
+                            } else {
+                                searchDTO.setStatus("未付款");
+                            }
+
+                            searchDTO.setMember(member.getMember());
+                            ordersList.add(searchDTO);
+                        }
+                        model.addAttribute("ordersList", JSON.toJSONString(ordersList));
+                    } else {
+                        List<SearchDTO> ordersList = new ArrayList<>();
+                        AtomicInteger index = new AtomicInteger(0);
+                        Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", cookieValue));
+
+                        if (!ObjectUtils.isEmpty(member)) {
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
+                            String date = df.format(member.getCreateTime());// new Date()为获取当前系统时间，也可使用当前时间戳
+
+                            SearchDTO searchDTO = new SearchDTO();
+                            searchDTO.setId(member.getId().toString());
+                            Integer andIncrement = (Integer) index.getAndIncrement();
+                            searchDTO.setAndIncrement(andIncrement.toString());
+                            searchDTO.setCreateTime(date);
+                            searchDTO.setMoney(member.getMoney().toString());
+                            if (member.getPayType().equals("codepay_alipay")
+                                    || member.getPayType().equals("mqpay_alipay")
+                                    || member.getPayType().equals("zlianpay_alipay")
+                                    || member.getPayType().equals("yungouos_alipay")
+                                    || member.getPayType().equals("xunhupay_alipay")
+                                    || member.getPayType().equals("jiepay_alipay")
+                                    || member.getPayType().equals("payjs_alipay")
+                                    || member.getPayType().equals("yunfu_alipay")
+                                    || member.getPayType().equals("alipay")) {
+                                searchDTO.setPayType("支付宝");
+                            } else if (member.getPayType().equals("codepay_wxpay")
+                                    || member.getPayType().equals("mqpay_wxpay")
+                                    || member.getPayType().equals("zlianpay_wxpay")
+                                    || member.getPayType().equals("yungouos_wxpay")
+                                    || member.getPayType().equals("xunhupay_wxpay")
+                                    || member.getPayType().equals("jiepay_wxpay")
+                                    || member.getPayType().equals("payjs_wxpay")
+                                    || member.getPayType().equals("yunfu_wxpay")
+                                    || member.getPayType().equals("wxpay")) {
+                                searchDTO.setPayType("微信");
+                            }
+                            if (member.getStatus() == 1) {
+                                searchDTO.setStatus("付款成功");
+                            } else if (member.getStatus() == 2) {
+                                searchDTO.setStatus("待发货");
+                            } else if (member.getStatus() == 3) {
+                                searchDTO.setStatus("已发货");
+                            } else {
+                                searchDTO.setStatus("未付款");
+                            }
+                            searchDTO.setMember(member.getMember());
+                            ordersList.add(searchDTO);
+                        }
+
+                        model.addAttribute("ordersList", JSON.toJSONString(ordersList));
+                    }
+                    break;
+                } else {
+                    List<SearchDTO> ordersList = new ArrayList<>();
+                    model.addAttribute("ordersList", JSON.toJSONString(ordersList));
+                }
+            }
+        } else {
+            List<SearchDTO> ordersList = new ArrayList<>();
+            model.addAttribute("ordersList", JSON.toJSONString(ordersList));
+        }
+
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
 
@@ -239,62 +395,81 @@ public class IndexController {
 
     @RequestMapping("/search/order/{order}")
     public String searchOrder(Model model, @PathVariable("order") String order) {
-
         Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", order));
-
         Products products = productsService.getById(member.getProductId());
+        if (!StringUtils.isEmpty(products.getIsPassword())) {
+            if (products.getIsPassword() == 1) {
+
+                Website website = websiteService.getById(1);
+                model.addAttribute("website", website);
+
+                ShopSettings shopSettings = shopSettingsService.getById(1);
+                model.addAttribute("isBackground", shopSettings.getIsBackground());
+
+                model.addAttribute("orderId", member.getId());
+                model.addAttribute("member", member.getMember());
+                Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+                return "theme/" + theme.getDriver() + "/orderPass.html";
+            }
+        }
         Classifys classifys = classifysService.getById(products.getClassifyId());
-
         List<OrderCard> ordersList = orderCardService.list(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
-
-        List<Cards> cardsList = new ArrayList<>();
+        List<String> cardsList = new ArrayList<>();
         for (OrderCard orderCard : ordersList) {
             Cards cards = cardsService.getById(orderCard.getCardId());
-            cardsList.add(cards);
+            String cardInfo = cards.getCardInfo();
+            StringBuilder builder = new StringBuilder();
+            if (products.getShipType() == 0) {
+                if (cardInfo.contains(" ")) {
+                    String[] split = cardInfo.split(" ");
+                    builder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                    cardsList.add(builder.toString());
+                } else {
+                    builder.append("卡密：").append(cardInfo).append("\n");
+                    cardsList.add(builder.toString());
+                }
+            } else {
+                builder.append(builder);
+                cardsList.add(builder.toString());
+            }
         }
-
         OrdersVo ordersVo = new OrdersVo();
-        BeanUtils.copyProperties(member,ordersVo);
+        BeanUtils.copyProperties(member, ordersVo);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
         if (member.getPayTime() != null) {
             String date = df.format(member.getPayTime());// new Date()为获取当前系统时间，也可使用当前时间戳
             ordersVo.setPayTime(date);
         } else {
-            ordersVo.setPayType(null);
+            ordersVo.setPayTime(null);
         }
-
         ordersVo.setMoney(member.getMoney().toString());
-
         /**
          * 发货模式
          */
         ordersVo.setShipType(products.getShipType());
-
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
-
         model.addAttribute("cardsList", cardsList); // 订单
         model.addAttribute("orders", ordersVo); // 订单
         model.addAttribute("goods", products);  // 商品
         model.addAttribute("classify", classifys);  // 分类
-
         ShopSettings shopSettings = shopSettingsService.getById(1);
         model.addAttribute("isBackground", shopSettings.getIsBackground());
-
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/order.html";
     }
 
     /**
      * 支付状态
+     *
      * @param model
      * @return
      */
     @RequestMapping("/pay/state/{payId}")
     public String payState(Model model, @PathVariable("payId") String payId) {
-        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member",payId));
-        model.addAttribute("orderId",orders.getId());
-        model.addAttribute("ordersMember",orders.getMember());
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
+        model.addAttribute("orderId", orders.getId());
+        model.addAttribute("ordersMember", orders.getMember());
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);

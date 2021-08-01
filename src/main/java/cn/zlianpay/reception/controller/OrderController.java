@@ -10,6 +10,7 @@ import cn.zlianpay.common.core.pays.wxpay.SendWxPay;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.yunfupay.SendYunfu;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
+import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -52,6 +54,7 @@ import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,14 +90,14 @@ public class OrderController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/buy")
-    public JsonResult save(Integer goodsId, String contact, Integer number, String email, String coupon, String payType, HttpServletRequest request) {
+    public JsonResult save(Integer goodsId, Integer number, String email, String coupon, String payType, String password,HttpServletResponse response, HttpServletRequest request) {
 
         if (StringUtils.isEmpty(goodsId)) {
             return JsonResult.error("商品不能为空");
-        } else if (StringUtils.isEmpty(contact)) {
-            return JsonResult.error("购买信息不能为空");
-        } else if (contact.length() < 6) {
-            return JsonResult.error("输入购买信息不得低于6位数");
+        } else if (StringUtils.isEmpty(email)) {
+            return JsonResult.error("电子邮件不能为空");
+        } else if (!FormCheckUtil.isEmail(email)) {
+            return JsonResult.error("请输入正确的电子邮件");
         } else if (StringUtils.isEmpty(number)) {
             return JsonResult.error("商品数量不能小于或等于0");
         } else if (StringUtils.isEmpty(payType)) {
@@ -108,8 +111,16 @@ public class OrderController extends BaseController {
             }
         }
 
+        if (!StringUtils.isEmpty(products.getIsPassword())) {
+            if (products.getIsPassword() == 1) {
+                if (StringUtils.isEmpty(password)) {
+                    return JsonResult.error("商品查询密码不能为空！！");
+                }
+            }
+        }
+
         if (products.getShipType() == 0) { // 自动发货模式
-            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId));
+            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId).eq("status", 0));
             if (count == 0) {
                 return JsonResult.error("本商品已售空，请联系店长补货！");
             } else if (number > count) {
@@ -144,8 +155,43 @@ public class OrderController extends BaseController {
                     return JsonResult.error("该优惠券代码已被使用过，或不能使用在本商品，请核对后再试！");
                 }
             }
-
-            Map<String, String> buy = ordersService.buy(goodsId, contact, number, email, couponId, payType, request);
+            Map<String, String> buy = ordersService.buy(goodsId, number, email, couponId, payType, password, request);
+            Cookie[] cookies = request.getCookies();
+            if (ObjectUtils.isEmpty(cookies)) {
+                /**
+                 * 创建 cookie
+                 * 将订单信息保存到浏览器
+                 */
+                Cookie cookie1 = new Cookie("BROWSER_ORDERS_CACHE", buy.get("member"));
+                cookie1.setMaxAge(7 * 24 * 60 * 60); // 7天过期
+                // 将cookie对象加入response响应
+                response.addCookie(cookie1);
+            } else {
+                for (Cookie cookie : cookies) {
+                    String cookieName = cookie.getName();
+                    if ("BROWSER_ORDERS_CACHE".equals(cookieName)) {
+                        String cookieValue = cookie.getValue();
+                        /**
+                         * 创建 cookie
+                         * 将订单信息保存到浏览器
+                         */
+                        Cookie cookie1 = new Cookie("BROWSER_ORDERS_CACHE", cookieValue + "=" + buy.get("member"));
+                        cookie1.setMaxAge(7 * 24 * 60 * 60); // 7天过期
+                        // 将cookie对象加入response响应
+                        response.addCookie(cookie1);
+                        break;
+                    } else {
+                        /**
+                         * 创建 cookie
+                         * 将订单信息保存到浏览器
+                         */
+                        Cookie cookie1 = new Cookie("BROWSER_ORDERS_CACHE", buy.get("member"));
+                        cookie1.setMaxAge(7 * 24 * 60 * 60); // 7天过期
+                        // 将cookie对象加入response响应
+                        response.addCookie(cookie1);
+                    }
+                }
+            }
 
             return JsonResult.ok("订单创建成功！").setCode(200).setData(buy);
         } catch (Exception e) {

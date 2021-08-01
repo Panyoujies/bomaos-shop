@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  * 操作日志
- * Created by wangfan on 2018-12-24 16:10
+ * Created by Panyoujie on 2018-12-24 16:10
  */
 @TableName("sys_oper_record")
 public class OperRecord implements Serializable {

@@ -7,6 +7,10 @@ import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.*;
 import cn.zlianpay.orders.vo.OrderVos;
+import cn.zlianpay.reception.controller.NotifyController;
+import cn.zlianpay.reception.dto.SearchDTO;
+import cn.zlianpay.settings.entity.ShopSettings;
+import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,6 +24,8 @@ import cn.zlianpay.orders.vo.OrdersVo;
 import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.service.ProductsService;
 import cn.zlianpay.settings.service.PaysService;
+import com.zjiecode.wxpusher.client.WxPusher;
+import com.zjiecode.wxpusher.client.bean.Message;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +51,9 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/orders/orders")
 public class OrdersController extends BaseController {
-    @Autowired
-    private OrdersService ordersService;
 
     @Autowired
-    private PaysService paysService;
+    private OrdersService ordersService;
 
     @Autowired
     private ProductsService productsService;
@@ -65,6 +69,9 @@ public class OrdersController extends BaseController {
 
     @Autowired
     private WebsiteService websiteService;
+
+    @Autowired
+    private ShopSettingsService shopSettingsService;
 
     @RequiresPermissions("orders:orders:view")
     @RequestMapping()
@@ -131,6 +138,7 @@ public class OrdersController extends BaseController {
         String contact = (String) parameterMap.get("contact");
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
         wrapper.eq("contact", contact)
+                .or().eq("email", contact)
                 .or().eq("member", contact)
                 .or().eq("pay_no", contact)
                 .orderByDesc("create_time");
@@ -138,44 +146,51 @@ public class OrdersController extends BaseController {
         List<Orders> ordersList = ordersService.page(pageParam, wrapper).getRecords();
 
         AtomicInteger index = new AtomicInteger(0);
-        List<OrderVos> orderVosList = ordersList.stream().map((orders) -> {
-            OrderVos orderVos = new OrderVos();
-            BeanUtils.copyProperties(orders, orderVos);
-            if (orderVos.getPayType().equals("codepay_alipay")
-                    || orderVos.getPayType().equals("mqpay_alipay")
-                    || orderVos.getPayType().equals("zlianpay_alipay")
-                    || orderVos.getPayType().equals("yungouos_alipay")
-                    || orderVos.getPayType().equals("xunhupay_alipay")
-                    || orderVos.getPayType().equals("jiepay_alipay")
-                    || orderVos.getPayType().equals("payjs_alipay")
-                    || orderVos.getPayType().equals("yunfu_alipay")) {
-                orderVos.setPayType("支付宝");
-            } else if (orderVos.getPayType().equals("codepay_wxpay")
-                    || orderVos.getPayType().equals("mqpay_wxpay")
-                    || orderVos.getPayType().equals("zlianpay_wxpay")
-                    || orderVos.getPayType().equals("yungouos_wxpay")
-                    || orderVos.getPayType().equals("xunhupay_wxpay")
-                    || orderVos.getPayType().equals("jiepay_wxpay")
-                    || orderVos.getPayType().equals("payjs_wxpay")
-                    || orderVos.getPayType().equals("yunfu_wxpay")
-                    || orderVos.getPayType().equals("wxpay")) {
-                orderVos.setPayType("微信");
-            }
+        List<SearchDTO> orderVosList = ordersList.stream().map((orders) -> {
 
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
+            String date = df.format(orders.getCreateTime());// new Date()为获取当前系统时间，也可使用当前时间戳
+
+            SearchDTO searchDTO = new SearchDTO();
+            searchDTO.setId(orders.getId().toString());
+            Integer andIncrement = (Integer) index.getAndIncrement();
+            searchDTO.setAndIncrement(andIncrement.toString());
+            searchDTO.setCreateTime(date);
+            searchDTO.setMoney(orders.getMoney().toString());
+            if (orders.getPayType().equals("codepay_alipay")
+                    || orders.getPayType().equals("mqpay_alipay")
+                    || orders.getPayType().equals("zlianpay_alipay")
+                    || orders.getPayType().equals("yungouos_alipay")
+                    || orders.getPayType().equals("xunhupay_alipay")
+                    || orders.getPayType().equals("jiepay_alipay")
+                    || orders.getPayType().equals("payjs_alipay")
+                    || orders.getPayType().equals("yunfu_alipay")
+                    || orders.getPayType().equals("alipay")) {
+                searchDTO.setPayType("支付宝");
+            } else if (orders.getPayType().equals("codepay_wxpay")
+                    || orders.getPayType().equals("mqpay_wxpay")
+                    || orders.getPayType().equals("zlianpay_wxpay")
+                    || orders.getPayType().equals("yungouos_wxpay")
+                    || orders.getPayType().equals("xunhupay_wxpay")
+                    || orders.getPayType().equals("jiepay_wxpay")
+                    || orders.getPayType().equals("payjs_wxpay")
+                    || orders.getPayType().equals("yunfu_wxpay")
+                    || orders.getPayType().equals("wxpay")) {
+                searchDTO.setPayType("微信");
+            }
             if (orders.getStatus() == 1) {
-                orderVos.setStatus("<span style=\"color: #00a65a\">付款成功</span>");
+                searchDTO.setStatus("付款成功");
             } else if (orders.getStatus() == 2) {
-                orderVos.setStatus("<span style=\"color: #ffb671\">待发货</span>");
+                searchDTO.setStatus("待发货");
             } else if (orders.getStatus() == 3) {
-                orderVos.setStatus("<span style=\"color: #00a65a\">已发货</span>");
+                searchDTO.setStatus("已发货");
             } else {
-                orderVos.setStatus("<span style=\"color: #00a65a\">未付款</span>");
+                searchDTO.setStatus("未付款");
             }
 
-            int andIncrement = index.getAndIncrement();
-            orderVos.setAndIncrement(andIncrement); // 索引
+            searchDTO.setMember(orders.getMember());
 
-            return orderVos;
+            return searchDTO;
         }).collect(Collectors.toList());
 
         return JsonResult.ok("查询成功！").setData(orderVosList);
@@ -303,6 +318,34 @@ public class OrdersController extends BaseController {
     }
 
     /**
+     * 批量删除订单表
+     */
+    @RequiresPermissions("orders:orders:remove")
+    @OperLog(value = "订单表管理", desc = "批量删除", result = true)
+    @ResponseBody
+    @RequestMapping("/clearAllRemove")
+    public JsonResult clearAllRemove() {
+        if (ordersService.clearAllRemove()) {
+            return JsonResult.ok("清理的订单成功！");
+        }
+        return JsonResult.error("没有可以清理的订单！");
+    }
+
+    /**
+     * 删除订单表
+     */
+    @RequiresPermissions("orders:orders:remove")
+    @OperLog(value = "订单表管理", desc = "订单删除", result = true)
+    @ResponseBody
+    @RequestMapping("/deleteById")
+    public JsonResult deleteById(Integer id) {
+        if (ordersService.deleteById(id)) {
+            return JsonResult.ok("删除订单成功！");
+        }
+        return JsonResult.error("没有可以删除的订单！");
+    }
+
+    /**
      *
      * @param id 商品id
      * @param shipInfo 需要发货的内容
@@ -372,69 +415,98 @@ public class OrdersController extends BaseController {
     @RequestMapping("/status/update")
     public JsonResult updateStates(Integer id, String payNo, Integer productId) {
 
-        /**
-         * 通过订单号查询
-         */
-        Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("id", id));
-        if (member == null) {
-            return JsonResult.error("没有这个订单"); // 本地没有这个订单
-        }
+        Orders member = ordersService.getById(id);
+        if (member == null) return JsonResult.error("没有找到相关订单"); // 本地没有这个订单
+
+        int count = orderCardService.count(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
+        if (count >= 1)  return JsonResult.ok("已经支付成功！自动发卡成功，补单失败");
 
         Products products = productsService.getById(productId);
-        if (products == null) {
-            return JsonResult.error("没有找到这个商品"); // 商品没了
-        }
+        if (products == null) return JsonResult.error("该订单的商品找不到！"); // 商品没了
 
-        List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+        Website website = websiteService.getById(1);
+        ShopSettings shopSettings = shopSettingsService.getById(1);
 
-        if (card == null) {
-            return JsonResult.error("卡密已售空！");
-        }
+        if (products.getShipType() == 0) { // 自动发货的商品
+            List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+            if (card == null) return JsonResult.error("卡密为空！请补充后再试。");
 
-        List<OrderCard> cardList = new ArrayList<>();
-        for (Cards cards : card) {
-            OrderCard orderCard = new OrderCard();
-            orderCard.setCardId(cards.getId());
-            orderCard.setOrderId(member.getId());
-            orderCard.setCreatedAt(new Date());
-            cardList.add(orderCard);
+            List<OrderCard> cardList = new ArrayList<>();
+            for (Cards cards : card) {
+                OrderCard orderCard = new OrderCard();
+                orderCard.setCardId(cards.getId());
+                orderCard.setOrderId(member.getId());
+                orderCard.setCreatedAt(new Date());
+                cardList.add(orderCard);
 
-            Cards cards1 = new Cards();
-            cards1.setId(cards.getId());
-            cards1.setStatus(1);
-            cards1.setUpdatedAt(new Date());
-            // 设置售出的卡密
-            cardsService.updateById(cards1);
+                Cards cards1 = new Cards();
+                cards1.setId(cards.getId());
+                cards1.setStatus(1);
+                cards1.setUpdatedAt(new Date());
+                // 设置售出的卡密
+                cardsService.updateById(cards1);
 
-            if (!StringUtils.isEmpty(member.getEmail())) {
-                if (isEmail(member.getEmail())) {
-                    emailService.sendTextEmail("卡密购买成功", "您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                if (shopSettings.getIsWxpusher() == 1) {
+                    Message message = new Message();
+                    message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                    message.setContentType(Message.CONTENT_TYPE_HTML);
+                    message.setUid(shopSettings.getWxpushUid());
+                    message.setAppToken(shopSettings.getAppToken());
+                    WxPusher.send(message);
+                }
+
+                if (!StringUtils.isEmpty(member.getEmail())) {
+                    if (FormCheckUtil.isEmail(member.getEmail())) {
+                        emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                    }
                 }
             }
-        }
 
-        /**
-         * 关联卡密
-         */
-        orderCardService.saveBatch(cardList);
+            /**
+             * 关联卡密
+             */
+            orderCardService.saveBatch(cardList);
+
+        } else { // 手动发货商品
+            Products products1 = new Products();
+            products1.setId(products.getId());
+            products1.setInventory(products.getInventory() - 1);
+            products1.setSales(products.getSales() + 1);
+
+            if (shopSettings.getIsWxpusher() == 1) {
+                Message message = new Message();
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContentType(Message.CONTENT_TYPE_HTML);
+                message.setUid(shopSettings.getWxpushUid());
+                message.setAppToken(shopSettings.getAppToken());
+                WxPusher.send(message);
+            }
+            if (FormCheckUtil.isEmail(member.getEmail())) {
+                emailService.sendTextEmail("订单提醒", "您的订单号为：" + member.getMember() + " 本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+            }
+            productsService.updateById(products1);
+        }
 
         /**
          * 更新订单
          */
         Orders orders = new Orders();
         orders.setId(member.getId());
-        orders.setStatus(1); // 设置已售出
+
+        if (products.getShipType() == 0) {
+            orders.setStatus(1); // 设置已售出
+        } else {
+            orders.setStatus(2); // 手动发货模式 为待处理
+        }
+
         orders.setPayTime(new Date());
         orders.setPayNo(payNo);
         orders.setPrice(member.getPrice());
-        orders.setMoney(member.getPrice().multiply(new BigDecimal(member.getNumber())));
+        orders.setMoney(member.getMoney());
 
-        if (ordersService.updateById(orders)) {
-            return JsonResult.ok("补单成功！");
-        }
+        boolean b = ordersService.updateById(orders);// 更新售出
 
-        return JsonResult.error("补单失败");
-
+        return JsonResult.ok("补单成功！！");
     }
 
     /**

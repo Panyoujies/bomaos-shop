@@ -12,8 +12,8 @@
 <!-- goods-card -->
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/theme/easy-night/images/notice.svg" style="top: 10px; position: absolute; left: 15px;">
+        <div class="layui-card-header">
+            <img src="${ctxPath}/theme/easy-night/images/notice.svg">
             购物须知
         </div>
         <div class="layui-card-body">
@@ -27,8 +27,8 @@
 <!-- goods-card -->
 <div class="layui-container body-card" style="margin-bottom: 0px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/theme/easy-night/images/classifys.svg" style="top: 10px; position: absolute; left: 15px;">
+        <div class="layui-card-header">
+            <img src="${ctxPath}/theme/easy-night/images/classifys.svg">
             选择分类
         </div>
         <div class="layui-card-body" style="padding: 15px 15px;">
@@ -37,8 +37,8 @@
         </div>
     </div>
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header" style="font-size: 18px; font-weight: 600; padding-left: 47px; display: block !important;">
-            <img src="${ctxPath}/theme/easy-night/images/product.svg" style="top: 10px; position: absolute; left: 15px;">
+        <div class="layui-card-header">
+            <img src="${ctxPath}/theme/easy-night/images/product.svg">
             选择商品
             <div class="pull-right" style="position: relative;">
                 <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
@@ -115,7 +115,7 @@
                 //示范一个公告层
                 layer.open({
                     type: 1
-                    ,title: false //不显示标题栏
+                    ,title: '站点公告'
                     ,closeBtn: false
                     ,area: '300px;'
                     ,shade: 0.3
@@ -135,7 +135,8 @@
                 });
             }
         }
-        // 支付方式点击事件
+
+        // 分类点击事件
         $('.pay-type-group>div').click(function () {
             $('.pay-type-group>div').removeClass('active');
             $(this).addClass('active');

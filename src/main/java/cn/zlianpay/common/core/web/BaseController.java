@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Controller基类
- * Created by wangfan on 2017-06-10 10:10
+ * Created by Panyoujie on 2017-06-10 10:10
  */
 public class BaseController {
 

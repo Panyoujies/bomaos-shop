@@ -1,7 +1,11 @@
 package cn.zlianpay.orders.service.impl;
 
+import cn.zlianpay.carmi.entity.OrderCard;
+import cn.zlianpay.carmi.mapper.CardsMapper;
+import cn.zlianpay.carmi.mapper.OrderCardMapper;
 import cn.zlianpay.common.core.web.PageParam;
 import cn.zlianpay.common.core.web.PageResult;
+import cn.zlianpay.dashboard.DateStrUtil;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.mapper.CouponMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,14 +21,13 @@ import cn.zlianpay.products.mapper.ProductsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 订单表服务实现类
@@ -39,6 +42,12 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Autowired
     private CouponMapper couponMapper;
+
+    @Autowired
+    private OrderCardMapper orderCardMapper;
+
+    @Autowired
+    private CardsMapper cardsMapper;
 
     @Override
     public PageResult<Orders> listPage(PageParam<Orders> page) {
@@ -55,14 +64,13 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
      * 创建订单
      *
      * @param productId 商品id
-     * @param contact   购买者信息
      * @param number    购买数量
      * @param payType   支付驱动
      * @param request
      * @return
      */
     @Override
-    public Map<String, String> buy(Integer productId, String contact, Integer number, String email, Integer couponId, String payType, HttpServletRequest request) {
+    public Map<String, String> buy(Integer productId, Integer number, String email, Integer couponId, String payType, String password, HttpServletRequest request) {
 
         Products products = productsMapper.selectById(productId);
         Map<String, String> map = new HashMap<>();
@@ -71,9 +79,11 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setPrice(products.getPrice());
         orders.setStatus(0); // 1 为支付，0未支付
         orders.setProductId(productId);
-        orders.setContact(contact);
         orders.setPayType(payType);
         orders.setNumber(number); // 订单数量
+        if (!StringUtils.isEmpty(password)) { // 不为空的时候
+            orders.setPassword(password);
+        }
 
         // 得到商品的实际支付金额
         BigDecimal multiply = products.getPrice().multiply(new BigDecimal(number));
@@ -196,5 +206,60 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean clearAllRemove() {
+        Date startDayTime = DateStrUtil.getStartDayTime(-+7);
+        QueryWrapper queryWrapper = getQueryWrapper(startDayTime);
+
+        List<Orders> list = this.list(queryWrapper);
+        List<Integer> ids = new ArrayList<>();
+        for (Orders orders : list) {
+            List<OrderCard> orderCardList = orderCardMapper.selectList(new QueryWrapper<OrderCard>().eq("order_id", orders.getId()));
+            if (!ObjectUtils.isEmpty(orderCardList)) {
+                List<Integer> cardIds = new ArrayList<>();
+                for (OrderCard orderCard : orderCardList) {
+                    cardIds.add(orderCard.getCardId());
+                }
+                cardsMapper.deleteBatchIds(cardIds);
+            }
+            ids.add(orders.getId());
+        }
+
+        boolean b = this.removeByIds(ids);
+        return b;
+    }
+
+    @Override
+    public boolean deleteById(Integer id) {
+        List<OrderCard> orderCardList = orderCardMapper.selectList(new QueryWrapper<OrderCard>().eq("order_id", id));
+        if (!ObjectUtils.isEmpty(orderCardList)) {
+            List<Integer> cardIds = new ArrayList<>();
+            for (OrderCard orderCard : orderCardList) {
+                cardIds.add(orderCard.getCardId());
+            }
+            cardsMapper.deleteBatchIds(cardIds);
+        }
+        boolean delete = this.removeById(id);
+        return delete;
+    }
+
+    /**
+     * 根据时间查询七天前的数据
+     *
+     * @param StartTime 开始的时间
+     * @return queryWrapper
+     */
+    public static QueryWrapper getQueryWrapper(Date StartTime) {
+        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String DayStartTime = formatter.format(StartTime);
+
+        //查询条件为时间范围
+        queryWrapper.apply("UNIX_TIMESTAMP(create_time) <= UNIX_TIMESTAMP('" + DayStartTime + "')");
+
+        return queryWrapper;
     }
 }

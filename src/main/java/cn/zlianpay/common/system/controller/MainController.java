@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * 首页、登录、验证码等
- * Created by wangfan on 2018-12-24 16:10
+ * Created by Panyoujie on 2018-12-24 16:10
  */
 @Controller
 public class MainController extends BaseController implements ErrorController {

@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * 文件上传下载工具类
- * Created by wangfan on 2018-12-14 08:38
+ * Created by Panyoujie on 2018-12-14 08:38
  */
 public class FileUploadUtil {
     // 文件上传的目录
@@ -40,8 +40,6 @@ public class FileUploadUtil {
         String suffix = orgName.substring(orgName.lastIndexOf(".") + 1);  // 获取文件后缀
         if (Constants.UPLOAD_UUID_NAME) {  // uuid命名
             path = dir + UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
-
-            System.out.println(Constants.UPLOAD_DIR);
             outFile = new File(UPLOAD_FILE_DIR, path);
         } else {  // 使用原名称，存在相同着加(1)
             path = dir + orgName;
@@ -66,8 +64,6 @@ public class FileUploadUtil {
                         StrUtil.removeSuffix(request.getRequestURL(), "upload/base64")
                         , "upload") + path);
             }
-
-            System.out.println(Constants.UPLOAD_DIR);
             return jsonResult;
         } catch (Exception e) {
             e.printStackTrace();

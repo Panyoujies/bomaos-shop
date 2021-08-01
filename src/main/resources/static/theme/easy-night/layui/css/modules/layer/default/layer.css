@@ -471,7 +471,7 @@ html #layuicss-layer {
 }
 
 .layui-layer-dialog {
-    min-width: 260px
+    min-width: 300px
 }
 
 .layui-layer-dialog .layui-layer-content {

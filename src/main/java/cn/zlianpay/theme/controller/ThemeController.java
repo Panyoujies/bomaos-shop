@@ -5,12 +5,15 @@ import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.theme.entity.Theme;
 import cn.zlianpay.theme.service.ThemeService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,17 @@ public class ThemeController extends BaseController {
     @RequiresPermissions("theme:theme:view")
     @RequestMapping()
     public String view() {
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("driver", "easy-bright"));
+        if (ObjectUtils.isEmpty(theme)) {
+            Theme theme1 = new Theme();
+            theme1.setEnable(0);
+            theme1.setDriver("easy-bright");
+            theme1.setName("少女丝袜");
+            theme1.setDescription("少女白色透明丝袜般的质感");
+            theme1.setCreateDate(new Date());
+            theme1.setUpdateDate(new Date());
+            themeService.save(theme1);
+        }
         return "theme/theme.html";
     }
 

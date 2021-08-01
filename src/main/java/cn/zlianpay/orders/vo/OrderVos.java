@@ -85,7 +85,7 @@ public class OrderVos {
     /**
      * 订单创建时间
      */
-    private Date createTime;
+    private String createTime;
 
     /**
      * 云端id
@@ -117,4 +117,14 @@ public class OrderVos {
      * 发货类型（0-自动，1-手动）
      */
     private Integer shipType;
+
+    /**
+     * 订单密码
+     */
+    private String password;
+
+    /**
+     * 是否为密码的方式查询
+     */
+    private Integer isPassword;
 }

@@ -118,7 +118,7 @@
 }
 
 .screen-input {
-    width: 160px;
+    width: 250px;
     font-size: 14px;
     height: 33px;
     margin-top: 6px;
@@ -164,4 +164,7 @@
         max-height: 210px;
     }
 
+    .screen-input {
+        width: 160px;
+    }
 }

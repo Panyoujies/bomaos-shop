@@ -73,7 +73,7 @@
 .pay-card {
     background-color: #141414;
     border-radius: 5px;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
+    border: 1px solid #1d1d1d;
 }
 
 .pay-card > .pay-card-title {

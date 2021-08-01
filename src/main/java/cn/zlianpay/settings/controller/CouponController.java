@@ -107,9 +107,6 @@ public class CouponController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Coupon coupon) {
-
-        System.out.println(coupon);
-
         if (coupon.getDiscountType() == 1 && coupon.getDiscountVal().compareTo(new BigDecimal(10)) == 1) {
             return JsonResult.error("折扣只能1-10之间的数字");
         }
