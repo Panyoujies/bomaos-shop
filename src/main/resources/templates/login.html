@@ -56,6 +56,10 @@
                         location.replace('/admin');
                     });
                 } else {
+				    /* 刷新图形验证码 */
+                    $('img.login-captcha').click(function () {
+                        this.src = this.src + '?t=' + (new Date).getTime();
+                    }).trigger('click');
                     layer.msg(res.msg || '登录失败', {icon: 2, anim: 6});
                 }
             });
@@ -64,8 +68,8 @@
 
         /* 图形验证码 */
         $('img.login-captcha').click(function () {
-            this.src = this.src + '?t=' + new Date().getTime();
-        });
+            this.src = this.src + '?t=' + (new Date).getTime();
+        }).trigger('click');
 
     });
 </script>

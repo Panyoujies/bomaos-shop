@@ -46,6 +46,7 @@ public class MainController extends BaseController implements ErrorController {
     public JsonResult login(String username, String password, String code, Boolean remember, HttpServletRequest request) {
         if (username == null || username.trim().isEmpty()) return JsonResult.error("请输入账号");
         if (!CaptchaUtil.ver(code, request)) {
+            CaptchaUtil.clear(request);  // 清除session中的验证码
             loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "验证码错误", request);
             return JsonResult.error("验证码不正确");
         }
