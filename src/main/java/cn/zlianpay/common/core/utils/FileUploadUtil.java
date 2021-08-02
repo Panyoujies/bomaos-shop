@@ -60,9 +60,7 @@ public class FileUploadUtil {
             JsonResult jsonResult = JsonResult.ok("上传成功").put("url", path).put("fileName", orgName)
                     .put("dir", "/" + StrUtil.removeSuffix(dir, "/"));
             if (request != null) {
-                jsonResult.put("location", StrUtil.removeSuffix(
-                        StrUtil.removeSuffix(request.getRequestURL(), "upload/base64")
-                        , "upload") + path);
+                jsonResult.put("location", "/file/" + path);
             }
             return jsonResult;
         } catch (Exception e) {
