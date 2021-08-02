@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -370,8 +371,7 @@ public class OrdersController extends BaseController {
         cards.setStatus(1); // 默认已使用
         cards.setUpdatedAt(new Date());
 
-        boolean save = cardsService.save(cards);
-        if (save) {
+        if (cardsService.save(cards)) {
             OrderCard orderCard = new OrderCard();
             orderCard.setCardId(cards.getId());
             orderCard.setOrderId(orders.getId());
@@ -383,10 +383,8 @@ public class OrdersController extends BaseController {
         orders1.setId(orders.getId());
         orders1.setStatus(3);
 
-        boolean b = ordersService.updateById(orders1);
-        if (b) { // 成功发送邮件
-            boolean email1 = FormCheckUtil.isEmail(email);
-            if (email1) {
+        if (ordersService.updateById(orders1)) { // 成功发送邮件
+            if (FormCheckUtil.isEmail(email)) {
                 Website website = websiteService.getById(1);
                 Map<String, Object> map = new HashMap<>();  // 页面的动态数据
                 map.put("title", website.getWebsiteName());
@@ -394,10 +392,13 @@ public class OrdersController extends BaseController {
                 map.put("date", new Date());
                 map.put("info", shipInfo);
                 try {
-                    emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{email});
-                    return JsonResult.ok("发货成功、并且邮件提醒成功");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    ShopSettings shopSettings = shopSettingsService.getById(1);
+                    if (shopSettings.getIsEmail() == 1) {
+                        emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{email});
+                        return JsonResult.ok("发货成功、并邮件通知成功。");
+                    }
+                    return JsonResult.ok("发货成功！");
+                } catch (AuthenticationFailedException e) {
                     return JsonResult.ok("发货成功、邮件提醒失败！");
                 }
             }
@@ -455,9 +456,15 @@ public class OrdersController extends BaseController {
                     WxPusher.send(message);
                 }
 
-                if (!StringUtils.isEmpty(member.getEmail())) {
-                    if (FormCheckUtil.isEmail(member.getEmail())) {
-                        emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                if (shopSettings.getIsEmail() == 1) {
+                    if (!StringUtils.isEmpty(member.getEmail())) {
+                        if (FormCheckUtil.isEmail(member.getEmail())) {
+                            try {
+                                emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                            } catch (Exception e) {
+                                return JsonResult.error("补单失败、邮箱系统配置错误！！");
+                            }
+                        }
                     }
                 }
             }
@@ -481,8 +488,14 @@ public class OrdersController extends BaseController {
                 message.setAppToken(shopSettings.getAppToken());
                 WxPusher.send(message);
             }
-            if (FormCheckUtil.isEmail(member.getEmail())) {
-                emailService.sendTextEmail("订单提醒", "您的订单号为：" + member.getMember() + " 本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+            if (shopSettings.getIsEmail() == 1) {
+                if (FormCheckUtil.isEmail(member.getEmail())) {
+                    try {
+                        emailService.sendTextEmail("订单提醒", "您的订单号为：" + member.getMember() + " 本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                    } catch (Exception e) {
+                        return JsonResult.error("补单失败、邮箱系统配置错误！！");
+                    }
+                }
             }
             productsService.updateById(products1);
         }
@@ -507,25 +520,6 @@ public class OrdersController extends BaseController {
         boolean b = ordersService.updateById(orders);// 更新售出
 
         return JsonResult.ok("补单成功！！");
-    }
-
-    /**
-     * 判断是否为邮箱
-     * @param email
-     * @return
-     */
-    public static boolean isEmail(String email){
-        if (null == email || "".equals(email)){
-            return false;
-        }
-        String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-        Pattern p = Pattern.compile(regEx1);
-        Matcher m = p.matcher(email);
-        if(m.matches()){
-            return true;
-        }else{
-            return false;
-        }
     }
 
 }

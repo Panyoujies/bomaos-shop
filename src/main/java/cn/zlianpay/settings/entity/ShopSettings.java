@@ -59,4 +59,9 @@ public class ShopSettings implements Serializable {
      */
     private String wxpushUid;
 
+    /**
+     * 邮件通知
+     */
+    private Integer isEmail;
+
 }

@@ -761,9 +761,11 @@ public class NotifyController {
                     WxPusher.send(message);
                 }
 
-                if (!StringUtils.isEmpty(member.getEmail())) {
-                    if (FormCheckUtil.isEmail(member.getEmail())) {
-                        emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                if (shopSettings.getIsEmail() == 1) {
+                    if (!StringUtils.isEmpty(member.getEmail())) {
+                        if (FormCheckUtil.isEmail(member.getEmail())) {
+                            emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                        }
                     }
                 }
             }
@@ -787,8 +789,10 @@ public class NotifyController {
                 message.setAppToken(shopSettings.getAppToken());
                 WxPusher.send(message);
             }
-            if (FormCheckUtil.isEmail(member.getEmail())) {
-                emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+            if (shopSettings.getIsEmail() == 1) {
+                if (FormCheckUtil.isEmail(member.getEmail())) {
+                    emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                }
             }
             productsService.updateById(products1);
         }
@@ -811,25 +815,6 @@ public class NotifyController {
         orders.setMoney(new BigDecimal(money));
         boolean b = ordersService.updateById(orders);// 更新售出
         return success;
-    }
-
-    /**
-     * 判断是否为邮箱
-     * @param email
-     * @return
-     */
-    public static boolean isEmail(String email){
-        if (null == email || "".equals(email)){
-            return false;
-        }
-        String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-        Pattern p = Pattern.compile(regEx1);
-        Matcher m = p.matcher(email);
-        if(m.matches()){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     @GetMapping("/order/state/{orderid}")

@@ -32,6 +32,9 @@
                 <if test="page.pageData.wxpushUid != null">
                     AND a.wxpush_uid LIKE CONCAT('%', #{page.pageData.wxpushUid}, '%')
                 </if>
+                <if test="page.pageData.isEmail != null">
+                    AND a.is_email = #{page.pageData.isEmail}
+                </if>
             </if>
         </where>
     </sql>
