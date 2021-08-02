@@ -134,11 +134,11 @@
     height: 38px;
     line-height: 1.3;
     line-height: 38px\9;
-    border-width: 2px;
+    border-width: 1px;
     border-style: solid;
-    background-color: rgb(255 255 255 / 40%);
+    background-color: rgb(255, 255, 255, 0.3);
     border-radius: 5px;
-    border-color: rgb(255 255 255 / 40%);
+    border-color: rgb(255, 255, 255, 0.4);
 }
 
 .layui-form-switch {
