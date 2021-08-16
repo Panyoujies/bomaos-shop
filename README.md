@@ -10,6 +10,8 @@
 <a href="http://shop.zlianpay.cn" target="_blank">演示地址</a>
 </p>
 
+## 仅供开发学习使用、不可用于违法用途。
+
 ## 介绍
 
 一款高效安全的发卡平台。
