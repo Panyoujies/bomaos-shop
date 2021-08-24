@@ -63,6 +63,9 @@ spring:
     servlet:
       content-type: text/html
 
+  main:
+    allow-bean-definition-overriding: true
+
 # Mybatis-plus配置
 mybatis-plus:
   mapper-locations: classpath:cn/zlianpay/**/*Mapper.xml

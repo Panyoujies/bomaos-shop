@@ -140,6 +140,36 @@
     text-shadow: 0 1px 1px rgb(0 0 0 / 20%);
 }
 
+.zliaan-body-info {
+    font-size: 16px;
+    font-family: Content-font, Roboto, sans-serif;
+    font-weight: 400;
+}
+
+.zliaan-body-info p {
+    line-height: 1.625;
+}
+
+.zliaan-body-info img{
+    width: 100%;
+}
+
+.zliaan-body-info::-webkit-scrollbar {
+    width: 2px;
+    border-radius: 1.5px;
+    background-color: transparent;
+}
+
+.zliaan-body-info::-webkit-scrollbar-track {
+    background: #262626;
+    border-radius: 1.5px;
+}
+
+.zliaan-body-info::-webkit-scrollbar-thumb {
+    background: #4E6EF2;
+    border-radius: 1.5px;
+}
+
 @media screen and (max-width: 750px) {
 
     .project-list-item-body {
@@ -167,5 +197,9 @@
 
     .screen-input {
         width: 160px;
+    }
+
+    .classify-null {
+        padding-left: 60px;
     }
 }

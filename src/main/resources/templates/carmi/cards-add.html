@@ -9,7 +9,7 @@
     <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
         <div class="layui-card-body">
             <!-- 表单开始 -->
-            <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
+            <form class="layui-form" id="formBasForm" lay-filter="formBasForm" style="margin-top: 20px">
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">选择商品</label>
                     <div class="layui-input-inline">
@@ -32,14 +32,14 @@
                     <label class="layui-form-label layui-form-required">输入卡密</label>
                     <div class="layui-input-block">
 						<textarea name="cardInfo" lay-verify="required" placeholder="卡号+空格+密码，一行一张卡
-						如：ABCDEFG 123456
-						(卡密长度不得超过200位)
-						(建议每次添加不超过2000张)" class="layui-textarea" style="min-height: 222px; height: 222px;"></textarea>
+如：ABCDEFG 123456
+(卡密长度不得超过200位)
+(建议每次添加不超过2000张)" class="layui-textarea" style="min-height: 222px; height: 222px;"></textarea>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label layui-form-required">过滤重复</label>
+                    <label class="layui-form-label">过滤重复</label>
                     <div class="layui-input-inline">
                         <input type="hidden" name="repeat" value="0">
                         <input type="checkbox" lay-filter="repeat" name="repeat" value="1" lay-skin="switch"

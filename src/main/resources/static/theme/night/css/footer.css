@@ -39,7 +39,7 @@
 }
 
 .link-box .other-link {
-    border-bottom: 1px solid #232323;
+    border-bottom: 1px solid #242424;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
     -moz-box-pack: justify;
@@ -61,12 +61,14 @@
     text-align: center;
     padding-top: 18px;
     font-size: .8rem;
-    color: rgba(0, 32, 89, .5);
+    font-weight: 400;
+    font-family: Content-font, Roboto, sans-serif;
+    color: rgb(245 245 245 / 50%);
 }
 
 .link-box .other-link .cop {
     font-size: .8rem;
-    color: #BFC7D5;
+    color: rgb(245 245 245 / 50%);
 }
 
 .link-box .other-link .other, .map-container {

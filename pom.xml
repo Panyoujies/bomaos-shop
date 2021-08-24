@@ -325,6 +325,12 @@
             <id>nexus-aliyun</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public</url>
         </repository>
+
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
     </repositories>
 
 </project>

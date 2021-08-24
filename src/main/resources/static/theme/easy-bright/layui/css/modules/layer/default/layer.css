@@ -343,7 +343,7 @@ html #layuicss-layer {
     height: 50px;
     line-height: 50px;
     border-bottom: 1px solid #F0F0F0;
-    font-size: 14px;
+    font-size: 15px;
     color: #333;
     overflow: hidden;
     border-radius: 2px 2px 0 0;
@@ -425,12 +425,45 @@ html #layuicss-layer {
 }
 
 .layui-layer-btn {
-    border-top: 1px solid #F0F0F0;
     text-align: center;
     padding: 12px 15px 12px;
     pointer-events: auto;
     user-select: none;
     -webkit-user-select: none
+}
+
+.layui-layer-btn:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid var(rgba(255, 255, 255, 0.1));
+    color: rgba(0,0,0,0.1);
+    color: var(rgba(0, 0, 0, 0.1));
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+
+.layui-layer-btn1:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    border-left: 1px solid rgba(0,0,0,0.1);
+    border-left: 1px solid var(rgba(255, 255, 255, 0.1));
+    color: rgba(0,0,0,0.1);
+    color: var(rgba(0, 0, 0, 0.1));
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
 }
 
 .layui-layer-btn a {

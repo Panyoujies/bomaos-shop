@@ -39,7 +39,7 @@
 }
 
 .link-box .other-link {
-    border-bottom: 1px solid rgba(51, 77, 122, .1);
+    border-bottom: 1px solid #eaeaea;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
     -moz-box-pack: justify;
@@ -61,7 +61,9 @@
     text-align: center;
     padding-top: 18px;
     font-size: .8rem;
-    color: rgba(0, 32, 89, .5);
+    font-weight: 400;
+    font-family: Content-font, Roboto, sans-serif;
+    color: rgb(57, 57, 57, 0.5);
 }
 
 .link-box .other-link .cop {

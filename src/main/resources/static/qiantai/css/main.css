@@ -1575,6 +1575,12 @@ body .layui-util-face .layui-layer-content {
     border-radius: 5px;
 }
 
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-paypal.active {
+    border: 2px solid rgb(0 48 135);
+    color: rgb(2, 168, 241);
+    border-radius: 5px;
+}
+
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin.active {
     border: 2px solid rgb(63, 183, 72);
     color: rgb(63, 183, 72);
@@ -1590,6 +1596,11 @@ body .layui-util-face .layui-layer-content {
 }
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-ali {
+    color: rgb(2, 168, 241) !important;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-paypal {
+    padding: 13px;
     color: rgb(2, 168, 241) !important;
 }
 
@@ -2219,12 +2230,6 @@ a.icon-text > .layui-icon {
 .ew-adv-item.sm {
     font-size: 14px;
     padding: 15px 5px
-}
-
-.layui-btn:not(.layui-btn-primary) {
-    border-width: 1px;
-    border-style: solid;
-    border-color: #4282ff;
 }
 
 .layui-input:focus, .layui-textarea:focus, xm-select:hover {

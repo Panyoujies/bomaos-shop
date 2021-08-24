@@ -116,6 +116,24 @@
             display: block;
             margin-left: 5px !important;
         }
+        .list_info::-webkit-scrollbar {
+            width: 2px;
+            border-radius: 1.5px;
+            background-color: transparent;
+        }
+        .list_info::-webkit-scrollbar-track {
+            background: #F5F5F6;
+            border-radius: 1.5px;
+        }
+        .list_info::-webkit-scrollbar-thumb {
+            background: #4E6EF2;
+            border-radius: 1.5px;
+        }
+        .list_info p {
+            height: auto !important;
+            line-height: 20px;
+            margin-bottom: 2px;
+        }
     </style>
     <script type="text/javascript" src="${ctxPath}/theme/easy-bright/js/clipboard.min.js"></script>
 </head>
@@ -239,7 +257,7 @@
                     使用说明
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px;">
-                    <div style="overflow-y: auto; max-height: 200px;">
+                    <div class="list_info" style="overflow-y: auto; max-height: 200px;">
                         ${goods.pdInfo!}
                     </div>
                 </div>

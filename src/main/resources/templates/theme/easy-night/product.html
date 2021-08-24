@@ -28,7 +28,7 @@
                             <div style="border-radius: 3px; width: 100%; height: 200px; max-height: 100%; bottom: 0; background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(${products.imageLogo!}); background-repeat: no-repeat; background-size: cover;"></div>
                         </div>
                         <div class="layui-col-md8">
-                            <div style="overflow-y: auto; max-height: 200px;">
+                            <div class="list_info" style="overflow-y: auto; max-height: 200px;">
                                 ${products.pdInfo!}
                             </div>
                         </div>
@@ -562,7 +562,7 @@
             }, function (res) {
                 if (res.code == 200) {
                     layer.confirm(getHtml(res.data), {
-                        title: '确认信息',
+                        title: '订单确认',
                         btn: ['立即支付', '支付完成'] //按钮
                     }, function () {
                         window.open('${ctxPath}/pay/' + res.data.member)
@@ -570,34 +570,34 @@
                         window.open('${ctxPath}/pay/state/' + res.data.member)
                     });
                 } else {
-                    layer.alert(res.msg, {title: '错误提示', btn: '知道了', shade: .1, skin: 'layui-layer-admin'});
+                    layer.alert(res.msg, {title: '错误提示', btn: '知道啦', shade: .1, skin: 'layui-layer-admin'});
                 }
             }, 'json');
         }
 
         function getHtml(mData) {
             var html = '' +
-                '<div style="font-size: 15px">' +
-                '   <p>妥善保存以下订单号用于查询</p>' +
-                '   <p>订单号: <br>' + mData.member + '</p>' +
-                '   <table class="layui-table layui-text">' +
-                '       <colgroup>' +
-                '           <col width="100">' +
-                '           <col>' +
-                '       </colgroup>' +
-                '       <tbody>' +
-                '           <tr>' +
-                '               <td>提交金额</td>' +
-                '               <td>' + mData.total_price + '</td>' +
-                '           </tr>' +
-                '           <tr>' +
-                '               <td>支付金额</td>' +
-                '               <td>' + mData.money + '</td>' +
-                '           </tr>' +
-                '       </tbody>' +
-                '   </table>' +
-                '   已提交请尽快完成支付！' +
-                '</div>'
+                '<div class="weui-form-preview__hd">\n' +
+                '    <div class="weui-form-preview__item">\n' +
+                '        <label class="weui-form-preview__label">付款金额</label>\n' +
+                '        <em class="weui-form-preview__value">￥ ' + mData.money + '</em>\n' +
+                '    </div>\n' +
+                '</div>' +
+                '<div class="weui-form-preview__bds">\n' +
+                '    <div class="weui-form-preview__items">\n' +
+                '        <label class="weui-form-preview__labels">订单号</label>\n' +
+                '        <span class="weui-form-preview__values">' + mData.member + '</span>\n' +
+                '    </div>\n' +
+                '    <div class="weui-form-preview__items">\n' +
+                '        <label class="weui-form-preview__labels">商品总价</label>\n' +
+                '        <span class="weui-form-preview__values">' + mData.total_price + '</span>\n' +
+                '    </div>\n' +
+                '    <div class="weui-form-preview__items">\n' +
+                '        <label class="weui-form-preview__labels">说明</label>\n' +
+                '        <span class="weui-form-preview__values">妥善保存以上订单号用于查询</span>\n' +
+                '    </div>\n' +
+                '</div>' +
+                '<div class="weui-form-preview__buttom"><span class="weui-form-preview__text">订单已提交请尽快完成支付！</span></div>';
             return html;
         }
 

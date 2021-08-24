@@ -134,11 +134,11 @@
     height: 38px;
     line-height: 1.3;
     line-height: 38px\9;
-    border-width: 1px;
+    border-width: 2px;
     border-style: solid;
-    background-color: rgb(255, 255, 255, 0.3);
+    background-color: rgb(255 255 255 / 40%);
     border-radius: 5px;
-    border-color: rgb(255, 255, 255, 0.4);
+    border-color: rgb(255 255 255 / 40%);
 }
 
 .layui-form-switch {
@@ -280,6 +280,7 @@
 
 .order-number-box input {
     color: #989898;
+    font-size: 16px;
     text-align: center;
     margin: 0px;
     display: block;
@@ -314,6 +315,123 @@
     border-radius: 5px;
     background-color: #eef5fd;
 }
+.list_info::-webkit-scrollbar {
+    width: 2px;
+    border-radius: 1.5px;
+    background-color: transparent;
+}
+.list_info::-webkit-scrollbar-track {
+    background: #F5F5F6;
+    border-radius: 1.5px;
+}
+.list_info::-webkit-scrollbar-thumb {
+    background: #4E6EF2;
+    border-radius: 1.5px;
+}
+
+.weui-form-preview__hd {
+    position: relative;
+    padding-bottom: 20px;
+    text-align: right;
+    line-height: 2.5em;
+}
+
+.weui-form-preview__hd:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.1);
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+
+.weui-form-preview__item {
+    overflow: hidden;
+}
+
+.weui-form-preview__label {
+    float: left;
+    margin-right: 1em;
+    min-width: 4em;
+    color: rgba(0, 0, 0, 0.5);
+    text-align: justify;
+    text-align-last: justify;
+}
+
+.weui-form-preview__value {
+    font-style: normal;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: block;
+    overflow: hidden;
+    word-break: normal;
+    word-wrap: break-word;
+    color: rgb(255 104 104 / 90%);
+}
+
+.weui-form-preview__buttom {
+    padding-top: 20px;
+    font-size: 1.2em;
+    text-align: center;
+    color: rgba(0,0,0,0.5);
+    /* color: var(--weui-FG-1); */
+    line-height: 2;
+}
+
+.weui-form-preview__bds {
+    padding: 20px 0 20px 0;
+    font-size: 0.9em;
+    text-align: right;
+    font-weight: 600;
+    color: rgba(0,0,0,0.5);
+    /* color: var(--weui-FG-1); */
+    line-height: 2
+}
+
+.weui-form-preview__bds:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    margin-top: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.1);
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    left: 20px;
+    right: 20px;
+}
+
+.weui-form-preview__items {
+    overflow: hidden;
+}
+
+.weui-form-preview__labels {
+    float: left;
+    margin-right: 1em;
+    min-width: 4em;
+    color: rgba(0,0,0,0.6);
+    text-align: justify;
+    text-align-last: justify;
+}
+
+.weui-form-preview__values {
+    display: block;
+    overflow: hidden;
+    word-break: normal;
+    word-wrap: break-word;
+    color: rgba(0,0,0,0.5);
+}
+
 
 @media screen and (max-width: 1200px) {
     .buy-btn-group .layui-btn {
