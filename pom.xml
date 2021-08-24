@@ -6,7 +6,7 @@
     <groupId>cn.zlianpay</groupId>
     <artifactId>zlianpay-faka</artifactId>
     <version>1.1.9-RELEASE</version>
-    <packaging>war</packaging>
+    <!--<packaging>war</packaging>-->
 
     <name>zlianpay-faka</name>
     <description>zlianpay-faka project for Spring Boot</description>
@@ -42,12 +42,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
         <!-- aop -->
         <dependency>
@@ -203,12 +203,12 @@
             <version>3.5</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
 
         <!-- yungouos-pay-sdk 支付sdk -->
         <dependency>
