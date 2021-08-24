@@ -86,6 +86,12 @@ public class OrderController extends BaseController {
     private ThemeService themeService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private OrderCardService orderCardService;
+
+    @Autowired
     private ShopSettingsService shopSettingsService;
 
     /**
@@ -216,6 +222,17 @@ public class OrderController extends BaseController {
         String price = orders.getMoney().toString();
         UserAgentGetter agentGetter = new UserAgentGetter(request);
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
+
+        System.out.println(price);
+        if (price.equals("0.00")) { // 0元商品 直接完成支付
+            long time = new Date().getTime();
+            String toString = Long.toString(time);
+            boolean big = returnBig(price, price, orders.getMember(), toString, productDescription);
+            if (big) {
+                response.sendRedirect("/search/order/" + orders.getMember());
+                return null;
+            }
+        }
 
         if (orders.getPayType().equals("mqpay_alipay")) {
             String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
@@ -379,8 +396,135 @@ public class OrderController extends BaseController {
         return "theme/" + theme.getDriver() + "/pay.html";
     }
 
-    public static Integer DateToTimestamp(Date time) {
-        Timestamp ts = new Timestamp(time.getTime());
-        return (int) ((ts.getTime()) / 1000);
+	
+	
+    /**
+     * 业务处理
+     * @param money 实收款金额
+     * @param price 订单金额
+     * @param payId 订单号
+     * @param pay_no 流水号
+     * @param param 自定义内容
+     * @return this
+     */
+    private boolean returnBig(String money, String price, String payId, String pay_no, String param) {
+
+        /**
+         * 通过订单号查询
+         */
+        Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
+        if (member == null) return false; // 本地没有这个订单
+
+        int count = orderCardService.count(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
+        if (count >= 1)  return true;
+
+        Products products = productsService.getById(param);
+        if (products == null) return false; // 商品没了
+
+        Website website = websiteService.getById(1);
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+
+        if (products.getShipType() == 0) { // 自动发货的商品
+            List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+            if (card == null) return false;
+
+            List<OrderCard> cardList = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Cards cards : card) {
+                OrderCard orderCard = new OrderCard();
+                orderCard.setCardId(cards.getId());
+                orderCard.setOrderId(member.getId());
+                orderCard.setCreatedAt(new Date());
+                cardList.add(orderCard);
+
+                Cards cards1 = new Cards();
+                cards1.setId(cards.getId());
+                cards1.setStatus(1);
+                cards1.setUpdatedAt(new Date());
+
+                if (cards.getCardInfo().contains(" ")) {
+                    String[] split = cards.getCardInfo().split(" ");
+                    stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                } else {
+                    stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
+                }
+                // 设置售出的卡密
+                cardsService.updateById(cards1);
+            }
+
+            if (shopSettings.getIsWxpusher() == 1) {
+                Message message = new Message();
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContentType(Message.CONTENT_TYPE_HTML);
+                message.setUid(shopSettings.getWxpushUid());
+                message.setAppToken(shopSettings.getAppToken());
+                WxPusher.send(message);
+            }
+
+            if (shopSettings.getIsEmail() == 1) {
+                if (!StringUtils.isEmpty(member.getEmail())) {
+                    if (FormCheckUtil.isEmail(member.getEmail())) {
+                        Map<String, Object> map = new HashMap<>();  // 页面的动态数据
+                        map.put("title", website.getWebsiteName());
+                        map.put("member", member.getMember());
+                        map.put("date", new Date());
+                        map.put("info", stringBuilder.toString());
+                        try {
+                            emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
+                            // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            /**
+             * 关联卡密
+             */
+            orderCardService.saveBatch(cardList);
+
+        } else { // 手动发货商品
+            Products products1 = new Products();
+            products1.setId(products.getId());
+            products1.setInventory(products.getInventory() - member.getNumber());
+            products1.setSales(products.getSales() + member.getNumber());
+
+            if (shopSettings.getIsWxpusher() == 1) {
+                Message message = new Message();
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContentType(Message.CONTENT_TYPE_HTML);
+                message.setUid(shopSettings.getWxpushUid());
+                message.setAppToken(shopSettings.getAppToken());
+                WxPusher.send(message);
+            }
+
+            if (shopSettings.getIsEmail() == 1) {
+                if (FormCheckUtil.isEmail(member.getEmail())) {
+                    emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                }
+            }
+            productsService.updateById(products1);
+        }
+
+        /**
+         * 更新订单
+         */
+        Orders orders = new Orders();
+        orders.setId(member.getId());
+
+        if (products.getShipType() == 0) {
+            orders.setStatus(1); // 设置已售出
+        } else {
+            orders.setStatus(2); // 手动发货模式 为待处理
+        }
+
+        orders.setPayTime(new Date());
+        orders.setPayNo(pay_no);
+        orders.setPrice(new BigDecimal(price));
+        orders.setMoney(new BigDecimal(money));
+        boolean b = ordersService.updateById(orders);// 更新售出
+        return b;
     }
+
 }
