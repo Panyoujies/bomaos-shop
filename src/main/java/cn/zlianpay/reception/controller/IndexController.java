@@ -286,8 +286,7 @@ public class IndexController {
                             searchDTO.setAndIncrement(andIncrement.toString());
                             searchDTO.setCreateTime(date);
                             searchDTO.setMoney(member.getMoney().toString());
-                            if (member.getPayType().equals("codepay_alipay")
-                                    || member.getPayType().equals("mqpay_alipay")
+                            if (member.getPayType().equals("mqpay_alipay")
                                     || member.getPayType().equals("zlianpay_alipay")
                                     || member.getPayType().equals("yungouos_alipay")
                                     || member.getPayType().equals("xunhupay_alipay")
@@ -296,8 +295,7 @@ public class IndexController {
                                     || member.getPayType().equals("yunfu_alipay")
                                     || member.getPayType().equals("alipay")) {
                                 searchDTO.setPayType("支付宝");
-                            } else if (member.getPayType().equals("codepay_wxpay")
-                                    || member.getPayType().equals("mqpay_wxpay")
+                            } else if (member.getPayType().equals("mqpay_wxpay")
                                     || member.getPayType().equals("zlianpay_wxpay")
                                     || member.getPayType().equals("yungouos_wxpay")
                                     || member.getPayType().equals("xunhupay_wxpay")
@@ -336,8 +334,7 @@ public class IndexController {
                             searchDTO.setAndIncrement(andIncrement.toString());
                             searchDTO.setCreateTime(date);
                             searchDTO.setMoney(member.getMoney().toString());
-                            if (member.getPayType().equals("codepay_alipay")
-                                    || member.getPayType().equals("mqpay_alipay")
+                            if (member.getPayType().equals("mqpay_alipay")
                                     || member.getPayType().equals("zlianpay_alipay")
                                     || member.getPayType().equals("yungouos_alipay")
                                     || member.getPayType().equals("xunhupay_alipay")
@@ -346,8 +343,7 @@ public class IndexController {
                                     || member.getPayType().equals("yunfu_alipay")
                                     || member.getPayType().equals("alipay")) {
                                 searchDTO.setPayType("支付宝");
-                            } else if (member.getPayType().equals("codepay_wxpay")
-                                    || member.getPayType().equals("mqpay_wxpay")
+                            } else if (member.getPayType().equals("mqpay_wxpay")
                                     || member.getPayType().equals("zlianpay_wxpay")
                                     || member.getPayType().equals("yungouos_wxpay")
                                     || member.getPayType().equals("xunhupay_wxpay")

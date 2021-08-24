@@ -193,7 +193,6 @@ public class DashboardController extends BaseController {
         BigDecimal bigAlipay = new BigDecimal(0.00);
         for (Orders orders : ordersList) {
             if (orders.getPayType().equals("mqpay_wxpay")
-                    || orders.getPayType().equals("codepay_wxpay")
                     || orders.getPayType().equals("zlianpay_wxpay")
                     || orders.getPayType().equals("yungouos_wxpay")
                     || orders.getPayType().equals("xunhupay_wxpay")
@@ -203,7 +202,6 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("wxpay")) { // 微信
                 bigWxpay = bigWxpay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             } else if (orders.getPayType().equals("mqpay_alipay")
-                    || orders.getPayType().equals("codepay_alipay")
                     || orders.getPayType().equals("zlianpay_alipay")
                     || orders.getPayType().equals("yungouos_alipay")
                     || orders.getPayType().equals("xunhupay_alipay")

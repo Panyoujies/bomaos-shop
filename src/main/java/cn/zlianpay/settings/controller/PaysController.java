@@ -34,6 +34,17 @@ public class PaysController extends BaseController {
     @RequiresPermissions("settings:pays:view")
     @RequestMapping()
     public String view() {
+        Pays codepay_wxpay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "codepay_wxpay"));
+        Pays codepay_alipay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "codepay_alipay"));
+
+        if (!ObjectUtils.isEmpty(codepay_wxpay)) {
+            paysService.remove(new QueryWrapper<Pays>().eq("driver", "codepay_wxpay"));
+        }
+
+        if (!ObjectUtils.isEmpty(codepay_alipay)) {
+            paysService.remove(new QueryWrapper<Pays>().eq("driver", "codepay_alipay"));
+        }
+
         return "settings/pays.html";
     }
 
@@ -53,11 +64,7 @@ public class PaysController extends BaseController {
             PaysVo paysVo = new PaysVo();
             BeanUtils.copyProperties(pays, paysVo);
             JSONObject configs = JSONObject.parseObject(pays.getConfig());
-            if (pays.getDriver().equals("codepay_alipay") || pays.getDriver().equals("codepay_wxpay")) {
-                paysVo.setAppid(configs.get("id").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("mqpay_alipay") || pays.getDriver().equals("mqpay_wxpay")) {
+            if (pays.getDriver().equals("mqpay_alipay") || pays.getDriver().equals("mqpay_wxpay")) {
                 paysVo.setKey(configs.get("key").toString());
                 paysVo.setCreateUrl(configs.get("create_url").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
@@ -148,11 +155,7 @@ public class PaysController extends BaseController {
     public JsonResult update(PaysVo paysVo) {
 
         Map<String,String> map = new HashMap<>();
-        if (paysVo.getDriver().equals("codepay_alipay") || paysVo.getDriver().equals("codepay_wxpay") || paysVo.getDriver().equals("codepay_qqpay")) {
-            map.put("id", paysVo.getAppid());
-            map.put("key", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("mqpay_alipay") || paysVo.getDriver().equals("mqpay_wxpay")) {
+        if (paysVo.getDriver().equals("mqpay_alipay") || paysVo.getDriver().equals("mqpay_wxpay")) {
             map.put("key", paysVo.getKey());
             map.put("create_url", paysVo.getCreateUrl());
             map.put("notify_url", paysVo.getNotifyUrl());

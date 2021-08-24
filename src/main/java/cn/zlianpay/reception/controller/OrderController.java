@@ -220,9 +220,6 @@ public class OrderController extends BaseController {
         } else if (orders.getPayType().equals("mqpay_wxpay")) {
             String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
             response.sendRedirect(createMqPay);
-        } else if (orders.getPayType().equals("codepay_wxpay") || orders.getPayType().equals("codepay_alipay")) {
-            String url = CodePaysConfig.CodePayConfigInfo(pays, price, ordersMember, productDescription);
-            response.sendRedirect(url);
             return null;
         } else if (orders.getPayType().equals("zlianpay_wxpay") || orders.getPayType().equals("zlianpay_alipay")) {
             String url = ZlianPay.zlianSendPay(pays, price, ordersMember, productDescription);

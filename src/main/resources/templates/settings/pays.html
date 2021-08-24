@@ -18,9 +18,6 @@
     {{# if(d.driver=='mqpay_alipay' || d.driver=='mqpay_wxpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="mqpay">配置修改</a>
     {{# } }}
-    {{# if(d.driver=='codepay_alipay' || d.driver=='codepay_wxpay' || d.driver=='codepay_qqpay'){ }}
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="codepay">配置修改</a>
-    {{# } }}
     {{# if(d.driver=='zlianpay_alipay' || d.driver=='zlianpay_wxpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="codepay">配置修改</a>
     {{# } }}
@@ -110,71 +107,6 @@
         </div>
     </form>
 </script>
-
-<!-- codepay -->
-<script type="text/html" id="codepayEditDialog">
-    <form id="codepayEditForm" lay-filter="codepayEditForm" class="layui-form model-form">
-        <input name="id" type="hidden"/>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">支付类型名称:</label>
-            <div class="layui-input-block">
-                <input name="name" placeholder="请输入支付类型名称" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
-            <div class="layui-input-block">
-                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">ID:</label>
-            <div class="layui-input-block">
-                <input name="appid" placeholder="输入ID" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">key:</label>
-            <div class="layui-input-block">
-                <input name="key" placeholder="输入key" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">通知地址:</label>
-            <div class="layui-input-block">
-                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">说明:</label>
-            <div class="layui-input-block">
-                <input name="comment" placeholder="请输入说明" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">是否启用:</label>
-            <div class="layui-input-block">
-                <input type="radio" name="enabled" value="0" title="关闭" checked>
-                <input type="radio" name="enabled" value="1" title="启用">
-            </div>
-        </div>
-        <div class="layui-form-item text-right">
-            <button class="layui-btn" lay-filter="codepayEditSubmit" lay-submit>保存</button>
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
-        </div>
-    </form>
-</script>
-
 
 <!-- zlianpay -->
 <script type="text/html" id="zlianpayEditDialog">
@@ -750,9 +682,7 @@
 
         /* 表格工具条点击事件 */
         table.on('tool(paysTable)', function (obj) {
-            if ('codepay' === obj.event) { // 修改马支付
-                showEditModel(obj.data);
-            } else if ('mqpay' === obj.event) {
+            if ('mqpay' === obj.event) {
                 showEditModel(obj.data);
             } else if ('zlianpay' === obj.event) {
                 showEditModel(obj.data);
@@ -775,11 +705,7 @@
 
         /* 显示表单弹窗 */
         function showEditModel(mData) {
-            if (mData.driver == 'codepay_alipay' || mData.driver == 'codepay_wxpay' || mData.driver == 'codepay_qqpay') {
-                var html = $('#codepayEditDialog').html();
-                var forms = 'codepayEditForm';
-                var submit = 'codepayEditSubmit';
-            } else if (mData.driver == 'mqpay_alipay' || mData.driver == 'mqpay_wxpay') {
+            if (mData.driver == 'mqpay_alipay' || mData.driver == 'mqpay_wxpay') {
                 var html = $('#mqpayEditDialog').html();
                 var forms = 'mqpayEditForm';
                 var submit = 'mqpayEditSubmit';

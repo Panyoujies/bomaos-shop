@@ -158,8 +158,7 @@ public class OrdersController extends BaseController {
             searchDTO.setAndIncrement(andIncrement.toString());
             searchDTO.setCreateTime(date);
             searchDTO.setMoney(orders.getMoney().toString());
-            if (orders.getPayType().equals("codepay_alipay")
-                    || orders.getPayType().equals("mqpay_alipay")
+            if (orders.getPayType().equals("mqpay_alipay")
                     || orders.getPayType().equals("zlianpay_alipay")
                     || orders.getPayType().equals("yungouos_alipay")
                     || orders.getPayType().equals("xunhupay_alipay")
@@ -168,8 +167,7 @@ public class OrdersController extends BaseController {
                     || orders.getPayType().equals("yunfu_alipay")
                     || orders.getPayType().equals("alipay")) {
                 searchDTO.setPayType("支付宝");
-            } else if (orders.getPayType().equals("codepay_wxpay")
-                    || orders.getPayType().equals("mqpay_wxpay")
+            } else if (orders.getPayType().equals("mqpay_wxpay")
                     || orders.getPayType().equals("zlianpay_wxpay")
                     || orders.getPayType().equals("yungouos_wxpay")
                     || orders.getPayType().equals("xunhupay_wxpay")
