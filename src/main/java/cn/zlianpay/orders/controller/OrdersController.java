@@ -346,8 +346,7 @@ public class OrdersController extends BaseController {
     }
 
     /**
-     *
-     * @param id 商品id
+     * @param id       商品id
      * @param shipInfo 需要发货的内容
      * @return
      */
@@ -419,7 +418,7 @@ public class OrdersController extends BaseController {
         if (member == null) return JsonResult.error("没有找到相关订单"); // 本地没有这个订单
 
         int count = orderCardService.count(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
-        if (count >= 1)  return JsonResult.ok("已经支付成功！自动发卡成功，补单失败");
+        if (count >= 1) return JsonResult.ok("已经支付成功！自动发卡成功，补单失败");
 
         Products products = productsService.getById(productId);
         if (products == null) return JsonResult.error("该订单的商品找不到！"); // 商品没了
@@ -432,6 +431,7 @@ public class OrdersController extends BaseController {
             if (card == null) return JsonResult.error("卡密为空！请补充后再试。");
 
             List<OrderCard> cardList = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
             for (Cards cards : card) {
                 OrderCard orderCard = new OrderCard();
                 orderCard.setCardId(cards.getId());
@@ -445,24 +445,31 @@ public class OrdersController extends BaseController {
                 cards1.setUpdatedAt(new Date());
                 // 设置售出的卡密
                 cardsService.updateById(cards1);
+            }
 
-                if (shopSettings.getIsWxpusher() == 1) {
-                    Message message = new Message();
-                    message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
-                    message.setContentType(Message.CONTENT_TYPE_HTML);
-                    message.setUid(shopSettings.getWxpushUid());
-                    message.setAppToken(shopSettings.getAppToken());
-                    WxPusher.send(message);
-                }
+            if (shopSettings.getIsWxpusher() == 1) {
+                Message message = new Message();
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContentType(Message.CONTENT_TYPE_HTML);
+                message.setUid(shopSettings.getWxpushUid());
+                message.setAppToken(shopSettings.getAppToken());
+                WxPusher.send(message);
+            }
 
-                if (shopSettings.getIsEmail() == 1) {
-                    if (!StringUtils.isEmpty(member.getEmail())) {
-                        if (FormCheckUtil.isEmail(member.getEmail())) {
-                            try {
-                                emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
-                            } catch (Exception e) {
-                                return JsonResult.error("补单失败、邮箱系统配置错误！！");
-                            }
+            if (shopSettings.getIsEmail() == 1) {
+                if (!StringUtils.isEmpty(member.getEmail())) {
+                    if (FormCheckUtil.isEmail(member.getEmail())) {
+                        Map<String, Object> map = new HashMap<>();  // 页面的动态数据
+                        map.put("title", website.getWebsiteName());
+                        map.put("member", member.getMember());
+                        map.put("date", new Date());
+                        map.put("info", stringBuilder.toString());
+                        try {
+                            emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
+                            // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return JsonResult.error("补单失败、邮箱系统配置错误！！");
                         }
                     }
                 }
@@ -481,7 +488,7 @@ public class OrdersController extends BaseController {
 
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>" + member.getMoney() + "</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());

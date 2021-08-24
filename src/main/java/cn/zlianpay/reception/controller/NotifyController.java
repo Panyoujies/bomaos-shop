@@ -657,6 +657,7 @@ public class NotifyController {
             if (card == null) return fiald;
 
             List<OrderCard> cardList = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
             for (Cards cards : card) {
                 OrderCard orderCard = new OrderCard();
                 orderCard.setCardId(cards.getId());
@@ -668,22 +669,39 @@ public class NotifyController {
                 cards1.setId(cards.getId());
                 cards1.setStatus(1);
                 cards1.setUpdatedAt(new Date());
+
+                if (cards.getCardInfo().contains(" ")) {
+                    String[] split = cards.getCardInfo().split(" ");
+                    stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                } else {
+                    stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
+                }
                 // 设置售出的卡密
                 cardsService.updateById(cards1);
+            }
 
-                if (shopSettings.getIsWxpusher() == 1) {
-                    Message message = new Message();
-                    message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
-                    message.setContentType(Message.CONTENT_TYPE_HTML);
-                    message.setUid(shopSettings.getWxpushUid());
-                    message.setAppToken(shopSettings.getAppToken());
-                    WxPusher.send(message);
-                }
+            if (shopSettings.getIsWxpusher() == 1) {
+                Message message = new Message();
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContentType(Message.CONTENT_TYPE_HTML);
+                message.setUid(shopSettings.getWxpushUid());
+                message.setAppToken(shopSettings.getAppToken());
+                WxPusher.send(message);
+            }
 
-                if (shopSettings.getIsEmail() == 1) {
-                    if (!StringUtils.isEmpty(member.getEmail())) {
-                        if (FormCheckUtil.isEmail(member.getEmail())) {
-                            emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+            if (shopSettings.getIsEmail() == 1) {
+                if (!StringUtils.isEmpty(member.getEmail())) {
+                    if (FormCheckUtil.isEmail(member.getEmail())) {
+                        Map<String, Object> map = new HashMap<>();  // 页面的动态数据
+                        map.put("title", website.getWebsiteName());
+                        map.put("member", member.getMember());
+                        map.put("date", new Date());
+                        map.put("info", stringBuilder.toString());
+                        try {
+                            emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
+                            // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -702,12 +720,13 @@ public class NotifyController {
 
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());
                 WxPusher.send(message);
             }
+
             if (shopSettings.getIsEmail() == 1) {
                 if (FormCheckUtil.isEmail(member.getEmail())) {
                     emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});

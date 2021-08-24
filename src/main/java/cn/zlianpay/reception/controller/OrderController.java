@@ -220,6 +220,7 @@ public class OrderController extends BaseController {
         if (orders.getPayType().equals("mqpay_alipay")) {
             String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
             response.sendRedirect(createMqPay);
+            return null;
         } else if (orders.getPayType().equals("mqpay_wxpay")) {
             String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
             response.sendRedirect(createMqPay);
@@ -278,6 +279,7 @@ public class OrderController extends BaseController {
         } else if (orders.getPayType().equals("jiepay_wxpay") || orders.getPayType().equals("jiepay_alipay")) {
             String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
             response.sendRedirect(payUtils);
+            return null;
         } else if (orders.getPayType().equals("payjs_wxpay") || orders.getPayType().equals("payjs_alipay")) {
             String payjs = "";
             if (orders.getPayType().equals("payjs_wxpay")) {
