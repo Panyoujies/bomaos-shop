@@ -97,6 +97,11 @@ public class PaysController extends BaseController {
                 paysVo.setMchid(configs.get("mchId").toString());
                 paysVo.setKey(configs.get("key").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("wxpay_h5")) {
+                paysVo.setAppid(configs.get("appId").toString());
+                paysVo.setMchid(configs.get("mchId").toString());
+                paysVo.setKey(configs.get("key").toString());
+                paysVo.setNotifyUrl(configs.get("notify_url").toString());
             } else if (pays.getDriver().equals("alipay")) {
                 paysVo.setAppid(configs.get("app_id").toString());
                 paysVo.setKey(configs.get("private_key").toString());
@@ -184,6 +189,11 @@ public class PaysController extends BaseController {
             map.put("key", paysVo.getKey());
             map.put("notify_url", paysVo.getNotifyUrl());
         } else if (paysVo.getDriver().equals("wxpay")) {
+            map.put("appId", paysVo.getAppid());
+            map.put("mchId", paysVo.getMchid());
+            map.put("key", paysVo.getKey());
+            map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("wxpay_h5")) {
             map.put("appId", paysVo.getAppid());
             map.put("mchId", paysVo.getMchid());
             map.put("key", paysVo.getKey());

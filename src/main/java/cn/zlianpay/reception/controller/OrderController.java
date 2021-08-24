@@ -37,6 +37,9 @@ import cn.zlianpay.settings.service.PaysService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DevicePlatform;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -341,6 +344,10 @@ public class OrderController extends BaseController {
 
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
+        } else if (pays.getDriver().equals("wxpay_h5")) {
+            String pay = SendWxPay.payMweb(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+            response.sendRedirect(pay);
+            return null;
         } else if (pays.getDriver().equals("alipay")) {
             String pay = SendAlipay.pay(pays, price, ordersMember, goodsName, productDescription, request);
             model.addAttribute("type", 2); // 支付宝当面付

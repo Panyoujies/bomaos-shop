@@ -174,7 +174,8 @@ public class OrdersController extends BaseController {
                     || orders.getPayType().equals("jiepay_wxpay")
                     || orders.getPayType().equals("payjs_wxpay")
                     || orders.getPayType().equals("yunfu_wxpay")
-                    || orders.getPayType().equals("wxpay")) {
+                    || orders.getPayType().equals("wxpay")
+                    || orders.getPayType().equals("wxpay_h5")) {
                 searchDTO.setPayType("微信");
             }
             if (orders.getStatus() == 1) {

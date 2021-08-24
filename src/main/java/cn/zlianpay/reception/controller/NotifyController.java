@@ -83,7 +83,9 @@ public class NotifyController {
     /**
      * 返回成功xml
      */
-    private String resSuccessXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+    private String WxpayresXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+
+    private String WxpayH5resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 
     /**
      * 返回失败xml
@@ -539,9 +541,14 @@ public class NotifyController {
                     BigDecimal bigDecimal = new BigDecimal(total_fee);
                     BigDecimal multiply = bigDecimal.divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_DOWN);
                     String money = new DecimalFormat("0.##").format(multiply);
-
-                    String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, resSuccessXml, resFailXml);
-                    resXml = returnBig;
+                    Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
+                    if (member.getPayType().equals("wxpay")) {
+                        String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, WxpayresXml, resFailXml);
+                        resXml = returnBig;
+                    } else {
+                        String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, WxpayH5resXml, resFailXml);
+                        resXml = returnBig;
+                    }
                 } else {
                     System.out.println("签名判断错误！！");
                 }

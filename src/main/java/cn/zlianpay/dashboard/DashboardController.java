@@ -199,7 +199,8 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("jiepay_wxpay")
                     || orders.getPayType().equals("payjs_wxpay")
                     || orders.getPayType().equals("yunfu_wxpay")
-                    || orders.getPayType().equals("wxpay")) { // 微信
+                    || orders.getPayType().equals("wxpay")
+                    || orders.getPayType().equals("wxpay_h5")) { // 微信
                 bigWxpay = bigWxpay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             } else if (orders.getPayType().equals("mqpay_alipay")
                     || orders.getPayType().equals("zlianpay_alipay")
@@ -229,17 +230,16 @@ public class DashboardController extends BaseController {
         Integer alipay = 0;
         for (Orders orders : ordersList) {
             if (orders.getPayType().equals("mqpay_wxpay")
-                    || orders.getPayType().equals("codepay_wxpay")
                     || orders.getPayType().equals("zlianpay_wxpay")
                     || orders.getPayType().equals("yungouos_wxpay")
                     || orders.getPayType().equals("xunhupay_wxpay")
                     || orders.getPayType().equals("jiepay_wxpay")
                     || orders.getPayType().equals("payjs_wxpay")
                     || orders.getPayType().equals("yunfu_wxpay")
-                    || orders.getPayType().equals("wxpay")) { // 微信
+                    || orders.getPayType().equals("wxpay")
+                    || orders.getPayType().equals("wxpay_h5")) { // 微信
                 wxpay++;
             } else if (orders.getPayType().equals("mqpay_alipay")
-                    || orders.getPayType().equals("codepay_alipay")
                     || orders.getPayType().equals("zlianpay_alipay")
                     || orders.getPayType().equals("yungouos_alipay")
                     || orders.getPayType().equals("xunhupay_alipay")

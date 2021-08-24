@@ -32,6 +32,9 @@ import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DevicePlatform;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -163,12 +166,25 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/product/{link}")
-    public String product(Model model, @PathVariable("link") String link) {
+    public String product(Model model, @PathVariable("link") String link, HttpServletRequest request) {
         // 查出商品
         Products products = productsService.getOne(new QueryWrapper<Products>().eq("link", link));
         // 查出分类
         Classifys classifys = classifysService.getById(products.getClassifyId());
 
+        Device currentDevice = DeviceUtils.getCurrentDevice(request);
+        DevicePlatform devicePlatform = currentDevice.getDevicePlatform();
+        Integer isMobile;
+        if (devicePlatform.name().equals("IOS") || devicePlatform.name().equals("ANDROID")) {
+            isMobile = 1;
+        } else {
+            isMobile = 0;
+        }
+        Pays isWxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "wxpay").eq("enabled", 1));
+        model.addAttribute("isWxPays", isWxPays);
+        Pays isWxH5Pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "wxpay_h5").eq("enabled", 1));
+        model.addAttribute("isWxH5Pays", isWxH5Pays);
+        model.addAttribute("isMobile", isMobile);
         model.addAttribute("products", products);
         model.addAttribute("classifyName", classifys.getName());
 
@@ -302,7 +318,8 @@ public class IndexController {
                                     || member.getPayType().equals("jiepay_wxpay")
                                     || member.getPayType().equals("payjs_wxpay")
                                     || member.getPayType().equals("yunfu_wxpay")
-                                    || member.getPayType().equals("wxpay")) {
+                                    || member.getPayType().equals("wxpay")
+                                    || member.getPayType().equals("wxpay_h5")) {
                                 searchDTO.setPayType("微信");
                             }
                             if (member.getStatus() == 1) {
@@ -350,7 +367,8 @@ public class IndexController {
                                     || member.getPayType().equals("jiepay_wxpay")
                                     || member.getPayType().equals("payjs_wxpay")
                                     || member.getPayType().equals("yunfu_wxpay")
-                                    || member.getPayType().equals("wxpay")) {
+                                    || member.getPayType().equals("wxpay")
+                                    || member.getPayType().equals("wxpay_h5")) {
                                 searchDTO.setPayType("微信");
                             }
                             if (member.getStatus() == 1) {
