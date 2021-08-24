@@ -6,8 +6,12 @@ import cn.zlianpay.common.system.entity.LoginRecord;
 import cn.zlianpay.common.system.entity.Menu;
 import cn.zlianpay.common.system.service.LoginRecordService;
 import cn.zlianpay.common.system.service.MenuService;
+import cn.zlianpay.settings.entity.Pays;
+import cn.zlianpay.settings.service.PaysService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wf.captcha.utils.CaptchaUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -15,12 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 首页、登录、验证码等
@@ -37,6 +45,9 @@ public class MainController extends BaseController implements ErrorController {
 
     @Autowired
     private WebsiteService websiteService;
+
+    @Autowired
+    private PaysService paysService;
 
     /**
      * 用户登录
@@ -88,6 +99,25 @@ public class MainController extends BaseController implements ErrorController {
      */
     @RequestMapping("/admin")
     public String index(Model model) {
+
+        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "paypal"));
+        if (ObjectUtils.isEmpty(pays)) {
+            Pays pays1 = new Pays();
+            pays1.setName("Paypal");
+            pays1.setDriver("paypal");
+
+            Map<String,String> map = new HashMap<>();
+            map.put("clientId", "xxx");
+            map.put("clientSecret", "xxx");
+            map.put("return_url", "xxx");
+            String jsonString = JSON.toJSONString(map);
+            pays1.setConfig(jsonString);
+            pays1.setComment("Paypal 境外支付（默认美元交易）");
+            pays1.setEnabled(0);
+            pays1.setCreatedAt(new Date());
+            pays1.setUpdatedAt(new Date());
+            paysService.save(pays1);
+        }
 
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
