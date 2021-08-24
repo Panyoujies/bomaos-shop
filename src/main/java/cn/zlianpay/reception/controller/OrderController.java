@@ -392,20 +392,15 @@ public class OrderController extends BaseController {
             try {
                 Payment payment = PaypalSend.createPayment(pays, price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, ordersMember);
                 for (Links links : payment.getLinks()) {
-
                     System.out.println(links.toString());
                     if (links.getRel().equals("approval_url")) {
-
                         System.out.println(links.getHref());
                         return "redirect:" + links.getHref();
                     }
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-;
             return null;
         }
         return null;

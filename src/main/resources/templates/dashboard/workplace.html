@@ -218,6 +218,8 @@
                             return '<span class="layui-badge layui-badge-blue">支付宝</span>'
                         } else if (res.payType == 'mqpay_wxpay' || res.payType == 'zlianpay_wxpay' || res.payType == 'yungouos_wxpay' || res.payType == 'xunhupay_wxpay' || res.payType == 'jiepay_wxpay' || res.payType == 'payjs_wxpay' || res.payType == 'yunfu_wxpay' || res.payType == 'wxpay' || res.payType == 'wxpay_h5'){
                             return '<span class="layui-badge layui-badge-green">微信</span>'
+                        } else if (res.payType == 'paypal') {
+                            return '<span class="layui-badge layui-badge-paypal">Paypal</span>'
                         }
                     }
                 },

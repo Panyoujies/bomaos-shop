@@ -321,6 +321,8 @@ public class IndexController {
                                     || member.getPayType().equals("wxpay")
                                     || member.getPayType().equals("wxpay_h5")) {
                                 searchDTO.setPayType("微信");
+                            } else if (member.getPayType().equals("paypal")) {
+                                searchDTO.setPayType("Paypal");
                             }
                             if (member.getStatus() == 1) {
                                 searchDTO.setStatus("付款成功");
@@ -370,6 +372,8 @@ public class IndexController {
                                     || member.getPayType().equals("wxpay")
                                     || member.getPayType().equals("wxpay_h5")) {
                                 searchDTO.setPayType("微信");
+                            } else if (member.getPayType().equals("paypal")) {
+                                searchDTO.setPayType("Paypal");
                             }
                             if (member.getStatus() == 1) {
                                 searchDTO.setStatus("付款成功");

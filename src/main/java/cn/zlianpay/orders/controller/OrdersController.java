@@ -177,6 +177,8 @@ public class OrdersController extends BaseController {
                     || orders.getPayType().equals("wxpay")
                     || orders.getPayType().equals("wxpay_h5")) {
                 searchDTO.setPayType("微信");
+            } else if (orders.getPayType().equals("paypal")) {
+                searchDTO.setPayType("Paypal");
             }
             if (orders.getStatus() == 1) {
                 searchDTO.setStatus("付款成功");
