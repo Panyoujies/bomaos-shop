@@ -94,6 +94,8 @@ public class ShiroConfig {
         filterChainDefinitions.put("/yunfu/notify", "anon");
         filterChainDefinitions.put("/wxpay/notify", "anon");
         filterChainDefinitions.put("/alipay/notify", "anon");
+        filterChainDefinitions.put("/paypal/cancel", "anon");
+        filterChainDefinitions.put("/paypal/success", "anon");
         filterChainDefinitions.put("/wxpusher/callback", "anon");
 
         // api

@@ -6,6 +6,7 @@ import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.pays.payjs.SignUtil;
+import cn.zlianpay.common.core.pays.paypal.PaypalSend;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.JsonResult;
@@ -31,6 +32,9 @@ import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.Transaction;
+import com.paypal.base.rest.PayPalRESTException;
 import com.zjiecode.wxpusher.client.WxPusher;
 import com.zjiecode.wxpusher.client.bean.Message;
 import org.apache.commons.codec.Charsets;
@@ -622,6 +626,55 @@ public class NotifyController {
             return failure;
         }
         return returnBig;
+    }
+
+    /**
+     * 取消订单
+     * @return
+     */
+    @GetMapping("/paypal/cancel")
+    @ResponseBody
+    public String cancelPay() {
+        return "cancel";
+    }
+
+    /**
+     * 完成支付
+     * @param paymentId
+     * @param payerId
+     * @param response
+     * @return
+     */
+    @GetMapping("/paypal/success")
+    @ResponseBody
+    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, HttpServletResponse response) {
+        try {
+            Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "paypal"));
+            Map mapTypes = JSON.parseObject(pays.getConfig());
+            String clientId = mapTypes.get("clientId").toString();
+            String clientSecret = mapTypes.get("clientSecret").toString();
+            Payment payment = PaypalSend.executePayment(clientId, clientSecret, paymentId, payerId);
+            if (payment.getState().equals("approved")) {
+                String member = null; // 订单号
+                String total = null;  // 金额
+                String pay_no = payment.getId();
+                List<Transaction> transactions = payment.getTransactions();
+                for (Transaction transaction : transactions) {
+                    member = transaction.getDescription();
+                    total = transaction.getAmount().getTotal(); // 实际付款金额
+                }
+                Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", member));
+                String returnBig = returnBig(total, orders.getPrice().toString(), member, pay_no, orders.getProductId().toString(), "success", "failure");
+                if (returnBig.equals("success")) {
+                    response.sendRedirect("/search/order/" + member);
+                } else {
+                    response.sendRedirect("/search/order/" + member);
+                }
+            }
+        } catch (PayPalRESTException | IOException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/";
     }
 
     /**

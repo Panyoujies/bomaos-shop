@@ -1,11 +1,15 @@
 package cn.zlianpay.reception.controller;
 
 import cn.zlianpay.carmi.entity.Cards;
+import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
+import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.pays.alipay.SendAlipay;
-import cn.zlianpay.common.core.pays.codepay.CodePaysConfig;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.payjs.sendPayjs;
+import cn.zlianpay.common.core.pays.paypal.PaypalSend;
+import cn.zlianpay.common.core.pays.paypal.config.PaypalPaymentIntent;
+import cn.zlianpay.common.core.pays.paypal.config.PaypalPaymentMethod;
 import cn.zlianpay.common.core.pays.wxpay.SendWxPay;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.yunfupay.SendYunfu;
@@ -14,6 +18,7 @@ import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.common.system.service.EmailService;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.CouponService;
@@ -36,6 +41,10 @@ import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payment;
+import com.zjiecode.wxpusher.client.WxPusher;
+import com.zjiecode.wxpusher.client.bean.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DevicePlatform;
@@ -54,12 +63,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class OrderController extends BaseController {
@@ -99,7 +106,7 @@ public class OrderController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/buy")
-    public JsonResult save(Integer goodsId, Integer number, String email, String coupon, String payType, String password,HttpServletResponse response, HttpServletRequest request) {
+    public JsonResult save(Integer goodsId, Integer number, String email, String coupon, String payType, String password, HttpServletResponse response, HttpServletRequest request) {
 
         if (StringUtils.isEmpty(goodsId)) {
             return JsonResult.error("商品不能为空");
@@ -354,13 +361,10 @@ public class OrderController extends BaseController {
             model.addAttribute("ordersMember", ordersMember);
             model.addAttribute("result", JSON.toJSONString(pay));
             model.addAttribute("orderId", orders.getId());
-
             Website website = websiteService.getById(1);
             model.addAttribute("website", website);
-
             ShopSettings shopSettings = shopSettingsService.getById(1);
             model.addAttribute("isBackground", shopSettings.getIsBackground());
-
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
         } else if (pays.getDriver().equals("wxpay_h5")) {
@@ -384,20 +388,29 @@ public class OrderController extends BaseController {
 
             Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
             return "theme/" + theme.getDriver() + "/yunpay.html";
+        } else if (pays.getDriver().equals("paypal")) {
+            try {
+                Payment payment = PaypalSend.createPayment(pays, price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, ordersMember);
+                for (Links links : payment.getLinks()) {
+
+                    System.out.println(links.toString());
+                    if (links.getRel().equals("approval_url")) {
+
+                        System.out.println(links.getHref());
+                        return "redirect:" + links.getHref();
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+;
+            return null;
         }
-
-        Website website = websiteService.getById(1);
-        model.addAttribute("website", website);
-
-        ShopSettings shopSettings = shopSettingsService.getById(1);
-        model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-        return "theme/" + theme.getDriver() + "/pay.html";
+        return null;
     }
 
-	
-	
     /**
      * 业务处理
      * @param money 实收款金额

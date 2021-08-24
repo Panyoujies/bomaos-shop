@@ -8,10 +8,12 @@ import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
 import cn.zlianpay.settings.vo.PaysVo;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,6 +109,10 @@ public class PaysController extends BaseController {
                 paysVo.setKey(configs.get("private_key").toString());
                 paysVo.setMpKey(configs.get("alipay_public_key").toString());
                 paysVo.setNotifyUrl(configs.get("notify_url").toString());
+            } else if (pays.getDriver().equals("paypal")) {
+                paysVo.setMchid(configs.get("clientId").toString());
+                paysVo.setKey(configs.get("clientSecret").toString());
+                paysVo.setNotifyUrl(configs.get("return_url").toString());
             }
             return paysVo;
         }).collect(Collectors.toList());
@@ -203,6 +209,10 @@ public class PaysController extends BaseController {
             map.put("private_key", paysVo.getKey());
             map.put("alipay_public_key", paysVo.getMpKey());
             map.put("notify_url", paysVo.getNotifyUrl());
+        } else if (paysVo.getDriver().equals("paypal")) {
+            map.put("clientId", paysVo.getMchid());
+            map.put("clientSecret", paysVo.getKey());
+            map.put("return_url", paysVo.getNotifyUrl());
         }
         String jsonString = JSON.toJSONString(map);
 

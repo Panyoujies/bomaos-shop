@@ -45,6 +45,9 @@
     {{# if(d.driver=='alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="alipay">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='paypal'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="paypal">配置修改</a>
+    {{# } }}
 </script>
 
 <!-- mqpay -->
@@ -714,6 +717,70 @@
     </form>
 </script>
 
+<!-- paypal -->
+<script type="text/html" id="paypalEditDialog">
+    <form id="paypalEditForm" lay-filter="paypalEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input" disabled=""
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input" disabled=""
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">clientId:</label>
+            <div class="layui-input-block">
+                <input name="mchid" placeholder="输入 clientId" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">clientSecret:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入 clientSecret" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">返回地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入返回的地址（自己的发卡域名带http/s）" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">是否启用:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="enabled" value="0" title="关闭" checked>
+                <input type="radio" name="enabled" value="1" title="启用">
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="paypalEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
 <!-- 商品状态 -->
 <script type="text/html" id="paysTbStatus">
     <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -746,10 +813,12 @@
                         return '<span class="layui-badge layui-badge-green">微信H5</span>'
                     } else if (res.name == '微信') {
                         return '<span class="layui-badge layui-badge-green">微信</span>'
-                    } else {
+                    } else if(res.name == '支付宝') {
                         return '<span class="layui-badge layui-badge-blue">支付宝</span>'
+                    } else {
+                        return '<span class="layui-badge layui-badge-blue">Paypal</span>'
                     }
-				}
+                }
                 },
                 {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
@@ -780,6 +849,8 @@
             } else if ('wxpay_h5' === obj.event) {
                 showEditModel(obj.data);
             } else if ('alipay' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('paypal' === obj.event) {
                 showEditModel(obj.data);
             }
         });
@@ -826,6 +897,10 @@
                 var html = $('#alipayEditDialog').html();
                 var forms = 'alipayEditForm';
                 var submit = 'alipayEditSubmit';
+            } else if (mData.driver == 'paypal') {
+                var html = $('#paypalEditDialog').html();
+                var forms = 'paypalEditForm';
+                var submit = 'paypalEditSubmit';
             }
 
             admin.open({
