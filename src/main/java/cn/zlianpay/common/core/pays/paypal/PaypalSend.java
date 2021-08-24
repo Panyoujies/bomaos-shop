@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class PaypalSend {
 
-    private static String mode = "sandbox";
+    private static String mode = "live"; // live （正式环境）  sandbox （测试环境）
 
     public static Payment createPayment(Pays pays,
                                         String total,

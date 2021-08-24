@@ -61,9 +61,12 @@ public class DashboardController extends BaseController {
         List<String> dayList = new ArrayList<>(); // 天
         List<BigDecimal> wxpayList = new ArrayList<>(); // 每天微信的总金额
         List<BigDecimal> alipayList = new ArrayList<>(); // 每天支付宝的总金额
+        List<BigDecimal> paypalList = new ArrayList<>(); // 每天贝宝的总金额
 
         Integer wxpayAll = 0; // 七天微信的交易量
         Integer alipayAll = 0; // 七天支付宝的交易量
+        Integer paypalAll = 0; // 七天贝宝的交易量
+
         for (int i = 0; i < 7; i++) {
             Date startDayTime = DateStrUtil.getStartDayTime(-+i);
             Date endDayTime = DateStrUtil.getEndDayTime(-+i);
@@ -71,15 +74,19 @@ public class DashboardController extends BaseController {
             String day = simpleDateFormat.format(DateUtil.getStartDayTime(-+i));
             BigDecimal wxpay = timeDayList.get("wxpay");
             BigDecimal alipay = timeDayList.get("alipay");
+            BigDecimal paypal = timeDayList.get("paypal");
 
             Map<String, Integer> timeDayCount = getTimeDayCount(startDayTime, endDayTime, ordersService);
             Integer wxpay1 = timeDayCount.get("wxpay");
             Integer alipay1 = timeDayCount.get("alipay");
+            Integer paypal1 = timeDayCount.get("paypal");
             wxpayAll += wxpay1;
             alipayAll += alipay1;
+            paypalAll += paypal1;
 
             wxpayList.add(wxpay);
             alipayList.add(alipay);
+            paypalList.add(paypal);
             dayList.add(day);
         }
 
@@ -94,6 +101,11 @@ public class DashboardController extends BaseController {
         map1.put("name", "支付宝");
         mapList.add(map1);
 
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("value", paypalAll.toString());
+        map2.put("name", "Paypal");
+        mapList.add(map2);
+
         List<Orders> ordersList = ordersService.list(new QueryWrapper<Orders>().ge("status", 1));
         BigDecimal total_amount = new BigDecimal(0.00); // 获取今天成功交易的订单交易额
         for (Orders orders : ordersList) {
@@ -104,6 +116,7 @@ public class DashboardController extends BaseController {
         model.addAttribute("dayList", JSON.toJSONString(dayList));
         model.addAttribute("wxpayList", JSON.toJSONString(wxpayList));
         model.addAttribute("alipayList", JSON.toJSONString(alipayList));
+        model.addAttribute("paypalList", JSON.toJSONString(paypalList));
         model.addAttribute("total_amount", total_amount.toString());
 
         model.addAttribute("user", getLoginUser());
@@ -191,6 +204,7 @@ public class DashboardController extends BaseController {
         List<Orders> ordersList = ordersService.list(queryWrapper);
         BigDecimal bigWxpay = new BigDecimal(0.00);
         BigDecimal bigAlipay = new BigDecimal(0.00);
+        BigDecimal bigPaypal = new BigDecimal(0.00);
         for (Orders orders : ordersList) {
             if (orders.getPayType().equals("mqpay_wxpay")
                     || orders.getPayType().equals("zlianpay_wxpay")
@@ -211,12 +225,15 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("yunfu_alipay")
                     || orders.getPayType().equals("alipay")) { // 支付宝
                 bigAlipay = bigAlipay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+            } else if (orders.getPayType().equals("paypal")) {
+                bigPaypal = bigPaypal.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             }
         }
 
         Map<String, BigDecimal> map = new HashMap<>();
         map.put("wxpay", bigWxpay);
         map.put("alipay", bigAlipay);
+        map.put("paypal", bigPaypal);
         return map;
     }
 
@@ -228,6 +245,7 @@ public class DashboardController extends BaseController {
         List<Orders> ordersList = ordersService.list(queryWrapper);
         Integer wxpay = 0;
         Integer alipay = 0;
+        Integer paypal = 0;
         for (Orders orders : ordersList) {
             if (orders.getPayType().equals("mqpay_wxpay")
                     || orders.getPayType().equals("zlianpay_wxpay")
@@ -248,12 +266,15 @@ public class DashboardController extends BaseController {
                     || orders.getPayType().equals("yunfu_alipay")
                     || orders.getPayType().equals("alipay")) { // 支付宝
                 alipay++;
+            } else if (orders.getPayType().equals("paypal")) {
+                paypal++;
             }
         }
 
         Map<String, Integer> map = new HashMap<>();
         map.put("wxpay", wxpay);
         map.put("alipay", alipay);
+        map.put("paypal", paypal);
         return map;
     }
 

@@ -199,6 +199,7 @@
         var dayList = JSON.parse('${dayList!}'); // 天数
         var wxpayList = JSON.parse('${wxpayList!}');
         var alipayList = JSON.parse('${alipayList!}');
+        var paypalList = JSON.parse('${paypalList!}');
         var mapList = JSON.parse('${mapList!}');
 
         /* 渲染表格 */
@@ -247,7 +248,7 @@
         var option;
 
         option = {
-            color: ['#09BA07', '#0E78FF'],
+            color: ['#09BA07', '#0E78FF', '#003087'],
             title: {
                 text: '近七天交易流水'
             },
@@ -262,7 +263,7 @@
             },
             legend: {
                 left: 'right',
-                data: ['微信', '支付宝']
+                data: ['微信', '支付宝', 'Paypal']
             },
             grid: {
                 left: '3%',
@@ -330,6 +331,30 @@
                         focus: 'series'
                     },
                     data: alipayList
+                },
+                {
+                    name: 'Paypal',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    lineStyle: {
+                        width: 0
+                    },
+                    showSymbol: false,
+                    areaStyle: {
+                        opacity: 0.8,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgb(118,169,255)'
+                        }, {
+                            offset: 1,
+                            color: 'rgb(0,48,135)'
+                        }])
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: paypalList
                 }
 
             ]
@@ -343,7 +368,7 @@
         var option1;
 
         option1 = {
-            color: ['#09BA07', '#0E78FF'],
+            color: ['#09BA07', '#0E78FF', '#003087'],
             title: {
                 text: '近七天收款类型统计'
             },
