@@ -87,11 +87,11 @@ public class OrdersController extends BaseController {
     @OperLog(value = "订单表管理", desc = "分页查询")
     @ResponseBody
     @RequestMapping("/page")
-    public PageResult<OrdersVo> page(HttpServletRequest request) {
+    public JsonResult page(HttpServletRequest request) {
         PageParam<Orders> pageParam = new PageParam<>(request);
         pageParam.setDefaultOrder(null, new String[]{"create_time"});
-        List<Orders> records = ordersService.page(pageParam, pageParam.getWrapper()).getRecords();
-        List<OrdersVo> ordersVoList = records.stream().map((orders) -> {
+        PageResult<Orders> ordersPageResult = ordersService.listPage(pageParam);
+        List<OrdersVo> ordersVoList = ordersPageResult.getData().stream().map((orders) -> {
             OrdersVo ordersVo = new OrdersVo();
             BeanUtils.copyProperties(orders, ordersVo);
 
@@ -123,7 +123,16 @@ public class OrdersController extends BaseController {
             return ordersVo;
         }).collect(Collectors.toList());
 
-        return new PageResult<>(ordersVoList, pageParam.getTotal());
+        BigDecimal totalAmount = new BigDecimal(0.00);
+        for (OrdersVo ordersVo : ordersVoList) {
+            if (ordersVo.getStatus() >= 1) {
+                totalAmount = totalAmount.add(new BigDecimal(ordersVo.getMoney())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+            }
+        }
+        Map<String, String> totalRow = new HashMap<>();
+        totalRow.put("money", totalAmount.toString());
+
+        return JsonResult.ok("查询成功！").put("totalRow", totalRow).setData(ordersVoList);
     }
 
     /**

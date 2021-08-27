@@ -35,13 +35,21 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">联系方式:</label>
                         <div class="layui-input-inline">
-                            <input name="contact" class="layui-input" placeholder="输入买家联系方式"/>
+                            <input name="email" class="layui-input" placeholder="输入买家联系方式"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">流水号:</label>
                         <div class="layui-input-inline">
                             <input name="payNo" class="layui-input" placeholder="输入流水号"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">选择日期:</label>
+                        <div class="layui-input-inline">
+                            <input name="ordersDateSel" class="layui-input icon-date" placeholder="选择日期范围"
+                                   autocomplete="off"/>
                         </div>
                     </div>
 
@@ -198,13 +206,14 @@
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
 <script>
-    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice'], function () {
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice', 'laydate'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
         var tableX = layui.tableX;
         var util = layui.util;
+        var laydate = layui.laydate;
         var admin = layui.admin;
         var notice = layui.notice;
 
@@ -218,8 +227,9 @@
                 '<button lay-event="clearAll" class="layui-btn layui-btn-sm layui-btn-danger icon-btn"><i class="layui-icon">&#xe640;</i>清理七天前订单</button>',
                 '</p>'].join(''),
             cellMinWidth: 100,
+            totalRow: true,
             cols: [[
-                {type: 'numbers'},
+                {type: 'numbers', unresize: true, totalRowText: '合计'},
                 {field: 'member', title: '订单号', minWidth: 140},
                 {field: 'productName', title: '商品名称', width: 120},
                 {field: 'email', title: '电子邮件', align: 'center', width: 120},
@@ -264,7 +274,7 @@
                         }
                     }, width: 90
                 },
-                {field: 'money', title: '金额', align: 'center', width: 90},
+                {field: 'money', title: '金额', align: 'center', width: 90, totalRow: true},
                 {
                     field: 'createTime', title: '订单创建时间', templet: function (d) {
                         return util.toDateString(d.createTime);
@@ -274,8 +284,24 @@
             ]]
         });
 
+        /* 时间范围 */
+        laydate.render({
+            elem: 'input[name="ordersDateSel"]',
+            type: 'date',
+            range: true,
+            trigger: 'click'
+        });
+
         /* 表格搜索 */
         form.on('submit(ordersTbSearch)', function (data) {
+            if (data.field.ordersDateSel) {
+                var searchDate = data.field.ordersDateSel.split(' - ');
+                data.field.createTimeStart = searchDate[0] + ' 00:00:00';
+                data.field.createTimeEnd = searchDate[1] + ' 23:59:59';
+            } else {
+                data.field.createTimeStart = '';
+                data.field.createTimeEnd = '';
+            }
             insTb.reload({where: data.field, page: {curr: 1}});
             return false;
         });
