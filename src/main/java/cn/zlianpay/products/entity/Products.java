@@ -77,6 +77,11 @@ public class Products implements Serializable {
     private Integer classifyId;
 
     /**
+     * 首页截图
+     */
+    private String indexLogo;
+
+    /**
      * 商品logo
      */
     private String imageLogo;

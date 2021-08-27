@@ -80,6 +80,11 @@ public class ProductsVos {
     private String cardsCount;
 
     /**
+     * 首页截图
+     */
+    private String indexLogo;
+
+    /**
      * 商品logo
      */
     private String imageLogo;

@@ -451,6 +451,7 @@ CREATE TABLE `sys_products` (
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
   `classify_id` int(11) DEFAULT NULL COMMENT '分类id',
+  `index_logo` longtext COMMENT '首页截图',
   `image_logo` longtext COMMENT '商品logo',
   `is_wholesale` int(1) DEFAULT NULL COMMENT '批发功能',
   `wholesale` longtext COMMENT '批发配置',

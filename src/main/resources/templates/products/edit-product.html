@@ -106,6 +106,26 @@
                 </div>
 
                 <div class="layui-form-item" style="margin-top: 15px">
+                    <label class="layui-form-label layui-form-required">首页图片:</label>
+                    <div class="layui-input-block" style="width: auto">
+                        <input id="indexLogo" name="indexLogo" placeholder="商品图片/可使用外链" class="layui-input" lay-verify="required" required/>
+                        <div class="layui-upload" style="margin-top: 10px">
+                            <button type="button" class="layui-btn" id="test2">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo2">
+                                <p id="demoText1"></p>
+                            </div>
+                            <div style="width: 95px;">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo1">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-word-aux">推荐图片尺寸为【266x127】</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 15px">
                     <label class="layui-form-label layui-form-required">商品图片:</label>
                     <div class="layui-input-block" style="width: auto">
                         <input id="imageLogo" name="imageLogo" placeholder="商品图片/可使用外链" class="layui-input" lay-verify="required" required/>
@@ -121,6 +141,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="layui-word-aux">推荐图片尺寸为【230x230】</div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -180,6 +201,7 @@
         // 回显表单数据
         form.val('productForm', products);
         $('#demo1').attr('src', products.imageLogo); //图片链接
+        $('#demo2').attr('src', products.indexLogo); //图片链接
 
         /* 渲染富文本编辑器 */
         tinymce.init({
@@ -253,6 +275,45 @@
             },
             progress: function (n, elem, e) { //进度条
                 element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test2',
+            url: '${ctxPath}/file/upload',
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+                element.progress('demo1', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                if (res.code == 0) {
+                    $("#indexLogo").val("/file/" + res.url);
+                }
+                $('#demoText1').html(''); //置空上传失败的状态
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            },
+            progress: function (n, elem, e) { //进度条
+                element.progress('demo1', n + '%'); //可配合 layui 进度条元素使用
                 if (n == 100) {
                     layer.msg('上传完毕', {icon: 1});
                 }

@@ -2402,6 +2402,12 @@ div.tagsinput span.tag {
     border: 1px solid #91d5ff
 }
 
+.layui-badge-paypal {
+    color: #003087;
+    background: #dfe7ff;
+    border: 1px solid #aac9ff
+}
+
 .layui-badge-red {
     color: #f5222d;
     background: #fff1f0;

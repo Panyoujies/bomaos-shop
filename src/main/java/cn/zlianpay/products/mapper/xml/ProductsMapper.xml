@@ -38,6 +38,9 @@
 				<if test="page.pageData.deletedAt != null">
                     AND a.deleted_at LIKE CONCAT('%', #{page.pageData.deletedAt}, '%')
 				</if>
+                <if test="page.pageData.indexLogo != null">
+                    AND a.index_logo LIKE CONCAT('%', #{page.pageData.indexLogo}, '%')
+                </if>
                 <if test="page.pageData.imageLogo != null">
                     AND a.image_logo LIKE CONCAT('%', #{page.pageData.imageLogo}, '%')
                 </if>
