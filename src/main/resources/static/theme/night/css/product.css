@@ -395,8 +395,9 @@
     height: 229px;
     max-height: 100%;
     bottom: 0;
-    background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: scroll;
+    background-position: center;
 }
 
 .zlian-card-controller {

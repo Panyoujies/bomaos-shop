@@ -6,6 +6,7 @@ import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.orders.vo.OrderVos;
+import cn.zlianpay.reception.dto.ProductDTO;
 import cn.zlianpay.reception.dto.SearchDTO;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.entity.ShopSettings;
@@ -136,26 +137,26 @@ public class IndexController {
         queryWrapper.orderByAsc("sort");
 
         List<Products> productsList = productsService.list(queryWrapper);
-        List<ProductsVo> productsVoList = productsList.stream().map((products) -> {
-            ProductsVo productsVo = new ProductsVo();
-            BeanUtils.copyProperties(products, productsVo);
+        List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
+            ProductDTO productDTO = new ProductDTO();
+            BeanUtils.copyProperties(products, productDTO);
             int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
-            productsVo.setCardMember(count);
+            productDTO.setCardMember(count);
             int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
-            productsVo.setSellCardMember(count2);
-            productsVo.setPrice(products.getPrice().toString());
+            productDTO.setSellCardMember(count2);
+            productDTO.setPrice(products.getPrice().toString());
 
             int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
-            productsVo.setIsCoupon(count1);
+            productDTO.setIsCoupon(count1);
 
             if (products.getShipType() == 1) {
-                productsVo.setCardMember(products.getInventory());
-                productsVo.setSellCardMember(products.getSales());
+                productDTO.setCardMember(products.getInventory());
+                productDTO.setSellCardMember(products.getSales());
             }
 
-            return productsVo;
+            return productDTO;
         }).collect(Collectors.toList());
-        return JsonResult.ok("ok").setData(productsVoList);
+        return JsonResult.ok("ok").setData(productDTOList);
     }
 
     /**
@@ -503,14 +504,25 @@ public class IndexController {
     @GetMapping("/getProductSearchList")
     public JsonResult getProductSearchList(Integer classifyId, String content) {
         List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("classify_id", classifyId).eq("status", 1).like("name", content));
-        List<ProductsVo> productsVoList = productsList.stream().map((products) -> {
-            ProductsVo productsVo = new ProductsVo();
-            BeanUtils.copyProperties(products, productsVo);
+        List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
+            ProductDTO productDTO = new ProductDTO();
+            BeanUtils.copyProperties(products, productDTO);
             int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
-            productsVo.setCardMember(count);
-            productsVo.setPrice(products.getPrice().toString());
-            return productsVo;
+            productDTO.setCardMember(count);
+            int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
+            productDTO.setSellCardMember(count2);
+            productDTO.setPrice(products.getPrice().toString());
+
+            int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
+            productDTO.setIsCoupon(count1);
+
+            if (products.getShipType() == 1) {
+                productDTO.setCardMember(products.getInventory());
+                productDTO.setSellCardMember(products.getSales());
+            }
+
+            return productDTO;
         }).collect(Collectors.toList());
-        return JsonResult.ok("查询成功！").setData(productsVoList);
+        return JsonResult.ok("查询成功！").setData(productDTOList);
     }
 }
