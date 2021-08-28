@@ -43,17 +43,50 @@
     display: block !important;
 }
 
+.btn-group-show:hover {
+    -webkit-box-shadow: 0 8px 20px 0 rgb(44 71 146 / 40%);
+    box-shadow: 0 8px 20px 0 rgb(44 71 146 / 40%);
+    border-radius: 3px;
+    -webkit-transform: scale(1.02);
+    transform: scale(1.01) translateY(-2px);
+}
+
 .btn-group-show {
     float: right;
     border-radius: 50px !important;
-    color: #fff !important;
-    height: initial !important;
-    line-height: 45px !important;
-    font-size: 15px !important;
-    padding: 0 18px !important;
-    -webkit-box-shadow: 0 5px 6px 0 rgb(73 105 230 / 22%) !important;
-    background: linear-gradient(0deg, #2a62ff, #716ffe) !important;
-    margin-left: 0px !important;
+    display: block;
+    cursor: pointer;
+    height: 48px;
+    width: 160px;
+    border: 1px solid rgba(51,100,237,.35);
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    background: #4172fa;
+    background: linear-gradient(
+            180deg
+            , #648CFF 0%, #4172FA 100%);
+    -webkit-box-shadow: 0 3px 4px 0 rgb(44 71 146 / 32%), inset 0 -2px 0 0 #3262e6;
+    box-shadow: 0 3px 4px 0 rgb(44 71 146 / 32%), inset 0 -2px 0 0 #3262e6;
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: .7px;
+    line-height: 46px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 @media screen and (max-width: 750px) {
