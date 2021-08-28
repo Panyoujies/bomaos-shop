@@ -127,6 +127,9 @@
     .product-info {
         display: block !important;
     }
+    .to-top {
+        display: none;
+    }
 }
 
 .layui-form-label {
@@ -459,6 +462,79 @@
     word-break: normal;
     word-wrap: break-word;
     color: rgba(255, 255, 255, 0.5);
+}
+
+.to-top {
+    position: fixed;
+    right: 32px;
+    bottom: 24px;
+    margin: 0 auto;
+    z-index: 9999;
+}
+
+.to-top .intercom-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0097FF), to(#005EFF));
+    background: -webkit-linear-gradient(top, #0097FF 0, #005EFF 100%);
+    background: linear-gradient(
+            180deg, #0097FF 0, #005EFF 100%);
+    box-shadow: 0 2px 2px 0 rgb(44 71 146 / 17%);
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    cursor: pointer;
+}
+
+.to-top .intercom-box .to-intercom {
+    pointer-events: none;
+    text-align: center;
+    overflow: hidden;
+}
+
+.to-top .intercom-box .to-intercom > div {
+    margin: 17px 0;
+}
+
+.to-top .intercom-box .to-intercom > div svg {
+    width: 24px;
+    animation: big2small 2s infinite linear;
+}
+#phone-code {
+    visibility: hidden;
+    opacity: 0;
+    margin-bottom: 15px;
+    margin-left: -25px;
+    box-sizing: border-box;
+    border: 1px solid rgba(225,227,232,.48);
+    border-radius: 3px;
+    background-color: #fff;
+    box-shadow: 0 2px 2px 0 rgb(44 71 146 / 17%);
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+}
+#phone-code>img {
+    width: 104px;
+}
+
+@keyframes big2small {
+    0% {
+        transform: scale(1)
+    }
+    50% {
+        transform: scale(1.2)
+    }
+    100% {
+        transform: scale(1)
+    }
 }
 
 

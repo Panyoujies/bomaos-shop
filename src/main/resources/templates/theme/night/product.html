@@ -469,6 +469,26 @@
         </div>
 
     </div>
+
+    <div class="to-top">
+        <div id="phone-code">
+            <img src="/file/enQrcode?url=${website.websiteUrl}/product/${products.link}" alt="微信二维码">
+        </div>
+        <div class="intercom-box" id="item-phone">
+            <div class="to-intercom">
+                <div>
+                    <svg width="25" height="25" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="11" y="4" width="26" height="40" rx="3" fill="none" stroke="#ffffff" stroke-width="4"/>
+                        <path d="M22 10L26 10" stroke="#ffffff" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M20 38H28" stroke="#ffffff" stroke-width="4" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- footer -->
@@ -482,6 +502,13 @@
         var form = layui.form;
         var notice = layui.notice;
         var product1 = {};
+
+        var A = document.getElementById("item-phone"), M = document.getElementById("phone-code");
+        A.addEventListener("mouseenter", function () {
+            M.style.visibility = "visible", M.style.opacity = "1"
+        }), A.addEventListener("mouseleave", function () {
+            M.style.visibility = "hidden", M.style.opacity = "0"
+        })
 
         $(document).ready(function (e) {
             $("#formBasForm #orderNumber").keyup(function (e) {
