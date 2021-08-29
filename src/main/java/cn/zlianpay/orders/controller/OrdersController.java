@@ -132,7 +132,7 @@ public class OrdersController extends BaseController {
         Map<String, String> totalRow = new HashMap<>();
         totalRow.put("money", totalAmount.toString());
 
-        return JsonResult.ok("查询成功！").put("totalRow", totalRow).setData(ordersVoList);
+        return JsonResult.ok("查询成功！").put("totalRow", totalRow).put("count", ordersPageResult.getCount()).setData(ordersVoList);
     }
 
     /**
