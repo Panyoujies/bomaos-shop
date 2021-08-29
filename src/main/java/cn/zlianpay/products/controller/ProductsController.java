@@ -146,11 +146,7 @@ public class ProductsController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Products products) {
-
-        if (products.getImageLogo() == null) {
-            return JsonResult.error("商品logo 不能为空！");
-        }
-
+        
         if (products.getShipType() == null) {
             return JsonResult.error("发货模式不能为空！");
         }
