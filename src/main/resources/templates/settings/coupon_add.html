@@ -7,105 +7,102 @@
 
 <!-- 正文开始 -->
 <div class="layui-fluid">
-    <form class="layui-form" lay-filter="emailForm">
-        <div class="layui-card">
-            <div class="layui-card-header">
-                添加优惠券
-            </div>
-            <div class="layui-card-body">
-
-                <!-- 表单开始 -->
-                <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
-
-                    <!-- 商品选择 -->
-                    <div class="layui-form-item" id="selectByitem">
-                        <label class="layui-form-label layui-form-required">选择商品:</label>
-                        <div class="layui-input-inline" id="selectClassify">
-                            <select name="classifysId" id="classifysid" lay-verType="tips" lay-filter="classifysid"
-                                    lay-verify="required">
-                                <option value="">请选择分类</option>
-                                <:for items="${classifyList}" var="item">
-                                    <option value="${item.id}">${item.name}</option>
-                                </:for>
-                            </select>
-                        </div>
-
-                        <div class="layui-input-inline" id="selectGoods">
-                            <select name="productId" id="productId" lay-verify="required" lay-filter="productId">
-                                <option value="">请选择商品</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- 面额 -->
-                    <div class="layui-form-item">
-                        <label class="layui-form-label layui-form-required">面额:</label>
-                        <div class="layui-input-inline" id="discountVal">
-                            <input name="discountVal" type="number" placeholder="请输入满减" class="layui-input"
-                                   lay-verify="required" required/>
-                            <div class="layui-word-aux">请输入金额,金额在0.1-20000元之间</div>
-                        </div>
-                        <div class="layui-input-inline">
-                            <select name="discountType" lay-filter="discountType" lay-verify="required">
-                                <option value="0">¥ 满减优惠券</option> <!-- 0 为钱 -->
-                                <option value="1">% 折扣优惠券</option> <!-- 1 为百分比-->
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- 满减金额 -->
-                    <div class="layui-form-item">
-                        <label class="layui-form-label layui-form-required">准用金额:</label>
-                        <div class="layui-input-inline">
-                            <input name="fullReduction" type="number" placeholder="请输入准用金额" class="layui-input"
-                                   lay-verify="required" required/>
-                            <div class="layui-word-aux">请输入金额,金额在0-20000元之间,如您输入了200,则代表此优惠券需订单金额满了200元才可以使用</div>
-                        </div>
-                    </div>
-
-                    <!-- 生成数量 -->
-                    <!-- 可用次数 -->
-                    <div class="layui-form-item">
-                        <label class="layui-form-label layui-form-required">生成数量:</label>
-                        <div class="layui-input-inline">
-                            <input name="countAll" type="number" placeholder="请输入生成数量" class="layui-input"
-                                   lay-verify="required" required/>
-                        </div>
-                    </div>
-
-                    <!-- 重复使用出现，券代码 -->
-                    <div class="layui-form-item" id="coupon" style="display:none;">
-                        <label class="layui-form-label layui-form-required">券代码:</label>
-                        <div class="layui-input-inline" id="inputCoupon">
-                            <input name="coupon" placeholder="输入券的代码" class="layui-input" lay-verType="tips"/>
-                        </div>
-                    </div>
-
-                    <!-- 使用类型 -->
-                    <div class="layui-form-item">
-                        <label class="layui-form-label layui-form-required">使用类型:</label>
-                        <div class="layui-input-inline">
-                            <input type="hidden" name="type" value="0">
-                            <input type="checkbox" lay-verify="required"
-                                   lay-filter="sellType"
-                                   id="sellType"
-                                   value="1"
-                                   name="type"
-                                   lay-skin="switch"
-                                   lay-text="重复使用|一次使用">
-                        </div>
-                    </div>
-
-                    <!-- 提交 -->
-                    <div class="layui-form-item">
-                        <div class="layui-input-block">
-                            <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加&emsp;</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            添加优惠券
         </div>
-    </form>
+        <div class="layui-card-body">
+            <!-- 表单开始 -->
+            <form class="layui-form" id="formBasForm" lay-filter="formBasForm" style="margin-top: 10px">
+
+                <!-- 商品选择 -->
+                <div class="layui-form-item" id="selectByitem">
+                    <label class="layui-form-label layui-form-required">选择商品:</label>
+                    <div class="layui-input-inline" id="selectClassify">
+                        <select name="classifysId" id="classifysid" lay-verType="tips" lay-filter="classifysid"
+                                lay-verify="required">
+                            <option value="">请选择分类</option>
+                            <:for items="${classifyList}" var="item">
+                                <option value="${item.id}">${item.name}</option>
+                            </:for>
+                        </select>
+                    </div>
+
+                    <div class="layui-input-inline" id="selectGoods">
+                        <select name="productId" id="productId" lay-verify="required" lay-filter="productId">
+                            <option value="">请选择商品</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 面额 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">面额:</label>
+                    <div class="layui-input-inline" id="discountVal">
+                        <input name="discountVal" type="number" placeholder="请输入满减" class="layui-input"
+                               lay-verify="required" required/>
+                        <div class="layui-word-aux">请输入金额,金额在0.1-20000元之间</div>
+                    </div>
+                    <div class="layui-input-inline">
+                        <select name="discountType" lay-filter="discountType" lay-verify="required">
+                            <option value="0">¥ 满减优惠券</option> <!-- 0 为钱 -->
+                            <option value="1">% 折扣优惠券</option> <!-- 1 为百分比-->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 满减金额 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">准用金额:</label>
+                    <div class="layui-input-inline">
+                        <input name="fullReduction" type="number" placeholder="请输入准用金额" class="layui-input"
+                               lay-verify="required" required/>
+                        <div class="layui-word-aux">请输入金额,金额在0-20000元之间,如您输入了200,则代表此优惠券需订单金额满了200元才可以使用</div>
+                    </div>
+                </div>
+
+                <!-- 生成数量 -->
+                <!-- 可用次数 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">生成数量:</label>
+                    <div class="layui-input-inline">
+                        <input name="countAll" type="number" placeholder="请输入生成数量" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="coupon" style="display:none;">
+                    <label class="layui-form-label layui-form-required">券代码:</label>
+                    <div class="layui-input-inline" id="inputCoupon">
+                        <input name="coupon" placeholder="输入券的代码" class="layui-input" lay-verType="tips"/>
+                    </div>
+                </div>
+
+                <!-- 使用类型 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">使用类型:</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" name="type" value="0">
+                        <input type="checkbox" lay-verify="required"
+                               lay-filter="sellType"
+                               id="sellType"
+                               value="1"
+                               name="type"
+                               lay-skin="switch"
+                               lay-text="重复使用|一次使用">
+                    </div>
+                </div>
+
+                <!-- 提交 -->
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加&emsp;</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- title 标题-->

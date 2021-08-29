@@ -11,12 +11,13 @@
 <body>
 <!-- 正文开始 -->
 <div class="layui-fluid">
-    <form class="layui-form" lay-filter="productForm">
-        <div class="layui-card">
-            <div class="layui-card-header">
-                编辑商品
-            </div>
-            <div class="layui-card-body">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            编辑商品
+        </div>
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="productForm" style="margin-top: 10px">
+
                 <input name="id" type="hidden"/>
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">商品分类:</label>
@@ -46,7 +47,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">排序:</label>
                     <div class="layui-input-block">
-                        <input name="sort" placeholder="请输入排序" class="layui-input" value="1000" lay-verify="required" required/>
+                        <input name="sort" placeholder="请输入排序" class="layui-input" value="1000" lay-verify="required"
+                               required/>
                     </div>
                 </div>
 
@@ -106,7 +108,7 @@
                 </div>
 
                 <div class="layui-form-item" style="margin-top: 15px">
-                    <label class="layui-form-label layui-form-required">首页图片:</label>
+                    <label class="layui-form-label">首页图片:</label>
                     <div class="layui-input-block" style="width: auto">
                         <input id="indexLogo" name="indexLogo" placeholder="商品图片/可使用外链" class="layui-input"/>
                         <div class="layui-upload" style="margin-top: 10px">
@@ -126,7 +128,7 @@
                 </div>
 
                 <div class="layui-form-item" style="margin-top: 15px">
-                    <label class="layui-form-label layui-form-required">商品图片:</label>
+                    <label class="layui-form-label">商品图片:</label>
                     <div class="layui-input-block" style="width: auto">
                         <input id="imageLogo" name="imageLogo" placeholder="商品图片/可使用外链" class="layui-input"/>
                         <div class="layui-upload" style="margin-top: 10px">
@@ -162,9 +164,9 @@
                         <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit> 保存商品</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>

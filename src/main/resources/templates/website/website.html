@@ -11,12 +11,12 @@
 <body>
 <!-- 正文开始 -->
 <div class="layui-fluid">
-    <form class="layui-form" lay-filter="websiteForm">
-        <div class="layui-card">
-            <div class="layui-card-header">
-                网站设置
-            </div>
-            <div class="layui-card-body">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            网站设置
+        </div>
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="websiteForm" style="margin-top: 10px">
                 <input name="id" type="hidden"/>
                 <!-- 解压文件测试 -->
                 <!--<div class="layui-form-item">
@@ -87,9 +87,9 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label layui-form-required">备案ICP:</label>
+                    <label class="layui-form-label layui-form-required">底部文字:</label>
                     <div class="layui-input-block">
-                        <input name="beianIcp" placeholder="请输入备案ICP" class="layui-input"
+                        <input name="beianIcp" placeholder="请输入底部文字" class="layui-input"
                                lay-verify="required" required/>
                     </div>
                 </div>
@@ -109,12 +109,13 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="websiteEditSubmit" lay-submit> 保存设置 </button>
+                        <button class="layui-btn" lay-filter="websiteEditSubmit" lay-submit> 保存设置</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
+
 </div>
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
