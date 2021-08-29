@@ -1800,7 +1800,7 @@ a cite {
     margin-bottom: 15px;
     border-radius: 5px;
     background-color: #fff;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05)
+    box-shadow: 0px 0px 2px rgb(98 124 153 / 10%)
 }
 
 .layui-card:last-child {

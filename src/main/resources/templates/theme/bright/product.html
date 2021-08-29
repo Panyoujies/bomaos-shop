@@ -18,7 +18,7 @@
         <!-- 左 -->
         <div class="layui-col-sm12 layui-col-md8">
             <div class="layui-card zlian-card-bottom"
-                 style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                 style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
                 <div class="layui-card-header">
                     <img src="${ctxPath}/qiantai/images/details.svg">
                     商品介绍
@@ -41,11 +41,11 @@
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px;">
                     <div class="layui-row layui-col-space15 goods-info-group">
-                        <div class="layui-col-md4">
-                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(${products.imageLogo!'../qiantai/images/info_logo.png'})">
+                        <div class="layui-col-xs12 layui-col-sm5 layui-col-md4">
+                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)">
                             </div>
                         </div>
-                        <div class="layui-col-md8 goods-info">
+                        <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
                             <div style="padding: 0px;">
                                 <div class="weui-cells">
                                     <div class="weui-cell">
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="layui-card zlian-card-controller"
-                 style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                 style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
                 <div class="layui-card-header">
                     <img src="${ctxPath}/qiantai/images/present.svg">
                     商品详情
@@ -89,7 +89,7 @@
         <div class="layui-col-sm12 layui-col-md4">
             <:if test="${products.isWholesale == 1}">
                 <div class="layui-card"
-                     style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                     style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
                     <div class="layui-card-header">
                         <img src="${ctxPath}/qiantai/images/wholesale.svg">
                         批发价格
@@ -123,7 +123,7 @@
                     </div>
                 </div>
             </:if>
-            <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <div class="layui-card" style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
                 <div class="layui-card-header">
                     <img src="${ctxPath}/qiantai/images/buy.svg">
                     购买信息
@@ -476,7 +476,7 @@
             </div>
 
             <div class="layui-card zlian-card-controller-1 card-shows"
-                 style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                 style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
                 <div class="layui-card-header">
                     <img src="${ctxPath}/qiantai/images/present.svg">
                     商品详情
