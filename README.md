@@ -20,7 +20,6 @@
 * v免签
 * 值联支付
 * [YunGouOS](https://dwz.cn/QQLN87nX)
-* 码支付
 * 虎皮椒支付
 * 捷支付（新增）
 * payjs（已完成测试）可正常使用
