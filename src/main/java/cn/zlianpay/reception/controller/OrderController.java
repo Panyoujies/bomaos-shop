@@ -122,7 +122,7 @@ public class OrderController extends BaseController {
         Products products = productsService.getById(goodsId);
         if (products.getRestricts() >= 1) { // 判断是不是限购
             if (number > products.getRestricts()) { // 判断限购
-                return JsonResult.error("您提交的商品数量超过限制购买的数量！核对后再试。");
+                return JsonResult.error("本商品最多只能购买" + products.getRestricts() + "个、请核对后再试！");
             }
         }
 
