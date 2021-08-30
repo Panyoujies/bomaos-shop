@@ -4,24 +4,91 @@
     <:include file="${ctxPath}/common/title.html" websiteName="订单查询 - ${website.websiteName}" keywords="${website.keywords}"
               description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/search.css"/>
+    <style>
+        .order-item {
+            overflow: hidden;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
+        }
+
+        .order-item .hd {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .order-item .hd dt {
+            color: #4d4d4d;
+            line-height: 24px;
+        }
+
+        .order-item .hd dd {
+            color: #999;
+            line-height: 1;
+            margin-top: 5px;
+        }
+
+        .order-item .bd {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .order-item .bd dt {
+            font-size: 15px;
+            color: #666;
+            font-family: Content-font, Roboto, sans-serif;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .order-item .bd dd {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .dd-box:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            bottom: 0;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            border-left: 1px solid var(rgba(255, 255, 255, 0.1));
+            color: rgba(0, 0, 0, 0.1);
+            color: var(rgba(0, 0, 0, 0.1));
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleX(0.5);
+            transform: scaleX(0.5);
+        }
+
+    </style>
 </head>
 <body>
 <!-- header -->
 <:include file="${ctxPath}/common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
-<!-- goods-card -->
-<div class="layui-container body-card" style="margin-bottom: 15px;">
-    <div class="layui-card" style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
-        <div class="layui-card-body" style="padding: 20px 20px; text-align: center">
-            <h2 style="font-size: 25px; margin-bottom: 10px; font-weight: 600;">订单查询</h2>
-            <h3>轻松查询订单,即刻享受卡密自动交易</h3>
-            <h3>浏览器缓存订单只保存七天、请尽快提取卡密</h3>
-            <h3>订单号开头为TUD,或者用下单时填写的联系方式查询</h3>
-        </div>
+<!-- banner -->
+<div class="ew-banner">
+    <div class="layui-container"
+         style="text-align: center; padding-bottom: 70px; padding-top: 30px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
+        <h2 style="font-size: 25px; color: #fff; font-weight: bold; margin-bottom: 10px">订单查询</h2>
+        <h3 style="color: #fff; line-height: 25px;">轻松查询订单、即刻享受卡密自动交易</h3>
+        <h3 style="color: #fff; line-height: 25px;">浏览器缓存订单只保存七天、请尽快提取卡密</h3>
+        <h3 style="color: #fff; line-height: 25px;">订单号开头为TUD、或者用下单时填写的联系方式查询</h3>
     </div>
 </div>
 
-<div class="layui-container body-card" style="margin-bottom: 15px;">
+<div class="layui-container body-card" style="margin-bottom: 15px; margin-top: -45px;">
     <div class="search-show">
         <form class="layui-form toolbar">
             <div class="layui-row layui-col-space15">
@@ -39,10 +106,12 @@
     </div>
 </div>
 <div class="layui-container body-card">
-    <div class="odlist" id="search-card">
-        <div class="no-content">
-            <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">
-            <p class="user-no-contents">暂无记录</p>
+    <div class="layui-row layui-col-space15" id="search-card">
+        <div class="layui-col-md12">
+            <div class="no-content">
+                <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">
+                <p class="user-no-contents">暂无记录</p>
+            </div>
         </div>
     </div>
 </div>
@@ -52,20 +121,36 @@
 
 <!-- 项目模板 -->
 <script type="text/html" id="orderItem">
-    <div class="row" {{#  if(d.andIncrement == 0){ }} {{#  } else { }}style="border-top: 1px solid #e3e3e3;"{{#  } }}>
-        <a href="/search/order/{{d.member}}" target="_blank">
-            <div class="row-bd">
-                <div class="center">
-                    <h3>订单日期： {{d.createTime}}</h3>
-                    <ul>
-                        <li><label>付款方式：</label> {{d.payType}}</li>
-                        <li><label>订单号：</label><span> {{d.member}}</span></li>
-                        <li><label>订单状态：</label> {{d.status}}</li>
-                    </ul>
-                </div>
-                <div class="right">金额：{{d.money}}</div>
+    <div class="layui-col-xs12 layui-col-sm4 layui-col-md3">
+        <div class="order-item">
+            <div class="hd">
+                <dl style="position: relative; z-index: 2;">
+                    <dt>{{d.member}}</dt>
+                    <dd>订单时间：{{d.createTime}}</dd>
+                </dl>
             </div>
-        </a>
+            <div class="bd">
+                <dl style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                    <dt>{{d.status}}</dt>
+                    <dd>支付状态</dd>
+                </dl>
+                <dl class="dd-box"
+                    style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                    <dt>{{d.payType}}</dt>
+                    <dd>付款方式</dd>
+                </dl>
+                <dl class="dd-box"
+                    style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                    <dt>{{d.money}}</dt>
+                    <dd>订单金额</dd>
+                </dl>
+            </div>
+            <div class="ft" style="padding: 15px;">
+                <a class="layui-btn layui-btn-primary layui-border-blue"
+                   style="width: 100%; font-size: 15px; border-radius: 5px;" href="/search/order/{{d.member}}"
+                   target="_blank">查看卡密</a>
+            </div>
+        </div>
     </div>
 </script>
 
@@ -86,7 +171,8 @@
                 createTime: d.createTime,
                 payType: d.payType,
                 status: d.status,
-                money: d.money}
+                money: d.money
+            }
         });
 
         if (ordersListJson.length != 0) {
@@ -97,9 +183,11 @@
             });
         } else {
             var cardListHtml = '' +
-                '<div class="no-content">\n' +
-                '    <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
-                '    <p class="user-no-contents">没有查询到该订单</p>\n' +
+                '<div class="layui-col-md12">' +
+                '    <div class="no-content">\n' +
+                '        <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
+                '        <p class="user-no-contents">没有查询到该订单</p>\n' +
+                '    </div>' +
                 '</div>';
 
             $("#search-card").html(cardListHtml);
@@ -125,9 +213,11 @@
                         });
                     } else {
                         cardListHtml = '' +
-                            '<div class="no-content">\n' +
-                            '    <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
-                            '    <p class="user-no-contents">没有查询到该订单</p>\n' +
+                            '<div class="layui-col-md12">' +
+                            '    <div class="no-content">\n' +
+                            '        <img src="${ctxPath}/qiantai/images/error_ic_empty.png" class="no-content-img">\n' +
+                            '        <p class="user-no-contents">没有查询到该订单</p>\n' +
+                            '    </div>' +
                             '</div>';
 
                         $("#search-card").html(cardListHtml);

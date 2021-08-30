@@ -95,7 +95,7 @@
 .search-show {
     margin: 0 auto;
     background-color: #141414;
-    padding: 10px;
+    padding: 15px;
     border-radius: 5px;
     border: 1px solid #1d1d1d;
 }
@@ -104,6 +104,9 @@
     padding: 80px 0 80px;
     text-align: center;
     color: #999;
+    background-color: #141414;
+    border-radius: 5px;
+    border: 1px solid #1d1d1d;
 }
 
 .no-content .no-content-img {
@@ -167,7 +170,7 @@
 }
 
 .ew-banner {
-    background: url(../images/banner_1.png) 50% no-repeat #4181ff;
+    background: url(../images/banner_1.jpg) 50% no-repeat #000;
     max-width: 100vw;
     overflow: hidden;
     color: #333;

@@ -957,7 +957,7 @@ body .layui-util-face .layui-layer-content {
 
 @media screen and (max-width: 768px) {
     .ew-banner > .layui-container {
-        padding: 40px 5px 30px 5px
+        padding: 40px 15px 30px 15px
     }
 
     .ew-banner h1 {
