@@ -30,6 +30,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ import java.util.stream.Collectors;
  * Created by Panyoujie on 2021-03-29 16:24:28
  */
 @Controller
+@Transactional
 @RequestMapping("/orders/orders")
 public class OrdersController extends BaseController {
 

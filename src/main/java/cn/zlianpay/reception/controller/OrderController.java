@@ -69,6 +69,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Controller
+@Transactional
 public class OrderController extends BaseController {
 
     @Autowired
