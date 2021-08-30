@@ -3,6 +3,7 @@ package cn.zlianpay.orders.service.impl;
 import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.mapper.CardsMapper;
 import cn.zlianpay.carmi.mapper.OrderCardMapper;
+import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.PageParam;
 import cn.zlianpay.common.core.web.PageResult;
 import cn.zlianpay.dashboard.DateStrUtil;
@@ -70,7 +71,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
      * @return
      */
     @Override
-    public Map<String, String> buy(Integer productId, Integer number, String email, Integer couponId, String payType, String password, HttpServletRequest request) {
+    public Map<String, String> buy(Integer productId, Integer number, String contact, Integer couponId, String payType, String password, HttpServletRequest request) {
 
         Products products = productsMapper.selectById(productId);
         Map<String, String> map = new HashMap<>();
@@ -81,6 +82,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setProductId(productId);
         orders.setPayType(payType);
         orders.setNumber(number); // 订单数量
+        orders.setContact(contact);
         if (!StringUtils.isEmpty(password)) { // 不为空的时候
             orders.setPassword(password);
         }
@@ -155,8 +157,12 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         System.out.println("总价：" + multiply);
         System.out.println("实际支付价格：" + orders.getMoney());
 
-        if (!StringUtils.isEmpty(email)) {
-            orders.setEmail(email);
+        /**
+         * 判断下是不是电子邮件
+         * 如果是测写入到email entity
+         */
+        if (FormCheckUtil.isEmail(contact)) {
+            orders.setEmail(contact);
         }
 
         orders.setMember("TUD" + DateUtil.subData() + StringUtil.getRandomString(6));

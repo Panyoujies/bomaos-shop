@@ -134,7 +134,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label layui-form-required">电子邮件</label>
                             <div class="layui-input-block">
-                                <input name="email" id="email" class="layui-input" placeholder="用于查询或接收卡密"/>
+                                <input name="contact" id="contact" class="layui-input" placeholder="用于查询或接收卡密"/>
                             </div>
                         </div>
                         <:if test="${products.isPassword == 1}">
@@ -622,14 +622,14 @@
 
         function doPay() {
             var number = $("#orderNumber").val() // 购买数量
-            var email = $("#email").val() // 邮箱账号
+            var contact = $("#contact").val() // 邮箱账号
             var coupon = $("#coupon").val() // 优惠券
             var payType = $('.pay-type-group .layui-row .layui-col-md6>div.active').data('id');
             var password = $('#password').val();
             $.post('/buy', {
                 goodsId: product1.id,
                 number: number,
-                email: email,
+                contact: contact,
                 coupon: coupon,
                 payType: payType,
                 password: password

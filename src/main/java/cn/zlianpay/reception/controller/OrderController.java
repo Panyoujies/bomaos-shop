@@ -107,14 +107,12 @@ public class OrderController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/buy")
-    public JsonResult save(Integer goodsId, Integer number, String email, String coupon, String payType, String password, HttpServletResponse response, HttpServletRequest request) {
+    public JsonResult save(Integer goodsId, Integer number, String contact, String coupon, String payType, String password, HttpServletResponse response, HttpServletRequest request) {
 
         if (StringUtils.isEmpty(goodsId)) {
             return JsonResult.error("商品不能为空");
-        } else if (StringUtils.isEmpty(email)) {
-            return JsonResult.error("电子邮件不能为空");
-        } else if (!FormCheckUtil.isEmail(email)) {
-            return JsonResult.error("请输入正确的电子邮件");
+        } else if (StringUtils.isEmpty(contact)) {
+            return JsonResult.error("联系方式不能为空！");
         } else if (StringUtils.isEmpty(number)) {
             return JsonResult.error("商品数量不能小于或等于0");
         } else if (StringUtils.isEmpty(payType)) {
@@ -172,7 +170,7 @@ public class OrderController extends BaseController {
                     return JsonResult.error("该优惠券代码已被使用过，或不能使用在本商品，请核对后再试！");
                 }
             }
-            Map<String, String> buy = ordersService.buy(goodsId, number, email, couponId, payType, password, request);
+            Map<String, String> buy = ordersService.buy(goodsId, number, contact, couponId, payType, password, request);
             Cookie[] cookies = request.getCookies();
             if (ObjectUtils.isEmpty(cookies)) {
                 /**

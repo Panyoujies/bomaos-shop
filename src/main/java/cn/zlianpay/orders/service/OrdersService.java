@@ -25,7 +25,7 @@ public interface OrdersService extends IService<Orders> {
      */
     List<Orders> listAll(Map<String, Object> page);
 
-    Map<String, String> buy(Integer goodsId, Integer number,String email, Integer couponId, String payType, String password, HttpServletRequest request);
+    Map<String, String> buy(Integer goodsId, Integer number,String contact, Integer couponId, String payType, String password, HttpServletRequest request);
 
     Orders selectByMember(String member);
 
