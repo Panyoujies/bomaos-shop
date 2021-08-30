@@ -35,7 +35,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">联系方式:</label>
                         <div class="layui-input-inline">
-                            <input name="email" class="layui-input" placeholder="输入买家联系方式"/>
+                            <input name="contact" class="layui-input" placeholder="输入买家联系方式"/>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -74,7 +74,6 @@
         {{# } }}
     {{# } }}
     {{# if(d.status == 0){ }}
-
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="budan">手动补单</a>
     {{# }else{ }}
     {{# if(d.status == 2){ }} <!-- 手动发货模式-->
@@ -232,7 +231,13 @@
                 {type: 'numbers', unresize: true, totalRowText: '合计'},
                 {field: 'member', title: '订单号', minWidth: 140},
                 {field: 'productName', title: '商品名称', width: 120},
-                {field: 'email', title: '电子邮件', align: 'center', width: 120},
+                {field: 'contact', title: '联系方式', align: 'center', width: 120, templet: function (res) {
+                        if (res.contact == '' || res.contact == null) {
+                            return res.email;
+                        } else {
+                            return res.contact;
+                        }
+                    }},
                 {
                     field: 'payType', title: '支付类型', templet: function (res) {
                         switch (res.payType) {

@@ -229,7 +229,6 @@ public class OrderController extends BaseController {
         UserAgentGetter agentGetter = new UserAgentGetter(request);
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
 
-        System.out.println(price);
         if (price.equals("0.00")) { // 0元商品 直接完成支付
             long time = new Date().getTime();
             String toString = Long.toString(time);
