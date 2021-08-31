@@ -178,7 +178,7 @@ public class OrderController extends BaseController {
                  * 将订单信息保存到浏览器
                  */
                 Cookie cookie1 = new Cookie("BROWSER_ORDERS_CACHE", buy.get("member"));
-                cookie1.setMaxAge(7 * 24 * 60 * 60); // 7天过期
+                cookie1.setMaxAge(24 * 60 * 60); // 1天过期
                 // 将cookie对象加入response响应
                 response.addCookie(cookie1);
             } else {
@@ -191,7 +191,7 @@ public class OrderController extends BaseController {
                          * 将订单信息保存到浏览器
                          */
                         Cookie cookie1 = new Cookie("BROWSER_ORDERS_CACHE", cookieValue + "=" + buy.get("member"));
-                        cookie1.setMaxAge(7 * 24 * 60 * 60); // 7天过期
+                        cookie1.setMaxAge(24 * 60 * 60); // 1天过期
                         // 将cookie对象加入response响应
                         response.addCookie(cookie1);
                         break;
@@ -201,7 +201,7 @@ public class OrderController extends BaseController {
                          * 将订单信息保存到浏览器
                          */
                         Cookie cookie1 = new Cookie("BROWSER_ORDERS_CACHE", buy.get("member"));
-                        cookie1.setMaxAge(7 * 24 * 60 * 60); // 7天过期
+                        cookie1.setMaxAge(24 * 60 * 60); // 1天过期
                         // 将cookie对象加入response响应
                         response.addCookie(cookie1);
                     }
