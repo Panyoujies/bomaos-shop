@@ -1,6 +1,6 @@
 .layui-input {
     border-width: 2px;
-    border-radius: 30px;
+    border-radius: 5px;
     height: 60px;
     padding: 30px;
     text-align: center;
@@ -21,7 +21,7 @@
 }
 
 .layui-btn-show {
-    border-radius: 30px;
+    border-radius: 5px;
     color: #fff;
     height: 64px;
     line-height: 64px;
@@ -43,7 +43,6 @@
 
 @media screen and (max-width: 935px) {
     .layui-input {
-        border-radius: 30px;
         height: 30px;
         padding: 20px;
     }
@@ -55,7 +54,6 @@
     }
 
     .layui-btn-show {
-        border-radius: 30px;
         color: #fff;
         height: 40px;
         line-height: 40px;
