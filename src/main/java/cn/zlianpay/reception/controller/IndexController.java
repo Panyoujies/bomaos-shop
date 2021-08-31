@@ -326,7 +326,7 @@ public class IndexController {
                                 searchDTO.setPayType("Paypal");
                             }
                             if (member.getStatus() == 1) {
-                                searchDTO.setStatus("付款成功");
+                                searchDTO.setStatus("已支付");
                             } else if (member.getStatus() == 2) {
                                 searchDTO.setStatus("待发货");
                             } else if (member.getStatus() == 3) {
@@ -377,7 +377,7 @@ public class IndexController {
                                 searchDTO.setPayType("Paypal");
                             }
                             if (member.getStatus() == 1) {
-                                searchDTO.setStatus("付款成功");
+                                searchDTO.setStatus("已支付");
                             } else if (member.getStatus() == 2) {
                                 searchDTO.setStatus("待发货");
                             } else if (member.getStatus() == 3) {

@@ -192,7 +192,7 @@ public class OrdersController extends BaseController {
                 searchDTO.setPayType("Paypal");
             }
             if (orders.getStatus() == 1) {
-                searchDTO.setStatus("付款成功");
+                searchDTO.setStatus("已支付");
             } else if (orders.getStatus() == 2) {
                 searchDTO.setStatus("待发货");
             } else if (orders.getStatus() == 3) {
