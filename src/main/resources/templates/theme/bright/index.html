@@ -4,6 +4,81 @@
     <:include file="${ctxPath}/common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
               description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/index.css"/>
+<!--    <style>
+        .project-list-item {
+            overflow: hidden;
+            border-radius: 5px;
+            border: 1px solid #e5e5e5;
+        }
+
+        .project-list-item:hover {
+            box-shadow: 0 2px 10px rgb(65 65 65 / 20%);
+        }
+
+        .project-list-item .hd {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .project-list-item .hd dt {
+            color: #4d4d4d;
+            line-height: 24px;
+        }
+
+        .project-list-item .hd dd {
+            color: #999;
+            line-height: 1;
+            margin-top: 5px;
+        }
+
+        .project-list-item .bd {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            text-align: center;
+            padding: 5px 0;
+        }
+
+        .project-list-item .bd dt {
+            font-size: 14px;
+            color: #666;
+            font-family: Content-font, Roboto, sans-serif;
+            font-weight: 600;
+        }
+
+        .project-list-item .bd dd {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .dd-box:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            bottom: 0;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            border-left: 1px solid var(rgba(255, 255, 255, 0.1));
+            color: rgba(0, 0, 0, 0.1);
+            color: var(rgba(0, 0, 0, 0.1));
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleX(0.5);
+            transform: scaleX(0.5);
+        }
+
+        .layui-btn-primary:hover {
+            color: #fff;
+            border-color: #4282ff;
+            background-color: #4282ff;
+        }
+
+    </style>-->
 </head>
 <body>
 <!-- header -->
@@ -101,6 +176,44 @@
         </div>
     </div>
 </script>
+
+
+<!-- 项目模板 -->
+<!--<script type="text/html" id="productItem">
+    <div class="layui-col-xs12 layui-col-sm4 layui-col-md3">
+        <div class="project-list-item" data-id="{{d.id}}"  lay-filter="productSubmit" lay-submit>
+            <div style="height: 120px; background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url({{# if(d.indexLogo == null || d.indexLogo == ''){ }}'../qiantai/images/index_logo.png'{{# } }}  {{# if(d.indexLogo != null){ }} {{d.indexLogo}} {{# } }}); background-size: cover; background-attachment: scroll; background-position: center;"></div>
+            <div class="hd">
+                <dl style="position: relative; z-index: 2;">
+                    <dt>{{d.name}}</dt>
+                </dl>
+            </div>
+            <div class="bd">
+                <dl style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                    <dt>
+                        {{d.price}}
+                    </dt>
+                    <dd>商品价格</dd>
+                </dl>
+                <dl class="dd-box" style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                    <dt>
+                        {{d.cardMember}}
+                    </dt>
+                    <dd>库存数量</dd>
+                </dl>
+                <dl class="dd-box"
+                    style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                    <dt>
+                        {{# if(d.shipType == 0){ }}<span style="color: #00a65a">自动</span>{{# } }}
+                        {{# if(d.shipType == 1){ }}<span style="color: #ff6464">手动</span>{{# } }}
+                    </dt>
+                    <dd>发货模式</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</script>-->
+
 
 <!-- js部分 -->
 <:include file="${ctxPath}/common/qiantaijs.html"/>

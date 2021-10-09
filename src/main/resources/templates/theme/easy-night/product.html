@@ -16,30 +16,10 @@
     <div class="layui-row layui-col-space15">
         <!-- 左 -->
         <div class="layui-col-sm12 layui-col-md8">
-
-            <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <div class="layui-card zlian-card-bottom" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header">
                     <img src="${ctxPath}/theme/easy-night/images/present.svg">
                     商品介绍
-                </div>
-                <div class="layui-card-body" style="padding: 15px 15px">
-                    <div class="layui-row layui-col-space15">
-                        <div class="layui-col-xs12 layui-col-sm5 layui-col-md4">
-                            <div style="border-radius: 3px; width: 100%; height: 200px; max-height: 100%; bottom: 0; background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>); background-repeat: no-repeat; background-size: cover;"></div>
-                        </div>
-                        <div class="layui-col-xs12 layui-col-sm7 layui-col-md8">
-                            <div class="list_info" style="overflow-y: auto; max-height: 200px;">
-                                ${products.pdInfo!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                <div class="layui-card-header">
-                    <img src="${ctxPath}/theme/easy-night/images/details.svg">
-                    商品详情
                     <:if test="${isCoupon >= 1}">
                         <span class="layui-badge layui-badge-blue pull-right"
                               style="top: 13px; margin-left: 10px; font-weight: 400;">券</span>
@@ -59,16 +39,19 @@
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px;">
                     <div class="layui-row layui-col-space15 goods-info-group">
-                        <div class="layui-col-md12 goods-info">
+                        <div class="layui-col-xs12 layui-col-sm5 layui-col-md4">
+                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
                             <div style="padding: 0px;">
                                 <div class="weui-cells">
                                     <div class="weui-cell">
-                                        <div class="weui-cell__bd">商品分类</div>
-                                        <div class="weui-cell__ft">${classifyName!}</div>
-                                    </div>
-                                    <div class="weui-cell">
                                         <div class="weui-cell__bd">商品名称</div>
                                         <div class="weui-cell__ft">${products.name!}</div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__bd">商品分类</div>
+                                        <div class="weui-cell__ft">${classifyName!}</div>
                                     </div>
                                     <div class="weui-cell">
                                         <div class="weui-cell__bd">商品价格</div>
@@ -86,17 +69,29 @@
                     </div>
                 </div>
             </div>
-
+            <div class="layui-card zlian-card-controller" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card-header">
+                    <img src="${ctxPath}/theme/easy-night/images/present.svg">
+                    商品详情
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px">
+                    <div class="list_info">
+                        ${products.pdInfo!}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="layui-col-sm12 layui-col-md4">
             <:if test="${products.isWholesale == 1}">
-                <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card"
+                     style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                     <div class="layui-card-header">
                         <img src="${ctxPath}/theme/easy-night/images/wholesale.svg">
                         批发价格
                         <:if test="${products.isWholesale == 1}">
-                            <span class="layui-badge layui-badge-yellow pull-right" style="top: 13px; margin-left: 10px; font-weight: 400;">折扣</span>
+                            <span class="layui-badge layui-badge-yellow pull-right"
+                                  style="top: 13px; margin-left: 10px; font-weight: 400;">折扣</span>
                         </:if>
                     </div>
                     <div class="layui-card-body" style="padding: 15px 15px;">
@@ -124,7 +119,7 @@
                     </div>
                 </div>
             </:if>
-            <div class="layui-card card-shows" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <div class="layui-card" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header">
                     <img src="${ctxPath}/theme/easy-night/images/buy.svg">
                     购买信息
@@ -152,13 +147,13 @@
                                 <div class="input-group order-number-box">
                                     <div class="input-group-prepend sub">
                                         <button class="layui-btn layui-btn-primary" type="button">
-                                            <img src="${ctxPath}/theme/night/images/sub.svg" style="width: 25px">
+                                            <img src="${ctxPath}/theme/easy-night/images/sub.svg" style="width: 25px">
                                         </button>
                                     </div>
                                     <input type="text" id="orderNumber" name="number" class="layui-input" required="" lay-verify="required|order_number" value="1">
                                     <div class="input-group-append add">
                                         <button class="layui-btn layui-btn-primary" type="button">
-                                            <img src="${ctxPath}/theme/night/images/add.svg" style="width: 25px">
+                                            <img src="${ctxPath}/theme/easy-night/images/add.svg" style="width: 25px">
                                         </button>
                                     </div>
                                 </div>
@@ -178,6 +173,7 @@
                 <div class="pay-type-group">
                     <div class="layui-row layui-col-space15">
                         <:for items="${paysList}" var="item">
+
                             <:if test="${item.andIncrement == 0}">
                                 <:if test="${isMobile == 1}"> <!-- 判断为手机访问 -->
                                     <:if test="${isWxPays == null}"> <!-- 判断为手机访问 -->
@@ -452,13 +448,25 @@
                             <span id="goodsprice2" style="font-size: 29px; font-weight: bold;">0.00</span>
                         </span>
                     <button id="btnPay" class="layui-btn layui-btn-warm layui-btn-lg btn-group-show">
-                        <i class="layui-icon layui-icon-cart"></i> 提交订单
+                        <i class="layui-icon layui-icon-cart"></i> 立即付款
                     </button>
                 </div>
+            </div>
 
+            <div class="layui-card zlian-card-controller-1 card-shows" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card-header">
+                    <img src="${ctxPath}/theme/easy-night/images/present.svg">
+                    商品详情
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px">
+                    <div class="list_info">
+                        ${products.pdInfo!}
+                    </div>
+                </div>
             </div>
 
         </div>
+
     </div>
 
     <div class="to-top">
@@ -637,7 +645,7 @@
                 if (res.code == 200) {
                     layer.confirm(getHtml(res.data), {
                         title: '订单确认',
-                        btn: ['立即支付', '支付完成'] //按钮
+                        btn: ['<span style="color: rgb(255, 104, 104, 0.9)">立即支付</span>', '支付完成'] //按钮
                     }, function () {
                         window.open('${ctxPath}/pay/' + res.data.member)
                     }, function () {

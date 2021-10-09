@@ -12,7 +12,11 @@
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card order-show" style="height: 350px;text-align: center;font-size: 25px">
         <img style="width: 120px;height: 120px;padding-top: 90px" src="${ctxPath}/assets/module/img/ic_loading.gif">
-        <h4 style="font-size: 22px">正在查询订单...</h4>
+        <h4 style="font-size: 22px; margin-bottom: 70px;">正在查询订单...</h4>
+
+        <div class="pay-card-footer">
+            <a href="/search/order/${ordersMember!}" style="font-size: 18px; color: cornflowerblue;" class="pay-card-right-btn ew-disable">等待支付（60s）</a>
+        </div>
     </div>
 </div>
 
@@ -29,17 +33,30 @@
         var layer = layui.layer;
         var notice = layui.notice;
 
+        // 支付倒计时
+        var syTime = 60;
+        var timer = setInterval(function () {
+            syTime--;
+            if (syTime <= 45) {
+                $('.pay-card-right-btn').text('已完成支付 >');
+                $('.pay-card-right-btn').removeClass('ew-disable');
+                clearInterval(timer);
+            } else {
+                $('.pay-card-right-btn').text('等待支付（' + syTime + 's）');
+            }
+        }, 1000);
+
         // 获取订单状态
-        setInterval(function () {
+        var state = setInterval(function () {
             $.get('/order/state/${orderId!}', function (res) {
                 if (res.code == 200 && res.data == 1) {
                     notice.msg("支付成功", {icon: 1});
-                    setInterval(function () {
-                        location.href = '/search/order/${ordersMember!}';
-                    }, 1000);
+                    clearInterval(state);
+                    location.href = '/search/order/${ordersMember!}';
                 }
             }, 'json');
         }, 1500);
+
     });
 </script>
 </body>
