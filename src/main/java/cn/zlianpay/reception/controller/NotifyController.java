@@ -194,6 +194,8 @@ public class NotifyController {
         String name = parameterMap.get("name");
         String money = parameterMap.get("money");
         String trade_status = parameterMap.get("trade_status");
+        String return_url = parameterMap.get("return_url");
+        String notify_url = parameterMap.get("notify_url");
         String sign = parameterMap.get("sign");
         String sign_type = parameterMap.get("sign_type");
 
@@ -204,9 +206,12 @@ public class NotifyController {
         params.put("type", type);
         params.put("name", name);
         params.put("money", money);
+        params.put("return_url", return_url);
+        params.put("notify_url", notify_url);
         params.put("trade_status", trade_status);
 
         String sign1 = ZlianPay.createSign(params, secret_key);
+
         if (sign1.equals(sign)) {
             String big = returnBig(money, money, out_trade_no, trade_no, name, "success", "final");
             return big;
@@ -244,6 +249,8 @@ public class NotifyController {
         String name = parameterMap.get("name");
         String money = parameterMap.get("money");
         String trade_status = parameterMap.get("trade_status");
+        String return_url = parameterMap.get("return_url");
+        String notify_url = parameterMap.get("notify_url");
         String sign = parameterMap.get("sign");
         String sign_type = parameterMap.get("sign_type");
 
@@ -254,6 +261,8 @@ public class NotifyController {
         params.put("type", type);
         params.put("name", name);
         params.put("money", money);
+        params.put("return_url", return_url);
+        params.put("notify_url", notify_url);
         params.put("trade_status", trade_status);
 
         String sign1 = ZlianPay.createSign(params, secret_key);
