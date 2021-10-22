@@ -19,6 +19,7 @@ import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.common.system.service.EmailService;
+import cn.zlianpay.reception.common.PaysEnmu;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.CouponService;
@@ -239,167 +240,114 @@ public class OrderController extends BaseController {
             }
         }
 
-        if (orders.getPayType().equals("mqpay_alipay")) {
-            String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
-            response.sendRedirect(createMqPay);
-            return null;
-        } else if (orders.getPayType().equals("mqpay_wxpay")) {
-            String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
-            response.sendRedirect(createMqPay);
-            return null;
-        } else if (orders.getPayType().equals("zlianpay_wxpay") || orders.getPayType().equals("zlianpay_alipay")) {
-            String url = ZlianPay.zlianSendPay(pays, price, ordersMember, productDescription);
-            response.sendRedirect(url);
-            return null;
-        } else if (orders.getPayType().equals("yungouos_wxpay") || orders.getPayType().equals("yungouos_alipay")) {
-            String gouos = "";
-            if (orders.getPayType().equals("yungouos_wxpay")) {
-                model.addAttribute("type", 1);
-                gouos = YunGouosConfig.yunGouosWxPay(pays, price, ordersMember, goodsName, productDescription);
-            } else if (orders.getPayType().equals("yungouos_alipay")) {
-                model.addAttribute("type", 2);
-                gouos = YunGouosConfig.yunGouosAliPay(pays, price, ordersMember, goodsName, productDescription);
-            }
+        model.addAttribute("goodsName", goodsName);
+        model.addAttribute("price", price);
+        model.addAttribute("ordersMember", ordersMember);
+        model.addAttribute("orderId", orders.getId());
 
-            model.addAttribute("goodsName", goodsName);
-            model.addAttribute("price", price);
-            model.addAttribute("ordersMember", ordersMember);
-            model.addAttribute("result", JSON.toJSONString(gouos));
-            model.addAttribute("orderId", orders.getId());
+        Website website = websiteService.getById(1);
+        model.addAttribute("website", website);
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
 
-            Website website = websiteService.getById(1);
-            model.addAttribute("website", website);
-
-            ShopSettings shopSettings = shopSettingsService.getById(1);
-            model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-            return "theme/" + theme.getDriver() + "/yunpay.html";
-        } else if (orders.getPayType().equals("xunhupay_wxpay") || orders.getPayType().equals("xunhupay_alipay")) {
-            if (orders.getPayType().equals("xunhupay_wxpay")) {
-                model.addAttribute("type", 1);
-            } else if (orders.getPayType().equals("xunhupay_alipay")) {
-                model.addAttribute("type", 2);
-            }
-
-            Map pay = PayUtils.pay(getWebName(), pays, goodsName, price, ordersMember, productDescription);
-            model.addAttribute("goodsName", goodsName);
-            model.addAttribute("price", price);
-            model.addAttribute("ordersMember", ordersMember);
-            model.addAttribute("result", pay.get("url_qrcode"));
-            model.addAttribute("wap", pay.get("url1"));
-            model.addAttribute("orderId", orders.getId());
-
-            Website website = websiteService.getById(1);
-            model.addAttribute("website", website);
-
-            ShopSettings shopSettings = shopSettingsService.getById(1);
-            model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-            return "theme/" + theme.getDriver() + "/xunhupay.html";
-        } else if (orders.getPayType().equals("jiepay_wxpay") || orders.getPayType().equals("jiepay_alipay")) {
-            String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
-            response.sendRedirect(payUtils);
-            return null;
-        } else if (orders.getPayType().equals("payjs_wxpay") || orders.getPayType().equals("payjs_alipay")) {
-            String payjs = "";
-            if (orders.getPayType().equals("payjs_wxpay")) {
-                model.addAttribute("type", 1);
-                payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
-            } else if (orders.getPayType().equals("payjs_alipay")) {
-                model.addAttribute("type", 2);
-                payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
-            }
-
-            model.addAttribute("goodsName", goodsName);
-            model.addAttribute("price", price);
-            model.addAttribute("ordersMember", ordersMember);
-            model.addAttribute("result", JSON.toJSONString(payjs));
-            model.addAttribute("orderId", orders.getId());
-
-            Website website = websiteService.getById(1);
-            model.addAttribute("website", website);
-
-            ShopSettings shopSettings = shopSettingsService.getById(1);
-            model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-            return "theme/" + theme.getDriver() + "/yunpay.html";
-        } else if (orders.getPayType().equals("yunfu_wxpay") || orders.getPayType().equals("yunfu_alipay")) {
-            String yunfu = "";
-
-            if (orders.getPayType().equals("yunfu_wxpay")) {
-                model.addAttribute("type", 1);
-                yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
-            } else if (orders.getPayType().equals("yunfu_alipay")) {
-                model.addAttribute("type", 2);
-                yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
-            }
-
-            model.addAttribute("goodsName", goodsName);
-            model.addAttribute("price", price);
-            model.addAttribute("ordersMember", ordersMember);
-            model.addAttribute("result", JSON.toJSONString(yunfu));
-            model.addAttribute("orderId", orders.getId());
-
-            Website website = websiteService.getById(1);
-            model.addAttribute("website", website);
-
-            ShopSettings shopSettings = shopSettingsService.getById(1);
-            model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-            return "theme/" + theme.getDriver() + "/yunpay.html";
-        } else if (pays.getDriver().equals("wxpay")) { // 微信扫码支付
-            String pay = SendWxPay.payNattve(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
-            model.addAttribute("type", 1); // 微信支付
-            model.addAttribute("goodsName", goodsName);
-            model.addAttribute("price", price);
-            model.addAttribute("ordersMember", ordersMember);
-            model.addAttribute("result", JSON.toJSONString(pay));
-            model.addAttribute("orderId", orders.getId());
-            Website website = websiteService.getById(1);
-            model.addAttribute("website", website);
-            ShopSettings shopSettings = shopSettingsService.getById(1);
-            model.addAttribute("isBackground", shopSettings.getIsBackground());
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-            return "theme/" + theme.getDriver() + "/yunpay.html";
-        } else if (pays.getDriver().equals("wxpay_h5")) {
-            String pay = SendWxPay.payMweb(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
-            response.sendRedirect(pay);
-            return null;
-        } else if (pays.getDriver().equals("alipay")) {
-            String pay = SendAlipay.pay(pays, price, ordersMember, goodsName, productDescription, request);
-            model.addAttribute("type", 2); // 支付宝当面付
-            model.addAttribute("goodsName", goodsName);
-            model.addAttribute("price", price);
-            model.addAttribute("ordersMember", ordersMember);
-            model.addAttribute("result", JSON.toJSONString(pay));
-            model.addAttribute("orderId", orders.getId());
-
-            Website website = websiteService.getById(1);
-            model.addAttribute("website", website);
-
-            ShopSettings shopSettings = shopSettingsService.getById(1);
-            model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-            Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
-            return "theme/" + theme.getDriver() + "/yunpay.html";
-        } else if (pays.getDriver().equals("paypal")) {
-            try {
-                Payment payment = PaypalSend.createPayment(pays, price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, ordersMember);
-                for (Links links : payment.getLinks()) {
-                    System.out.println(links.toString());
-                    if (links.getRel().equals("approval_url")) {
-                        System.out.println(links.getHref());
-                        return "redirect:" + links.getHref();
-                    }
+        /**
+         * 创建支付接口
+         * 使用枚举加switch
+         */
+        switch (Objects.requireNonNull(PaysEnmu.getByValue(orders.getPayType()))) {
+            case MQPAY_ALIPAY:
+            case MQPAY_WXPAY:
+                String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
+                response.sendRedirect(createMqPay);
+                break;
+            case ZLIANPAY_ALIPAY:
+            case ZLIANPAY_WXPAY:
+                String zlianSendPay = ZlianPay.zlianSendPay(pays, price, ordersMember, productDescription);
+                response.sendRedirect(zlianSendPay);
+                break;
+            case YUNGOUOS_WXPAY:
+            case YUNGOUOS_ALIPAY:
+                String gouos = "";
+                if (orders.getPayType().equals("yungouos_wxpay")) {
+                    model.addAttribute("type", 1);
+                    gouos = YunGouosConfig.yunGouosWxPay(pays, price, ordersMember, goodsName, productDescription);
+                } else if (orders.getPayType().equals("yungouos_alipay")) {
+                    model.addAttribute("type", 2);
+                    gouos = YunGouosConfig.yunGouosAliPay(pays, price, ordersMember, goodsName, productDescription);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
+                model.addAttribute("result", JSON.toJSONString(gouos));
+                return "theme/" + theme.getDriver() + "/yunpay.html";
+            case XUNHUPAY_WXPAY:
+            case XUNHUPAY_ALIPAY:
+                if (orders.getPayType().equals("xunhupay_wxpay")) {
+                    model.addAttribute("type", 1);
+                } else if (orders.getPayType().equals("xunhupay_alipay")) {
+                    model.addAttribute("type", 2);
+                }
+                Map pay = PayUtils.pay(getWebName(), pays, goodsName, price, ordersMember, productDescription);
+                model.addAttribute("result", pay.get("url_qrcode"));
+                model.addAttribute("wap", pay.get("url1"));
+                return "theme/" + theme.getDriver() + "/xunhupay.html";
+            case JIEPAY_WXPAY:
+            case JIEPAY_ALIPAY:
+                String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
+                response.sendRedirect(payUtils);
+                break;
+            case PAYJS_WXPAY:
+            case PAYJS_ALIPAY:
+                String payjs = "";
+                if (orders.getPayType().equals("payjs_wxpay")) {
+                    model.addAttribute("type", 1);
+                    payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
+                } else if (orders.getPayType().equals("payjs_alipay")) {
+                    model.addAttribute("type", 2);
+                    payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
+                }
+                model.addAttribute("result", JSON.toJSONString(payjs));
+                return "theme/" + theme.getDriver() + "/yunpay.html";
+            case YUNFU_WXPAY:
+            case YUNFU_ALIPAY:
+                String yunfu = "";
+                if (orders.getPayType().equals("yunfu_wxpay")) {
+                    model.addAttribute("type", 1);
+                    yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+                } else if (orders.getPayType().equals("yunfu_alipay")) {
+                    model.addAttribute("type", 2);
+                    yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+                }
+                model.addAttribute("result", JSON.toJSONString(yunfu));
+                return "theme/" + theme.getDriver() + "/yunpay.html";
+            case WXPAY:
+                String payNattve = SendWxPay.payNattve(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+                model.addAttribute("type", 1); // 微信支付
+                model.addAttribute("result", JSON.toJSONString(payNattve));
+                return "theme/" + theme.getDriver() + "/yunpay.html";
+            case ALIPAY:
+                String payAlipay = SendAlipay.payAlipay(pays, price, ordersMember, goodsName, productDescription, request);
+                model.addAttribute("type", 2); // 支付宝当面付
+                model.addAttribute("result", JSON.toJSONString(payAlipay));
+                return "theme/" + theme.getDriver() + "/yunpay.html";
+            case WXPAU_H5:
+                String payMweb = SendWxPay.payMweb(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
+                response.sendRedirect(payMweb);
+                break;
+            case PAYPAL:
+                try {
+                    Payment payment = PaypalSend.createPayment(pays, price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, ordersMember);
+                    for (Links links : payment.getLinks()) {
+                        System.out.println(links.toString());
+                        if (links.getRel().equals("approval_url")) {
+                            System.out.println(links.getHref());
+                            return "redirect:" + links.getHref();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
         }
         return null;
     }
