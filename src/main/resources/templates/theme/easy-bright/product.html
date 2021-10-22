@@ -154,7 +154,7 @@
                                         </button>
                                     </div>
                                     <input type="text" id="orderNumber" name="number" class="layui-input" required=""
-                                           lay-verify="required|order_number" value="1">
+                                           lay-verify="required|order_number" value="1" disabled>
                                     <div class="input-group-append add">
                                         <button class="layui-btn layui-btn-primary" type="button">
                                             <img src="${ctxPath}/theme/night/images/add.svg" style="width: 25px">
@@ -513,33 +513,6 @@
         }), A.addEventListener("mouseleave", function () {
             M.style.visibility = "hidden", M.style.opacity = "0"
         })
-
-        $(document).ready(function (e) {
-            $("#formBasForm #orderNumber").keyup(function (e) {
-                if (product1 != null) {
-                    if (product1.isWholesale == 1) {
-                        var wholesale = product1.wholesale;
-                        var s = wholesale.split("\n");
-
-                        var price = $(this).val() * product1.price;
-                        $("#goodsprice2").text(price.toFixed(2));
-
-                        for (let i = 0; i < s.length; i++) {
-                            var ss = s[i].split("=");
-                            if ($(this).val() >= ss[0]) {
-                                var price = $(this).val() * ss[1];
-                                $("#goodsprice2").text(price.toFixed(2));
-                            }
-                        }
-                    } else {
-                        var price = $(this).val() * product1.price;
-                        $("#goodsprice2").text(price.toFixed(2));
-                    }
-                } else {
-                    layer.msg("请选择商品再试！")
-                }
-            });
-        });
 
         //加减商品数量
         let orderNumber = 1;
