@@ -14,6 +14,12 @@ public class DateUtil {
         return date;
     }
 
+    public static String getDate() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
+        String date = df.format(new Date());// new Date()为获取当前系统时间，也可使用当前时间戳
+        return date;
+    }
+
     // 获取当天的开始时间
     public static Date getDayBegin() {
         Calendar cal = new GregorianCalendar();

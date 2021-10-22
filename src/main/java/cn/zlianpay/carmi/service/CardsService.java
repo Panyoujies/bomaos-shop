@@ -29,4 +29,5 @@ public interface CardsService extends IService<Cards> {
 
     List<Cards> getCard(Integer status, Integer productId, Integer number);
 
+    String export(Integer productId, Integer status);
 }

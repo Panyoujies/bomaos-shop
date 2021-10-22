@@ -215,4 +215,16 @@ public class CardsController extends BaseController {
         return JsonResult.error("删除失败");
     }
 
+    /**
+     * 导出指定的数据
+     */
+    @RequiresPermissions("carmi:cards:list")
+    @OperLog(value = "卡密管理", desc = "导出指定的数据")
+    @ResponseBody
+    @RequestMapping("/export")
+    public JsonResult export(Integer productId, Integer status) {
+        String export = cardsService.export(productId, status);
+        return JsonResult.ok().setData(export);
+    }
+
 }

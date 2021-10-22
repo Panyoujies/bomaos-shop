@@ -12,7 +12,6 @@
             <form class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">商品:</label>
                         <div class="layui-input-inline">
                             <select id="classifyId" lay-verType="tips" lay-verify="required" lay-filter="classifyId"
                                     required>
@@ -29,6 +28,13 @@
                         </div>
                     </div>
                     <div class="layui-inline">
+                        <label class="layui-form-label">状态:</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="status" value="1" title="已出售" checked>
+                            <input type="radio" name="status" value="0" title="未出售">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
                         <label class="layui-form-label">卡密:</label>
                         <div class="layui-input-inline">
                             <input name="cardInfo" class="layui-input" placeholder="输入卡密"/>
@@ -39,7 +45,13 @@
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
                     </div>
+                    <div class="layui-inline">&emsp;
+                        <button class="layui-btn icon-btn" lay-filter="cardsExport" lay-submit>
+                            <i class="layui-icon layui-icon-export"></i>导出卡密
+                        </button>
+                    </div>
                 </div>
+
             </form>
             <!-- 数据表格 -->
             <table id="cardsTable" lay-filter="cardsTable"></table>
@@ -89,6 +101,7 @@
         </div>
     </form>
 </script>
+
 <:include file="../common/js.html"/>
 <script>
     layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown'], function () {
@@ -156,6 +169,18 @@
         /* 表格搜索 */
         form.on('submit(cardsTbSearch)', function (data) {
             insTb.reload({where: data.field, page: {curr: 1}});
+            return false;
+        });
+
+        form.on('submit(cardsExport)', function (data) {
+            $.post('cards/export', data.field, function (res) {
+                if (0 === res.code) {
+                    console.log(res.data)
+                    window.open('${ctxPath}/' + res.data)
+                } else {
+                    layer.msg("导出失败")
+                }
+            });
             return false;
         });
 
