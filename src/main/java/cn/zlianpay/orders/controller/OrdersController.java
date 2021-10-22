@@ -4,6 +4,9 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
+import cn.zlianpay.common.core.enmu.Alipay;
+import cn.zlianpay.common.core.enmu.Paypal;
+import cn.zlianpay.common.core.enmu.Wxpay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.*;
 import cn.zlianpay.orders.vo.OrderVos;
@@ -169,26 +172,11 @@ public class OrdersController extends BaseController {
             searchDTO.setAndIncrement(andIncrement.toString());
             searchDTO.setCreateTime(date);
             searchDTO.setMoney(orders.getMoney().toString());
-            if (orders.getPayType().equals("mqpay_alipay")
-                    || orders.getPayType().equals("zlianpay_alipay")
-                    || orders.getPayType().equals("yungouos_alipay")
-                    || orders.getPayType().equals("xunhupay_alipay")
-                    || orders.getPayType().equals("jiepay_alipay")
-                    || orders.getPayType().equals("payjs_alipay")
-                    || orders.getPayType().equals("yunfu_alipay")
-                    || orders.getPayType().equals("alipay")) {
+            if (Alipay.getByValue(orders.getPayType())) {
                 searchDTO.setPayType("支付宝");
-            } else if (orders.getPayType().equals("mqpay_wxpay")
-                    || orders.getPayType().equals("zlianpay_wxpay")
-                    || orders.getPayType().equals("yungouos_wxpay")
-                    || orders.getPayType().equals("xunhupay_wxpay")
-                    || orders.getPayType().equals("jiepay_wxpay")
-                    || orders.getPayType().equals("payjs_wxpay")
-                    || orders.getPayType().equals("yunfu_wxpay")
-                    || orders.getPayType().equals("wxpay")
-                    || orders.getPayType().equals("wxpay_h5")) {
+            } else if (Wxpay.getByValue(orders.getPayType())) {
                 searchDTO.setPayType("微信");
-            } else if (orders.getPayType().equals("paypal")) {
+            } else if (Paypal.getByValue(orders.getPayType())) {
                 searchDTO.setPayType("Paypal");
             }
             if (orders.getStatus() == 1) {

@@ -1,5 +1,9 @@
 package cn.zlianpay.reception.common;
 
+/**
+ * 支付接口枚举类
+ * Created by Panyoujie on 2021-10-23 00:11:08
+ */
 public enum PaysEnmu {
     MQPAY_ALIPAY("mqpay_alipay"),
     MQPAY_WXPAY("mqpay_wxpay"),

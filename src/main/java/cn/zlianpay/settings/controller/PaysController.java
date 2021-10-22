@@ -1,6 +1,7 @@
 package cn.zlianpay.settings.controller;
 
 import cn.zlianpay.common.core.web.*;
+import cn.zlianpay.reception.common.PaysEnmu;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import cn.zlianpay.common.core.web.*;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -66,54 +68,76 @@ public class PaysController extends BaseController {
             PaysVo paysVo = new PaysVo();
             BeanUtils.copyProperties(pays, paysVo);
             JSONObject configs = JSONObject.parseObject(pays.getConfig());
-            if (pays.getDriver().equals("mqpay_alipay") || pays.getDriver().equals("mqpay_wxpay")) {
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setCreateUrl(configs.get("create_url").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("zlianpay_alipay") || pays.getDriver().equals("zlianpay_wxpay")) {
-                paysVo.setAppid(configs.get("pid").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setCreateUrl(configs.get("create_url").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("yungouos_wxpay") || pays.getDriver().equals("yungouos_alipay")) {
-                paysVo.setAppid(configs.get("mchId").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("xunhupay_wxpay") || pays.getDriver().equals("xunhupay_alipay")) {
-                paysVo.setAppid(configs.get("appid").toString());
-                paysVo.setKey(configs.get("appsecret").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("jiepay_wxpay") || pays.getDriver().equals("jiepay_alipay")) {
-                paysVo.setAppid(configs.get("appid").toString());
-                paysVo.setKey(configs.get("apptoken").toString());
-            } else if (pays.getDriver().equals("payjs_wxpay") || pays.getDriver().equals("payjs_alipay")) {
-                paysVo.setAppid(configs.get("mchId").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("yunfu_wxpay") || pays.getDriver().equals("yunfu_alipay")) {
-                paysVo.setAppid(configs.get("appid").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("wxpay")) {
-                paysVo.setAppid(configs.get("appId").toString());
-                paysVo.setMchid(configs.get("mchId").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("wxpay_h5")) {
-                paysVo.setAppid(configs.get("appId").toString());
-                paysVo.setMchid(configs.get("mchId").toString());
-                paysVo.setKey(configs.get("key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("alipay")) {
-                paysVo.setAppid(configs.get("app_id").toString());
-                paysVo.setKey(configs.get("private_key").toString());
-                paysVo.setMpKey(configs.get("alipay_public_key").toString());
-                paysVo.setNotifyUrl(configs.get("notify_url").toString());
-            } else if (pays.getDriver().equals("paypal")) {
-                paysVo.setMchid(configs.get("clientId").toString());
-                paysVo.setKey(configs.get("clientSecret").toString());
-                paysVo.setNotifyUrl(configs.get("return_url").toString());
+
+            switch (Objects.requireNonNull(PaysEnmu.getByValue(pays.getDriver()))) {
+                case MQPAY_ALIPAY:
+                case MQPAY_WXPAY:
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setCreateUrl(configs.get("create_url").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case ZLIANPAY_ALIPAY:
+                case ZLIANPAY_WXPAY:
+                    paysVo.setAppid(configs.get("pid").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setCreateUrl(configs.get("create_url").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case YUNGOUOS_ALIPAY:
+                case YUNGOUOS_WXPAY:
+                    paysVo.setAppid(configs.get("mchId").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case XUNHUPAY_ALIPAY:
+                case XUNHUPAY_WXPAY:
+                    paysVo.setAppid(configs.get("appid").toString());
+                    paysVo.setKey(configs.get("appsecret").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case JIEPAY_ALIPAY:
+                case JIEPAY_WXPAY:
+                    paysVo.setAppid(configs.get("appid").toString());
+                    paysVo.setKey(configs.get("apptoken").toString());
+                    break;
+                case PAYJS_ALIPAY:
+                case PAYJS_WXPAY:
+                    paysVo.setAppid(configs.get("mchId").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case YUNFU_ALIPAY:
+                case YUNFU_WXPAY:
+                    paysVo.setAppid(configs.get("appid").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case WXPAY:
+                    paysVo.setAppid(configs.get("appId").toString());
+                    paysVo.setMchid(configs.get("mchId").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case WXPAU_H5:
+                    paysVo.setAppid(configs.get("appId").toString());
+                    paysVo.setMchid(configs.get("mchId").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case ALIPAY:
+                    paysVo.setAppid(configs.get("app_id").toString());
+                    paysVo.setKey(configs.get("private_key").toString());
+                    paysVo.setMpKey(configs.get("alipay_public_key").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
+                case PAYPAL:
+                    paysVo.setMchid(configs.get("clientId").toString());
+                    paysVo.setKey(configs.get("clientSecret").toString());
+                    paysVo.setNotifyUrl(configs.get("return_url").toString());
+                default:
+                    break;
             }
+
             return paysVo;
         }).collect(Collectors.toList());
         return new PageResult<>(collect, pageParam.getTotal());
@@ -166,54 +190,77 @@ public class PaysController extends BaseController {
     public JsonResult update(PaysVo paysVo) {
 
         Map<String,String> map = new HashMap<>();
-        if (paysVo.getDriver().equals("mqpay_alipay") || paysVo.getDriver().equals("mqpay_wxpay")) {
-            map.put("key", paysVo.getKey());
-            map.put("create_url", paysVo.getCreateUrl());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("zlianpay_alipay") || paysVo.getDriver().equals("zlianpay_wxpay")) {
-            map.put("pid", paysVo.getAppid());
-            map.put("key", paysVo.getKey());
-            map.put("create_url", paysVo.getCreateUrl());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("yungouos_wxpay") || paysVo.getDriver().equals("yungouos_alipay")) {
-            map.put("mchId", paysVo.getAppid());
-            map.put("key", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("xunhupay_wxpay") || paysVo.getDriver().equals("xunhupay_alipay")) {
-            map.put("appid", paysVo.getAppid());
-            map.put("appsecret", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("jiepay_wxpay") || paysVo.getDriver().equals("jiepay_alipay")) {
-            map.put("appid", paysVo.getAppid());
-            map.put("apptoken", paysVo.getKey());
-        } else if (paysVo.getDriver().equals("payjs_wxpay") || paysVo.getDriver().equals("payjs_alipay")) {
-            map.put("mchId", paysVo.getAppid());
-            map.put("key", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("yunfu_wxpay") || paysVo.getDriver().equals("yunfu_alipay")) {
-            map.put("appid", paysVo.getAppid());
-            map.put("key", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("wxpay")) {
-            map.put("appId", paysVo.getAppid());
-            map.put("mchId", paysVo.getMchid());
-            map.put("key", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("wxpay_h5")) {
-            map.put("appId", paysVo.getAppid());
-            map.put("mchId", paysVo.getMchid());
-            map.put("key", paysVo.getKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("alipay")) {
-            map.put("app_id", paysVo.getAppid());
-            map.put("private_key", paysVo.getKey());
-            map.put("alipay_public_key", paysVo.getMpKey());
-            map.put("notify_url", paysVo.getNotifyUrl());
-        } else if (paysVo.getDriver().equals("paypal")) {
-            map.put("clientId", paysVo.getMchid());
-            map.put("clientSecret", paysVo.getKey());
-            map.put("return_url", paysVo.getNotifyUrl());
+
+        switch (Objects.requireNonNull(PaysEnmu.getByValue(paysVo.getDriver()))) {
+            case MQPAY_ALIPAY:
+            case MQPAY_WXPAY:
+                map.put("key", paysVo.getKey());
+                map.put("create_url", paysVo.getCreateUrl());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case ZLIANPAY_ALIPAY:
+            case ZLIANPAY_WXPAY:
+                map.put("pid", paysVo.getAppid());
+                map.put("key", paysVo.getKey());
+                map.put("create_url", paysVo.getCreateUrl());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case YUNGOUOS_ALIPAY:
+            case YUNGOUOS_WXPAY:
+                map.put("mchId", paysVo.getAppid());
+                map.put("key", paysVo.getKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case XUNHUPAY_ALIPAY:
+            case XUNHUPAY_WXPAY:
+                map.put("appid", paysVo.getAppid());
+                map.put("appsecret", paysVo.getKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case JIEPAY_WXPAY:
+            case JIEPAY_ALIPAY:
+                map.put("appid", paysVo.getAppid());
+                map.put("apptoken", paysVo.getKey());
+                break;
+            case PAYJS_ALIPAY:
+            case PAYJS_WXPAY:
+                map.put("mchId", paysVo.getAppid());
+                map.put("key", paysVo.getKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case YUNFU_ALIPAY:
+            case YUNFU_WXPAY:
+                map.put("appid", paysVo.getAppid());
+                map.put("key", paysVo.getKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case WXPAY:
+                map.put("appId", paysVo.getAppid());
+                map.put("mchId", paysVo.getMchid());
+                map.put("key", paysVo.getKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case WXPAU_H5:
+                map.put("appId", paysVo.getAppid());
+                map.put("mchId", paysVo.getMchid());
+                map.put("key", paysVo.getKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case ALIPAY:
+                map.put("app_id", paysVo.getAppid());
+                map.put("private_key", paysVo.getKey());
+                map.put("alipay_public_key", paysVo.getMpKey());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case PAYPAL:
+                map.put("clientId", paysVo.getMchid());
+                map.put("clientSecret", paysVo.getKey());
+                map.put("return_url", paysVo.getNotifyUrl());
+                break;
+            default:
+                break;
         }
+
         String jsonString = JSON.toJSONString(map);
 
         Pays pays = new Pays();

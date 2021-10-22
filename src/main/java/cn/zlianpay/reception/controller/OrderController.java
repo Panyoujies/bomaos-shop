@@ -231,9 +231,8 @@ public class OrderController extends BaseController {
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
 
         if (price.equals("0.00")) { // 0元商品 直接完成支付
-            long time = new Date().getTime();
-            String toString = Long.toString(time);
-            boolean big = returnBig(price, price, orders.getMember(), toString, productDescription);
+            String currentTime = Long.toString(System.currentTimeMillis());
+            boolean big = returnBig(price, price, orders.getMember(), currentTime, productDescription);
             if (big) {
                 response.sendRedirect("/search/order/" + orders.getMember());
                 return null;
@@ -336,9 +335,7 @@ public class OrderController extends BaseController {
                 try {
                     Payment payment = PaypalSend.createPayment(pays, price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, ordersMember);
                     for (Links links : payment.getLinks()) {
-                        System.out.println(links.toString());
                         if (links.getRel().equals("approval_url")) {
-                            System.out.println(links.getHref());
                             return "redirect:" + links.getHref();
                         }
                     }

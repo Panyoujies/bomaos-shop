@@ -401,7 +401,7 @@ public class NotifyController {
         String newSign = SecureUtil.md5(appid + apptoken + code + order_id + order_rmb + diy);
         if (sign.equals(newSign)) {
             this.order_id = order_id;
-            String returnBig = returnBig(order_rmb, order_rmb, order_id, new Date().getTime() + "", diy, "success", "fiald");
+            String returnBig = returnBig(order_rmb, order_rmb, order_id, System.currentTimeMillis() + "", diy, "success", "fiald");
             return returnBig;
         } else {
             return "error";

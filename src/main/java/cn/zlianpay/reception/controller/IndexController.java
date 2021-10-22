@@ -4,6 +4,9 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
+import cn.zlianpay.common.core.enmu.Alipay;
+import cn.zlianpay.common.core.enmu.Paypal;
+import cn.zlianpay.common.core.enmu.Wxpay;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.orders.vo.OrderVos;
 import cn.zlianpay.reception.dto.ProductDTO;
@@ -303,26 +306,11 @@ public class IndexController {
                             searchDTO.setAndIncrement(andIncrement.toString());
                             searchDTO.setCreateTime(date);
                             searchDTO.setMoney(member.getMoney().toString());
-                            if (member.getPayType().equals("mqpay_alipay")
-                                    || member.getPayType().equals("zlianpay_alipay")
-                                    || member.getPayType().equals("yungouos_alipay")
-                                    || member.getPayType().equals("xunhupay_alipay")
-                                    || member.getPayType().equals("jiepay_alipay")
-                                    || member.getPayType().equals("payjs_alipay")
-                                    || member.getPayType().equals("yunfu_alipay")
-                                    || member.getPayType().equals("alipay")) {
+                            if (Alipay.getByValue(member.getPayType())) {
                                 searchDTO.setPayType("支付宝");
-                            } else if (member.getPayType().equals("mqpay_wxpay")
-                                    || member.getPayType().equals("zlianpay_wxpay")
-                                    || member.getPayType().equals("yungouos_wxpay")
-                                    || member.getPayType().equals("xunhupay_wxpay")
-                                    || member.getPayType().equals("jiepay_wxpay")
-                                    || member.getPayType().equals("payjs_wxpay")
-                                    || member.getPayType().equals("yunfu_wxpay")
-                                    || member.getPayType().equals("wxpay")
-                                    || member.getPayType().equals("wxpay_h5")) {
+                            } else if (Wxpay.getByValue(member.getPayType())) {
                                 searchDTO.setPayType("微信");
-                            } else if (member.getPayType().equals("paypal")) {
+                            } else if (Paypal.getByValue(member.getPayType())) {
                                 searchDTO.setPayType("Paypal");
                             }
                             if (member.getStatus() == 1) {
@@ -354,26 +342,11 @@ public class IndexController {
                             searchDTO.setAndIncrement(andIncrement.toString());
                             searchDTO.setCreateTime(date);
                             searchDTO.setMoney(member.getMoney().toString());
-                            if (member.getPayType().equals("mqpay_alipay")
-                                    || member.getPayType().equals("zlianpay_alipay")
-                                    || member.getPayType().equals("yungouos_alipay")
-                                    || member.getPayType().equals("xunhupay_alipay")
-                                    || member.getPayType().equals("jiepay_alipay")
-                                    || member.getPayType().equals("payjs_alipay")
-                                    || member.getPayType().equals("yunfu_alipay")
-                                    || member.getPayType().equals("alipay")) {
+                            if (Alipay.getByValue(member.getPayType())) {
                                 searchDTO.setPayType("支付宝");
-                            } else if (member.getPayType().equals("mqpay_wxpay")
-                                    || member.getPayType().equals("zlianpay_wxpay")
-                                    || member.getPayType().equals("yungouos_wxpay")
-                                    || member.getPayType().equals("xunhupay_wxpay")
-                                    || member.getPayType().equals("jiepay_wxpay")
-                                    || member.getPayType().equals("payjs_wxpay")
-                                    || member.getPayType().equals("yunfu_wxpay")
-                                    || member.getPayType().equals("wxpay")
-                                    || member.getPayType().equals("wxpay_h5")) {
+                            } else if (Wxpay.getByValue(member.getPayType())) {
                                 searchDTO.setPayType("微信");
-                            } else if (member.getPayType().equals("paypal")) {
+                            } else if (Paypal.getByValue(member.getPayType())) {
                                 searchDTO.setPayType("Paypal");
                             }
                             if (member.getStatus() == 1) {

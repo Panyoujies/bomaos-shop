@@ -29,7 +29,7 @@ public class SendAlipay {
      * @param goodsDescription 自定义内容
      * @return 支付二维码链接
      */
-    public static String pay(Pays pays, String price, String ordersMember, String goodsName, String goodsDescription, HttpServletRequest request){
+    public static String payAlipay(Pays pays, String price, String ordersMember, String goodsName, String goodsDescription, HttpServletRequest request){
 
         Map mapTypes = JSON.parseObject(pays.getConfig());
         String app_id = mapTypes.get("app_id").toString();

@@ -1,6 +1,10 @@
 package cn.zlianpay.dashboard;
 
+import cn.zlianpay.common.core.enmu.Alipay;
+import cn.zlianpay.common.core.enmu.Paypal;
+import cn.zlianpay.common.core.enmu.Wxpay;
 import cn.zlianpay.common.core.web.BaseController;
+import cn.zlianpay.reception.common.PaysEnmu;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.utils.DateUtil;
@@ -206,26 +210,12 @@ public class DashboardController extends BaseController {
         BigDecimal bigAlipay = new BigDecimal(0.00);
         BigDecimal bigPaypal = new BigDecimal(0.00);
         for (Orders orders : ordersList) {
-            if (orders.getPayType().equals("mqpay_wxpay")
-                    || orders.getPayType().equals("zlianpay_wxpay")
-                    || orders.getPayType().equals("yungouos_wxpay")
-                    || orders.getPayType().equals("xunhupay_wxpay")
-                    || orders.getPayType().equals("jiepay_wxpay")
-                    || orders.getPayType().equals("payjs_wxpay")
-                    || orders.getPayType().equals("yunfu_wxpay")
-                    || orders.getPayType().equals("wxpay")
-                    || orders.getPayType().equals("wxpay_h5")) { // 微信
+
+            if (Wxpay.getByValue(orders.getPayType())) { // 微信
                 bigWxpay = bigWxpay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
-            } else if (orders.getPayType().equals("mqpay_alipay")
-                    || orders.getPayType().equals("zlianpay_alipay")
-                    || orders.getPayType().equals("yungouos_alipay")
-                    || orders.getPayType().equals("xunhupay_alipay")
-                    || orders.getPayType().equals("jiepay_alipay")
-                    || orders.getPayType().equals("payjs_alipay")
-                    || orders.getPayType().equals("yunfu_alipay")
-                    || orders.getPayType().equals("alipay")) { // 支付宝
+            } else if (Alipay.getByValue(orders.getPayType())) { // 支付宝
                 bigAlipay = bigAlipay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
-            } else if (orders.getPayType().equals("paypal")) {
+            } else if (Paypal.getByValue(orders.getPayType())) {
                 bigPaypal = bigPaypal.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             }
         }
@@ -247,26 +237,11 @@ public class DashboardController extends BaseController {
         Integer alipay = 0;
         Integer paypal = 0;
         for (Orders orders : ordersList) {
-            if (orders.getPayType().equals("mqpay_wxpay")
-                    || orders.getPayType().equals("zlianpay_wxpay")
-                    || orders.getPayType().equals("yungouos_wxpay")
-                    || orders.getPayType().equals("xunhupay_wxpay")
-                    || orders.getPayType().equals("jiepay_wxpay")
-                    || orders.getPayType().equals("payjs_wxpay")
-                    || orders.getPayType().equals("yunfu_wxpay")
-                    || orders.getPayType().equals("wxpay")
-                    || orders.getPayType().equals("wxpay_h5")) { // 微信
+            if (Wxpay.getByValue(orders.getPayType())) { // 微信
                 wxpay++;
-            } else if (orders.getPayType().equals("mqpay_alipay")
-                    || orders.getPayType().equals("zlianpay_alipay")
-                    || orders.getPayType().equals("yungouos_alipay")
-                    || orders.getPayType().equals("xunhupay_alipay")
-                    || orders.getPayType().equals("jiepay_alipay")
-                    || orders.getPayType().equals("payjs_alipay")
-                    || orders.getPayType().equals("yunfu_alipay")
-                    || orders.getPayType().equals("alipay")) { // 支付宝
+            } else if (Alipay.getByValue(orders.getPayType())) { // 支付宝
                 alipay++;
-            } else if (orders.getPayType().equals("paypal")) {
+            } else if (Paypal.getByValue(orders.getPayType())) {
                 paypal++;
             }
         }
