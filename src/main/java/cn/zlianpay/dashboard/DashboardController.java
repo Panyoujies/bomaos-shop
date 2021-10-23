@@ -210,7 +210,6 @@ public class DashboardController extends BaseController {
         BigDecimal bigAlipay = new BigDecimal(0.00);
         BigDecimal bigPaypal = new BigDecimal(0.00);
         for (Orders orders : ordersList) {
-
             if (Wxpay.getByValue(orders.getPayType())) { // 微信
                 bigWxpay = bigWxpay.add(new BigDecimal(orders.getMoney().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             } else if (Alipay.getByValue(orders.getPayType())) { // 支付宝

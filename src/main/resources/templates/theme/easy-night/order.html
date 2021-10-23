@@ -15,6 +15,7 @@
         .user-info-list-item {
             position: relative;
         }
+
         .weui-cells {
             margin-top: 0;
             background-color: rgba(0,0,0,0.4);
@@ -77,12 +78,6 @@
             color: var(--weui-FG-1);
         }
 
-        p {
-            height: 20px;
-            line-height: 20px;
-            margin-bottom: 2px;
-        }
-
         .card-info-list {
             text-align: left;
             background-color: rgba(0,0,0,0.4);
@@ -114,24 +109,38 @@
             display: block;
             margin-left: 5px !important;
         }
+
+        .list_info {
+            font-size: 16px;
+            font-family: Content-font, Roboto, sans-serif;
+            font-weight: 400;
+        }
+
+        .list_info p{
+            line-height: 1.625;
+        }
+
+        .list_info img{
+            height: auto;
+            max-width: 100%;
+        }
+
         .list_info::-webkit-scrollbar {
             width: 2px;
             border-radius: 1.5px;
             background-color: transparent;
         }
+
         .list_info::-webkit-scrollbar-track {
             background: #F5F5F6;
             border-radius: 1.5px;
         }
+
         .list_info::-webkit-scrollbar-thumb {
             background: #4E6EF2;
             border-radius: 1.5px;
         }
-        .list_info p {
-            height: auto !important;
-            line-height: 20px;
-            margin-bottom: 2px;
-        }
+
     </style>
     <script type="text/javascript" src="${ctxPath}/theme/easy-night/js/clipboard.min.js"></script>
 </head>
@@ -254,7 +263,7 @@
                     使用说明
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px;">
-                    <div class="list_info" style="overflow-y: auto; max-height: 200px;">
+                    <div class="list_info">
                         ${goods.pdInfo!}
                     </div>
                 </div>
