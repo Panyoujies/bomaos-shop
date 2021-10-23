@@ -103,7 +103,10 @@
 .no-content {
     padding: 80px 0 80px;
     text-align: center;
-    color: #999;
+    color: #e0e0e0;
+    background-color: rgba(0,0,0,0.7);
+    border-radius: 5px;
+    box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
 }
 
 .no-content .no-content-img {
