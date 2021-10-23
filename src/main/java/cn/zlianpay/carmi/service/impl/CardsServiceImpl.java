@@ -103,7 +103,6 @@ public class CardsServiceImpl extends ServiceImpl<CardsMapper, Cards> implements
         String[] arr = {"商品名称", "卡密信息", "导出时间"};
         String toExcelByPOJO = ExcelWrite.writeToExcelByPOJO(Constants.UPLOAD_DIR + "file/excel/", arr, list);
 
-        System.out.println(toExcelByPOJO);
         return toExcelByPOJO;
     }
 

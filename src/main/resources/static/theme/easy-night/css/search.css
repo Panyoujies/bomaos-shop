@@ -175,3 +175,15 @@
     background-size: cover;
     margin-top: -70px;
 }
+
+input::-webkit-input-placeholder {
+    color: #e3e3e3;
+}
+
+input::-moz-input-placeholder {
+    color: #e3e3e3;
+}
+
+input::-ms-input-placeholder {
+    color: #e3e3e3;
+}

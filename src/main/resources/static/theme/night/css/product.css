@@ -481,6 +481,7 @@
     width: 24px;
     animation: big2small 2s infinite linear;
 }
+
 #phone-code {
     visibility: hidden;
     opacity: 0;
