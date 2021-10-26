@@ -33,7 +33,11 @@ public class ZlianPay {
         } else if (pays.getDriver().equals("zlianpay_wxpay")) {
             type = "wxpay";
             paramMap.put("type", "wxpay");
+        } else if (pays.getDriver().equals("zlianpay_qqpay")) {
+            type = "qqpay";
+            paramMap.put("type", "qqpay");
         }
+
         paramMap.put("out_trade_no", payId);
         paramMap.put("notify_url", notifyUrl);
         paramMap.put("return_url", returnUrl);

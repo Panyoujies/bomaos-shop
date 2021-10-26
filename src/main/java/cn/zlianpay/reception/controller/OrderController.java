@@ -261,6 +261,7 @@ public class OrderController extends BaseController {
                 response.sendRedirect(createMqPay);
                 break;
             case ZLIANPAY_ALIPAY:
+            case ZLIANPAY_QQPAY:
             case ZLIANPAY_WXPAY:
                 String zlianSendPay = ZlianPay.zlianSendPay(pays, price, ordersMember, productDescription);
                 response.sendRedirect(zlianSendPay);
@@ -364,20 +365,28 @@ public class OrderController extends BaseController {
          * 通过订单号查询
          */
         Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
-        if (member == null) return false; // 本地没有这个订单
+        if (member == null) {
+            return false; // 本地没有这个订单
+        }
 
         int count = orderCardService.count(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
-        if (count >= 1)  return true;
+        if (count >= 1) {
+            return true;
+        }
 
         Products products = productsService.getById(param);
-        if (products == null) return false; // 商品没了
+        if (products == null) {
+            return false; // 商品没了
+        }
 
         Website website = websiteService.getById(1);
         ShopSettings shopSettings = shopSettingsService.getById(1);
 
         if (products.getShipType() == 0) { // 自动发货的商品
             List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-            if (card == null) return false;
+            if (card == null) {
+                return false;
+            }
 
             List<OrderCard> cardList = new ArrayList<>();
             StringBuilder stringBuilder = new StringBuilder();

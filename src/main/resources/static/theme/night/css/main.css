@@ -1591,12 +1591,22 @@ body .layui-util-face .layui-layer-content {
     border-radius: 5px;
 }
 
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-qq.active {
+    border: 2px solid rgb(2, 168, 241);
+    color: rgb(2, 168, 241);
+    border-radius: 5px;
+}
+
 .pay-type-group .layui-row .layui-col-md6 > div.pay-type-wexin.active:before {
     border-color: #40ba49 #40ba49 transparent transparent
 }
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin {
     color: rgb(63, 183, 72) !important;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-qq {
+    color: rgb(2, 168, 241) !important;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-ali {

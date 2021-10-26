@@ -1557,7 +1557,7 @@ body .layui-util-face .layui-layer-content {
 .pay-type-group .layui-row .layui-col-md6 > div {
     color: #666;
     font-size: 16px;
-    border: 2px solid #ddd;
+    border: 2px solid #f2f2f2;
     padding: 10px;
     background-color: #fafafa;
     background-repeat: no-repeat;
@@ -1567,6 +1567,12 @@ body .layui-util-face .layui-layer-content {
     cursor: pointer;
     text-align: center;
     border-radius: 5px
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-qq.active {
+    border: 2px solid rgb(2, 168, 241);
+    color: rgb(2, 168, 241);
+    border-radius: 5px;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-ali.active {
@@ -1593,6 +1599,10 @@ body .layui-util-face .layui-layer-content {
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-wexin {
     color: rgb(63, 183, 72) !important;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-qq {
+    color: rgb(2, 168, 241) !important;
 }
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-ali {

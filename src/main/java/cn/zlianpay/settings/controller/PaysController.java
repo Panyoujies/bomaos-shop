@@ -77,6 +77,7 @@ public class PaysController extends BaseController {
                     paysVo.setNotifyUrl(configs.get("notify_url").toString());
                     break;
                 case ZLIANPAY_ALIPAY:
+                case ZLIANPAY_QQPAY:
                 case ZLIANPAY_WXPAY:
                     paysVo.setAppid(configs.get("pid").toString());
                     paysVo.setKey(configs.get("key").toString());
@@ -199,6 +200,7 @@ public class PaysController extends BaseController {
                 map.put("notify_url", paysVo.getNotifyUrl());
                 break;
             case ZLIANPAY_ALIPAY:
+            case ZLIANPAY_QQPAY:
             case ZLIANPAY_WXPAY:
                 map.put("pid", paysVo.getAppid());
                 map.put("key", paysVo.getKey());

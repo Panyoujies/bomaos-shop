@@ -182,6 +182,8 @@ public class NotifyController {
             driver = "zlianpay_wxpay";
         } else if (type.equals("alipay")) {
             driver = "zlianpay_alipay";
+        } else if (type.equals("qqpay")) {
+            driver = "zlianpay_qqpay";
         }
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", driver));
@@ -237,6 +239,8 @@ public class NotifyController {
             driver = "zlianpay_wxpay";
         } else if (type.equals("alipay")) {
             driver = "zlianpay_alipay";
+        } else if (type.equals("qqpay")) {
+            driver = "zlianpay_qqpay";
         }
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", driver));

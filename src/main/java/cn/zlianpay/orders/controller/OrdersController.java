@@ -6,6 +6,7 @@ import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.enmu.Alipay;
 import cn.zlianpay.common.core.enmu.Paypal;
+import cn.zlianpay.common.core.enmu.QQPay;
 import cn.zlianpay.common.core.enmu.Wxpay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.*;
@@ -178,6 +179,8 @@ public class OrdersController extends BaseController {
                 searchDTO.setPayType("微信");
             } else if (Paypal.getByValue(orders.getPayType())) {
                 searchDTO.setPayType("Paypal");
+            } else if (QQPay.getByValue(orders.getPayType())) {
+                searchDTO.setPayType("QQ钱包");
             }
             if (orders.getStatus() == 1) {
                 searchDTO.setStatus("已支付");

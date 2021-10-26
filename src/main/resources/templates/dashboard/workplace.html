@@ -199,6 +199,7 @@
         var wxpayList = JSON.parse('${wxpayList!}');
         var alipayList = JSON.parse('${alipayList!}');
         var paypalList = JSON.parse('${paypalList!}');
+        var qqpayList = JSON.parse('${qqpayList!}');
         var mapList = JSON.parse('${mapList!}');
 
         /* 渲染表格 */
@@ -220,6 +221,8 @@
                             return '<span class="layui-badge layui-badge-green">微信</span>'
                         } else if (res.payType == 'paypal') {
                             return '<span class="layui-badge layui-badge-paypal">Paypal</span>'
+                        } else if (res.payType == 'zlianpay_qqpay') {
+                            return '<span class="layui-badge layui-badge-blue">QQ钱包</span>'
                         }
                     }
                 },
@@ -247,7 +250,7 @@
         var option;
 
         option = {
-            color: ['#09BA07', '#0E78FF', '#003087'],
+            color: ['#09BA07', '#4d77ff', '#003087', '#58A1FF'],
             title: {
                 text: '近七天交易流水'
             },
@@ -262,7 +265,7 @@
             },
             legend: {
                 left: 'right',
-                data: ['微信', '支付宝', 'Paypal']
+                data: ['微信', '支付宝', 'Paypal', 'QQ钱包']
             },
             grid: {
                 left: '3%',
@@ -354,8 +357,31 @@
                         focus: 'series'
                     },
                     data: paypalList
+                },
+                {
+                    name: 'QQ钱包',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    lineStyle: {
+                        width: 0
+                    },
+                    showSymbol: false,
+                    areaStyle: {
+                        opacity: 0.8,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgb(147,192,255)'
+                        }, {
+                            offset: 1,
+                            color: 'rgb(88,161,255)'
+                        }])
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: qqpayList
                 }
-
             ]
         };
 
@@ -367,7 +393,7 @@
         var option1;
 
         option1 = {
-            color: ['#09BA07', '#0E78FF', '#003087'],
+            color: ['#09BA07', '#0E78FF', '#003087', '#58a1ff'],
             title: {
                 text: '近七天收款类型统计'
             },

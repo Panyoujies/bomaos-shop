@@ -1577,6 +1577,12 @@ body .layui-util-face .layui-layer-content {
     border-radius: 5px;
 }
 
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-qq.active {
+    border: 2px solid rgb(2, 168, 241);
+    color: rgb(2, 168, 241);
+    border-radius: 5px;
+}
+
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-paypal.active {
     border: 2px solid rgb(0 48 135);
     color: rgb(2, 168, 241);
@@ -1598,6 +1604,10 @@ body .layui-util-face .layui-layer-content {
 }
 
 .pay-type-group .layui-row .layui-col-md6 > .pay-type-ali {
+    color: rgb(2, 168, 241) !important;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-qq {
     color: rgb(2, 168, 241) !important;
 }
 

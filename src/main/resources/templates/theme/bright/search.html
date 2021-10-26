@@ -151,6 +151,7 @@
                 </dl>
                 <dl class="dd-box" style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
                     <dt>
+                        {{#  if(d.payType == 'QQ钱包'){ }}<span style="color: rgb(2, 168, 241)">{{d.payType}}</span>{{#  } }}
                         {{#  if(d.payType == '支付宝'){ }}<span style="color: rgb(2, 168, 241)">{{d.payType}}</span>{{#  } }}
                         {{#  if(d.payType == '微信'){ }}<span style="color: rgb(63, 183, 72)">{{d.payType}}</span>{{#  } }}
                         {{#  if(d.payType == 'Paypal'){ }}<span style="color: rgb(0, 48, 135)">{{d.payType}}</span>{{#  } }}

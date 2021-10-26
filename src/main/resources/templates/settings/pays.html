@@ -18,7 +18,7 @@
     {{# if(d.driver=='mqpay_alipay' || d.driver=='mqpay_wxpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="mqpay">配置修改</a>
     {{# } }}
-    {{# if(d.driver=='zlianpay_alipay' || d.driver=='zlianpay_wxpay'){ }}
+    {{# if(d.driver=='zlianpay_alipay' || d.driver=='zlianpay_wxpay' || d.driver=='zlianpay_qqpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="zlianpay">配置修改</a>
     {{# } }}
     {{# if(d.driver=='yungouos_wxpay' || d.driver=='yungouos_alipay'){ }}
@@ -815,8 +815,10 @@
                         return '<span class="layui-badge layui-badge-green">微信</span>'
                     } else if(res.name == '支付宝') {
                         return '<span class="layui-badge layui-badge-blue">支付宝</span>'
-                    } else {
+                    } else if (res.name == 'Paypal'){
                         return '<span class="layui-badge layui-badge-paypal">Paypal</span>'
+                    } else if (res.name == 'QQ钱包'){
+                        return '<span class="layui-badge layui-badge-blue">QQ钱包</span>'
                     }
                 }
                 },
@@ -861,7 +863,7 @@
                 var html = $('#mqpayEditDialog').html();
                 var forms = 'mqpayEditForm';
                 var submit = 'mqpayEditSubmit';
-            } else if (mData.driver == 'zlianpay_alipay' || mData.driver == 'zlianpay_wxpay') {
+            } else if (mData.driver == 'zlianpay_alipay' || mData.driver == 'zlianpay_wxpay' || mData.driver == 'zlianpay_qqpay') {
                 var html = $('#zlianpayEditDialog').html();
                 var forms = 'zlianpayEditForm';
                 var submit = 'zlianpayEditSubmit';

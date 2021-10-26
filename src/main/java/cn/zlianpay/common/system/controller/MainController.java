@@ -100,8 +100,10 @@ public class MainController extends BaseController implements ErrorController {
     @RequestMapping("/admin")
     public String index(Model model) {
 
-        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "paypal"));
-        if (ObjectUtils.isEmpty(pays)) {
+        Pays paypal = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "paypal"));
+        Pays zlqqpay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "zlianpay_qqpay"));
+
+        if (ObjectUtils.isEmpty(paypal)) {
             Pays pays1 = new Pays();
             pays1.setName("Paypal");
             pays1.setDriver("paypal");
@@ -113,6 +115,26 @@ public class MainController extends BaseController implements ErrorController {
             String jsonString = JSON.toJSONString(map);
             pays1.setConfig(jsonString);
             pays1.setComment("Paypal 境外支付（默认美元交易）");
+            pays1.setEnabled(0);
+            pays1.setCreatedAt(new Date());
+            pays1.setUpdatedAt(new Date());
+            paysService.save(pays1);
+        }
+
+        if (ObjectUtils.isEmpty(zlqqpay)) {
+            Pays pays1 = new Pays();
+            pays1.setName("QQ钱包");
+            pays1.setDriver("zlianpay_qqpay");
+
+            Map<String,String> map = new HashMap<>();
+            map.put("pid", "xxx");
+            map.put("key", "xxx");
+            map.put("notify_url", "xxx");
+            map.put("create_url", "xxx");
+
+            String jsonString = JSON.toJSONString(map);
+            pays1.setConfig(jsonString);
+            pays1.setComment("易支付 - QQ钱包");
             pays1.setEnabled(0);
             pays1.setCreatedAt(new Date());
             pays1.setUpdatedAt(new Date());
