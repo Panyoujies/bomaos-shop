@@ -4,6 +4,70 @@
     <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
               description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/theme/easy-bright/css/index.css"/>
+    <style>
+        .ribbon-two {
+            position: absolute;
+            left: 2.5px;
+            top: 2.5px;
+            z-index: 1;
+            overflow: hidden;
+            width: 75px;
+            height: 75px;
+            text-align: right;
+        }
+
+        .ribbon-two span {
+            font-size: 12px;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            width: 100px;
+            display: block;
+            -webkit-box-shadow: 0 0 8px 0 rgb(71 77 86 / 8%), 0 1px 0 0 rgb(71 77 86 / 3%);
+            box-shadow: 0 0 8px 0 rgb(71 77 86 / 8%), 0 1px 0 0 rgb(71 77 86 / 3%);
+            position: absolute;
+            top: 19px;
+            left: -21px;
+            font-weight: 400;
+        }
+
+        .ribbon-two-danger span {
+            background: #4ab1fc;
+        }
+
+        .ribbon-two span:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 100%;
+            z-index: -1;
+            border-right: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .ribbon-two-danger span:before {
+            border-left: 3px solid #2880bd;
+            border-top: 3px solid #2880bd;
+        }
+
+        .ribbon-two-danger span:after {
+            border-right: 3px solid #2880bd;
+            border-top: 3px solid #2880bd;
+        }
+
+        .ribbon-two span:after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+    </style>
 </head>
 <body style="background: url(${isBackground}) fixed no-repeat; background-position: center center; background-size: cover;">
 <!-- header -->
@@ -83,11 +147,16 @@
                 </div>
                 <div class="project-list-item-text" style="color: #FFFFFF; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">库存数量：{{d.cardMember}}</div>
                 <div class="tag">
-                    {{#  if(d.isCoupon >= 1){ }}<span class="layui-badge layui-bg-blue">券</span>{{#  } }}
+                    {{# if(d.shipType == 0){ }}<span class="el-tag el-tag--light">自动发货</span>{{# } }}
+                    {{# if(d.shipType == 1){ }}<span class="el-tag el-tag--success el-tag--danger">手动发货</span>{{# } }}
+                    <!--{{#  if(d.isCoupon >= 1){ }}<span class="layui-badge layui-bg-blue">券</span>{{#  } }}
                     {{#  if(d.restricts >= 1){ }}<span class="layui-badge">限</span>{{#  } }}
-                    {{#  if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{#  } }}
+                    {{#  if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{#  } }}-->
                 </div>
             </div>
+            {{# if(d.cardMember == 0){ }}
+            <div class="ribbon-two ribbon-two-danger"><span>售罄</span></div>
+            {{# } }}
         </div>
     </div>
 </script>

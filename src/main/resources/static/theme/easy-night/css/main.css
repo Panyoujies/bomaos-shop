@@ -2450,3 +2450,46 @@ div.tagsinput span.tag {
     position: absolute;
     left: 14px;
 }
+
+
+.el-tag {
+    background-color: #222427;
+    display: inline-block;
+    height: 25px;
+    padding: 0 10px;
+    line-height: 23px;
+    font-size: 12px;
+    color: #409eff;
+    border: 1px solid #3d444a;
+    border-radius: 4px;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.demo-block.demo-tag .el-tag+.el-tag {
+    margin-left: 10px;
+}
+
+.el-tag.el-tag--success {
+    background-color: #222521;
+    border-color: #3a4036;
+    color: #67c23a;
+}
+
+.el-tag.el-tag--info {
+    background-color: #2a2a2a;
+    border-color: #464646;
+    color: #909399;
+}
+
+.el-tag.el-tag--warning {
+    background-color: #232221;
+    border-color: #3f3b36;
+    color: #e6a23c;
+}
+
+.el-tag.el-tag--danger {
+    background-color: #272424;
+    border-color: #423a3a;
+    color: #f56c6c;
+}

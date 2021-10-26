@@ -23,20 +23,20 @@
                     <img src="${ctxPath}/qiantai/images/details.svg">
                     商品介绍
                     <:if test="${isCoupon >= 1}">
-                        <span class="layui-badge layui-badge-blue pull-right"
-                              style="top: 13px; margin-left: 10px; font-weight: 400;">券</span>
+                        <span class="el-tag el-tag--warning el-tag--light pull-right"
+                              style="top: 10px; position: relative; font-weight: lighter; margin-left: 10px;">券</span>
                     </:if>
                     <:if test="${products.restricts >= 1}">
-                        <span class="layui-badge layui-badge-red pull-right"
-                              style="top: 13px; margin-left: 10px; font-weight: 400;">限购: ${products.restricts!}</span>
+                        <span class="el-tag el-tag--info el-tag--light pull-right"
+                              style="top: 10px; position: relative; font-weight: lighter; margin-left: 10px;">限购: ${products.restricts!}</span>
                     </:if>
                     <:if test="${products.shipType == 1}">
-                        <span class="layui-badge layui-badge-yellow pull-right"
-                              style="top: 13px; margin-left: 10px; font-weight: 400;">手动发货</span>
+                        <span class="el-tag el-tag--danger el-tag--light pull-right"
+                              style="top: 10px; position: relative; font-weight: lighter; margin-left: 10px;">手动发货</span>
                     </:if>
                     <:if test="${products.shipType == 0}">
-                        <span class="layui-badge layui-badge-green pull-right"
-                              style="top: 13px; margin-left: 10px; font-weight: 400;">自动发货</span>
+                        <span class="el-tag el-tag--light pull-right"
+                              style="top: 10px; position: relative; font-weight: lighter; margin-left: 10px;">自动发货</span>
                     </:if>
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px;">
@@ -94,8 +94,8 @@
                         <img src="${ctxPath}/qiantai/images/wholesale.svg">
                         批发价格
                         <:if test="${products.isWholesale == 1}">
-                            <span class="layui-badge layui-badge-yellow pull-right"
-                                  style="top: 13px; margin-left: 10px; font-weight: 400;">折扣</span>
+                            <span class="el-tag el-tag--warning el-tag--light pull-right"
+                                  style="top: 11px; position: relative; font-weight: lighter;">折扣</span>
                         </:if>
                     </div>
                     <div class="layui-card-body" style="padding: 15px 15px;">
@@ -106,7 +106,7 @@
                                     <div class="weui-colla">
                                         <div class="weui-colla__bd">购买数量满${item.number}个或以上每个</div>
                                         <div class="weui-colla__ft">
-                                            <span class="layui-badge layui-badge-blue">￥${item.money}</span>
+                                            <span class="el-tag el-tag--success el-tag--light">￥ ${item.money}</span>
                                         </div>
                                     </div>
                                 </:if>
@@ -114,7 +114,7 @@
                                     <div class="weui-colla" style="border-top: 1px solid #e4e4e4;">
                                         <div class="weui-colla__bd">购买数量满${item.number}个或以上每个</div>
                                         <div class="weui-colla__ft">
-                                            <span class="layui-badge layui-badge-blue">￥${item.money}</span>
+                                            <span class="el-tag el-tag--success el-tag--light">￥ ${item.money}</span>
                                         </div>
                                     </div>
                                 </:if>
