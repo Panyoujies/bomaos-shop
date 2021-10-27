@@ -11,6 +11,14 @@
 <body>
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
+
+<!-- banner -->
+<div class="ew-banner"
+     style="background: url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>) 50% no-repeat #4181ff; background-size: cover; background-attachment: scroll; background-position: center;">
+    <div class="layui-container" style="text-align: center; padding-bottom: 70px; padding-top: 140px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
+    </div>
+</div>
+
 <!-- goods-card -->
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-row layui-col-space15">
@@ -39,7 +47,7 @@
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px;">
                     <div class="layui-row layui-col-space15 goods-info-group">
-                        <div class="layui-col-xs12 layui-col-sm5 layui-col-md4">
+                        <div class="layui-col-xs12 layui-col-sm5 layui-col-md4 zlian-col-image">
                             <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
                         </div>
                         <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
