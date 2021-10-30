@@ -7,7 +7,7 @@
 <img alt="shiro" src="https://img.shields.io/badge/Shiro-1.3.0-yellow">
 <br><br>
 <a href="https://zlian.gitbook.io/zhilian-cloud/" target="_blank">部署文档</a>&nbsp;&nbsp;
-<a href="http://shop.zlianpay.cn" target="_blank">演示地址</a>
+<a href="http://www.zlianyun.store" target="_blank">演示地址</a>
 </p>
 
 ## 仅供开发学习使用、不可用于违法用途。
@@ -33,7 +33,7 @@
 ## 系统介绍
 - 开源式站长自动化售货解决方案、高效、稳定、快速！
 
-  演示地址：[http://shop.zlianpay.cn](http://shop.zlianpay.cn)
+  演示地址：[http://www.zlianyun.store/](http://www.zlianyun.store/)
 
 - 开发语言：JAVA
 - 开发框架：Spring boot
