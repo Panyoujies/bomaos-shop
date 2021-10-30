@@ -7,15 +7,63 @@
               description="${website.description}"
               favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/theme/night/css/product.css"/>
+    <style>
+        .ew-banner ._avatar {
+            z-index: 800;
+            position: absolute;
+            top: 165px;
+            left: 31px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .ew-banner ._avatar .imgContainer {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid #1f1f1f !important;
+            background-color: #000;
+        }
+
+        .ew-banner img {
+            display: block;
+        }
+
+        ._avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .spaceProfileCard__line {
+            position: absolute;
+            left: 125px;
+            top: 180px;
+        }
+
+    </style>
 </head>
 <body>
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
 <!-- banner -->
-<div class="ew-banner"
-     style="background: url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>) 50% no-repeat #4181ff; background-size: cover; background-attachment: scroll; background-position: center;">
-    <div class="layui-container" style="text-align: center; padding-bottom: 70px; padding-top: 140px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%);">
+<div class="ew-banner" style="top: -55px;">
+    <div class="layui-container" style="text-align: center; padding-bottom: 100px; padding-top: 150px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%); background-size: cover; background-attachment: scroll; background-position: center; box-sizing: border-box; overflow: hidden; background-image: linear-gradient(to top, rgb(0 0 0), rgba(255,255,255,0)),url(<:if test="${products.indexLogo == null || products.indexLogo == ''}">'../qiantai/images/index_logo.png'</:if><:if test="${products.indexLogo != null || products.indexLogo != ''}">${products.indexLogo!}</:if>); filter: blur(1px);">
+    </div>
+    <div class="_avatar">
+        <div class="imgContainer user-info-head" id="userInfoHead">
+            <img src="<:if test="${products.imageLogo == null || products.imageLogo == ''}">../qiantai/images/info_logo.png</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>" alt="">
+        </div>
+        <i class="i-work-sex-30-0 posa avatar-sex"></i>
+    </div>
+    <div class="cl spaceProfileCard__line">
+        <a style="color: #ffffff; font-size: 17px; text-shadow: 0 1px 1px rgb(0 0 0 / 50%);" title="开心购物每一天！">开心购物每一天！</a>
     </div>
 </div>
 
@@ -26,8 +74,8 @@
         <div class="layui-col-sm12 layui-col-md8">
             <div class="layui-card zlian-card-bottom" style="border-radius: 5px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header">
-                    <img src="${ctxPath}/theme/night/images/present.svg">
-                    商品介绍
+                    <img class="is-title-image" src="${ctxPath}/theme/night/images/present.svg">
+                    <span class="is-title-text">商品介绍</span>
                     <:if test="${isCoupon >= 1}">
                         <span class="el-tag el-tag--light pull-right"
                               style="top: 10px; position: relative; font-weight: lighter; margin-left: 10px;">券</span>

@@ -5,6 +5,11 @@
               description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/qiantai/css/index.css"/>
 <!--    <style>
+
+    </style>-->
+
+    <style>
+/*
         .project-list-item {
             overflow: hidden;
             border-radius: 5px;
@@ -16,15 +21,17 @@
         }
 
         .project-list-item .hd {
-            display: flex;
             flex-wrap: wrap;
-            padding: 15px;
+            padding: 8px 15px;
             border-bottom: 1px solid #e5e5e5;
             font-size: 15px;
             position: relative;
         }
 
         .project-list-item .hd dt {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             color: #4d4d4d;
             line-height: 24px;
         }
@@ -78,9 +85,17 @@
             background-color: #4282ff;
         }
 
-    </style>-->
+        .project-list-item .tag {
+            position: absolute;
+            right: 15px;
+            top: 11px;
+        }
 
-    <style>
+*/
+
+
+
+
         .ribbon-two {
             position: absolute;
             left: 2.5px;
@@ -252,6 +267,13 @@
     <div class="layui-col-xs12 layui-col-sm4 layui-col-md3">
         <div class="project-list-item" data-id="{{d.id}}"  lay-filter="productSubmit" lay-submit>
             <div style="height: 120px; background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url({{# if(d.indexLogo == null || d.indexLogo == ''){ }}'../qiantai/images/index_logo.png'{{# } }}  {{# if(d.indexLogo != null){ }} {{d.indexLogo}} {{# } }}); background-size: cover; background-attachment: scroll; background-position: center;"></div>
+            <div class="tag">
+                {{# if(d.shipType == 0){ }}<span class="el-tag el-tag&#45;&#45;light">自动发货</span>{{# } }}
+                {{# if(d.shipType == 1){ }}<span class="el-tag el-tag&#45;&#45;success el-tag&#45;&#45;danger">手动发货</span>{{# } }}
+                &lt;!&ndash;{{# if(d.isCoupon >= 1){ }}<span class="layui-badge layui-bg-blue">券</span>{{# } }}
+                {{# if(d.restricts >= 1){ }}<span class="layui-badge">限</span>{{# } }}
+                {{# if(d.isWholesale === 1){ }}<span class="layui-badge layui-bg-orange">折</span>{{# } }}&ndash;&gt;
+            </div>
             <div class="hd">
                 <dl style="position: relative; z-index: 2;">
                     <dt>{{d.name}}</dt>
@@ -279,6 +301,9 @@
                     <dd>发货模式</dd>
                 </dl>
             </div>
+            {{# if(d.cardMember == 0){ }}
+            <div class="ribbon-two ribbon-two-danger"><span>售罄</span></div>
+            {{# } }}
         </div>
     </div>
 </script>-->

@@ -206,11 +206,6 @@ public class IndexController {
             return paysVo;
         }).collect(Collectors.toList());
 
-        for (PaysVo paysVo : paysVoList) {
-
-            System.out.println(paysVo.toString());
-        }
-
         model.addAttribute("paysList", paysVoList);
 
         if (products.getIsWholesale() == 1) {

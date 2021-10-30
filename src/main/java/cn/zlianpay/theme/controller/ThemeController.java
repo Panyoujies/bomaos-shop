@@ -186,9 +186,9 @@ public class ThemeController extends BaseController {
         theme.setId(id);
         theme.setEnable(enabled);
         if (themeService.updateById(theme)) {
-            return JsonResult.ok("修改成功");
+            return JsonResult.ok("主题切换成功！");
         }
-        return JsonResult.error("修改失败");
+        return JsonResult.error("主题切换失败！");
     }
 
 }

@@ -578,7 +578,6 @@
     .zlian-card-bottom {
         margin-bottom: 0px;
     }
-
     .to-top {
         display: none;
     }
@@ -588,11 +587,18 @@
     }
 
     .body-card {
-        margin-top: -80px;
+        margin-top: -100px;
     }
 
     .ew-banner {
         display: block;
     }
 
+    .is-title-image {
+        display: none;
+    }
+
+    .is-title-text {
+        display: none;
+    }
 }
