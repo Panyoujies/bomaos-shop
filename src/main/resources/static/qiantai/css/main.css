@@ -560,7 +560,8 @@ body .layui-util-face .layui-layer-content {
     top: 0;
     left: 0;
     right: 0;
-    background-color: #fff;
+    backdrop-filter: saturate(5) blur(20px);
+    background: rgba(255, 255, 255, 0.8);
     z-index: 1000;
     box-shadow: 0px 0px 2px rgb(98 124 153 / 10%)
 }

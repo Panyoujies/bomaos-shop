@@ -576,6 +576,8 @@
 
     .zlian-card-bottom {
         margin-bottom: 0px;
+        backdrop-filter: saturate(5) blur(20px);
+        background: rgb(20 20 20 / 80%);
     }
     .to-top {
         display: none;
