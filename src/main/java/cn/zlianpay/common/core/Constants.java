@@ -30,6 +30,9 @@ public class Constants {
     /* 返回结果统一 */
     public static final int RESULT_OK_CODE = 0;  // 默认成功码
     public static final int RESULT_ERROR_CODE = 1;  // 默认失败码
-
-
+	
+    /**
+     * 支付超时时间(分钟)
+     */
+    public static Integer PAY_TIMEOUT_MINUTES = 5;
 }
