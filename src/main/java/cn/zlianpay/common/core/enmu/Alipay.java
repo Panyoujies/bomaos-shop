@@ -7,7 +7,6 @@ public enum Alipay {
     XUNHUPAY_ALIPAY("xunhupay_alipay"),
     JIEPAY_ALIPAY("jiepay_alipay"),
     PAYJS_ALIPAY("payjs_alipay"),
-    YUNFU_ALIPAY("yunfu_alipay"),
     ALIPAY("alipay");
 
     Alipay(String code) {

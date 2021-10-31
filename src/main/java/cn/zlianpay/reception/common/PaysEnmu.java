@@ -18,8 +18,6 @@ public enum PaysEnmu {
     JIEPAY_ALIPAY("jiepay_alipay"),
     PAYJS_WXPAY("payjs_wxpay"),
     PAYJS_ALIPAY("payjs_alipay"),
-    YUNFU_WXPAY("yunfu_wxpay"),
-    YUNFU_ALIPAY("yunfu_alipay"),
     WXPAY("wxpay"),
     ALIPAY("alipay"),
     WXPAU_H5("wxpay_h5"),

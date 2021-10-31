@@ -12,7 +12,6 @@ import cn.zlianpay.common.core.pays.paypal.config.PaypalPaymentIntent;
 import cn.zlianpay.common.core.pays.paypal.config.PaypalPaymentMethod;
 import cn.zlianpay.common.core.pays.wxpay.SendWxPay;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
-import cn.zlianpay.common.core.pays.yunfupay.SendYunfu;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.utils.UserAgentGetter;
@@ -305,18 +304,6 @@ public class OrderController extends BaseController {
                     payjs = sendPayjs.pay(pays, price, ordersMember, goodsName, productDescription);
                 }
                 model.addAttribute("result", JSON.toJSONString(payjs));
-                return "theme/" + theme.getDriver() + "/yunpay.html";
-            case YUNFU_WXPAY:
-            case YUNFU_ALIPAY:
-                String yunfu = "";
-                if (orders.getPayType().equals("yunfu_wxpay")) {
-                    model.addAttribute("type", 1);
-                    yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
-                } else if (orders.getPayType().equals("yunfu_alipay")) {
-                    model.addAttribute("type", 2);
-                    yunfu = SendYunfu.pay(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
-                }
-                model.addAttribute("result", JSON.toJSONString(yunfu));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
             case WXPAY:
                 String payNattve = SendWxPay.payNattve(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());

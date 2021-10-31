@@ -477,39 +477,6 @@ public class NotifyController {
         }
     }
 
-    @RequestMapping("/yunfu/notify")
-    @ResponseBody
-    public String yunfuNotify(HttpServletRequest request) {
-        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
-
-        String bank = params.get("bank");
-        String out_trade_no = params.get("out_trade_no");
-        String appid = params.get("appid");
-        String sign = params.get("sign");
-        String trade_no = params.get("trade_no");
-
-        Map<String, Object> payData = new HashMap<>();
-        payData.put("bank", bank);
-        payData.put("out_trade_no", out_trade_no);
-        payData.put("appid", appid);
-        payData.put("trade_no", trade_no);
-
-        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "yunfu_wxpay"));
-        Map mapTypes = JSON.parseObject(pays.getConfig());
-        String key = mapTypes.get("key").toString(); // 密钥
-        String newSign = cn.zlianpay.common.core.pays.yunfupay.SignUtil.createSign(payData, key);
-
-        if (sign.equals(newSign)) {
-            Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
-            Products products = productsService.getById(member.getProductId());
-
-            String returnBig = returnBig(member.getMoney().toString(), member.getMoney().toString(), out_trade_no, trade_no, products.getId().toString(), "SUCCESS", "fiald");
-            return returnBig;
-        } else {
-            return "fiald";
-        }
-    }
-
     /**
      * 微信官方异步通知
      * @param request

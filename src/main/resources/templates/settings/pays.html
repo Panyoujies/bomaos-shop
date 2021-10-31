@@ -33,9 +33,6 @@
     {{# if(d.driver=='payjs_wxpay' || d.driver=='payjs_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="payjs">配置修改</a>
     {{# } }}
-    {{# if(d.driver=='yunfu_wxpay' || d.driver=='yunfu_alipay'){ }}
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yunfu">配置修改</a>
-    {{# } }}
     {{# if(d.driver=='wxpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="wxpay">配置修改</a>
     {{# } }}
@@ -125,6 +122,7 @@
                        lay-verify="required" required/>
             </div>
         </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">支付驱动类型:</label>
             <div class="layui-input-block">
@@ -431,70 +429,6 @@
         </div>
         <div class="layui-form-item text-right">
             <button class="layui-btn" lay-filter="payjsEditSubmit" lay-submit>保存</button>
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
-        </div>
-    </form>
-</script>
-
-<!-- payjs -->
-<script type="text/html" id="yunfuEditDialog">
-    <form id="yunfuEditForm" lay-filter="yunfuEditForm" class="layui-form model-form">
-        <input name="id" type="hidden"/>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">支付类型名称:</label>
-            <div class="layui-input-block">
-                <input name="name" placeholder="请输入支付类型名称" class="layui-input" disabled=""
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
-            <div class="layui-input-block">
-                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input" disabled=""
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">appid:</label>
-            <div class="layui-input-block">
-                <input name="appid" placeholder="输入appid" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">key:</label>
-            <div class="layui-input-block">
-                <input name="key" placeholder="输入key" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">通知地址:</label>
-            <div class="layui-input-block">
-                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">说明:</label>
-            <div class="layui-input-block">
-                <input name="comment" placeholder="请输入说明" class="layui-input"
-                       lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">是否启用:</label>
-            <div class="layui-input-block">
-                <input type="radio" name="enabled" value="0" title="关闭" checked>
-                <input type="radio" name="enabled" value="1" title="启用">
-            </div>
-        </div>
-        <div class="layui-form-item text-right">
-            <button class="layui-btn" lay-filter="yunfuEditSubmit" lay-submit>保存</button>
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
@@ -844,8 +778,6 @@
                 showEditModel(obj.data);
             } else if ('payjs' === obj.event) {
                 showEditModel(obj.data);
-            } else if ('yunfu' === obj.event) {
-                showEditModel(obj.data);
             } else if ('wxpay' === obj.event) {
                 showEditModel(obj.data);
             } else if ('wxpay_h5' === obj.event) {
@@ -883,10 +815,6 @@
                 var html = $('#payjsEditDialog').html();
                 var forms = 'payjsEditForm';
                 var submit = 'payjsEditSubmit';
-            } else if (mData.driver == 'yunfu_wxpay' || mData.driver == 'yunfu_alipay') {
-                var html = $('#yunfuEditDialog').html();
-                var forms = 'yunfuEditForm';
-                var submit = 'yunfuEditSubmit';
             } else if (mData.driver == 'wxpay') {
                 var html = $('#wxpayEditDialog').html();
                 var forms = 'wxpayEditForm';
