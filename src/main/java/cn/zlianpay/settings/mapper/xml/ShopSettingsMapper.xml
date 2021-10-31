@@ -14,8 +14,8 @@
 				<if test="page.pageData.isWindow != null">
 					AND a.is_window = #{page.pageData.isWindow}
                 </if>
-				<if test="page.pageData.window != null">
-                    AND a.window LIKE CONCAT('%', #{page.pageData.window}, '%')
+				<if test="page.pageData.windowText != null">
+                    AND a.window_text LIKE CONCAT('%', #{page.pageData.windowText}, '%')
 				</if>
 				<if test="page.pageData.isBackground != null">
                     AND a.is_background LIKE CONCAT('%', #{page.pageData.isBackground}, '%')

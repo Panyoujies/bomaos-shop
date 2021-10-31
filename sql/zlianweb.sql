@@ -612,7 +612,7 @@ DROP TABLE IF EXISTS `sys_shop_settings`;
 CREATE TABLE `sys_shop_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `is_window` int(1) DEFAULT NULL COMMENT '是否开启弹窗',
-  `window` longtext COMMENT '弹窗内容',
+  `window_text` longtext COMMENT '弹窗内容',
   `is_background` varchar(255) DEFAULT NULL COMMENT '全局背景图',
   `store_details` longtext COMMENT '商店详情',
   `is_wxpusher` int(1) DEFAULT NULL COMMENT '是否开启微信通知',

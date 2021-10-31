@@ -32,7 +32,7 @@ public class ShopSettings implements Serializable {
     /**
      * 弹窗内容
      */
-    private String window;
+    private String windowText;
 
     /**
      * 全局背景图
