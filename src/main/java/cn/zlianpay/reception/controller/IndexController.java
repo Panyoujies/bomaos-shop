@@ -422,7 +422,7 @@ public class IndexController {
                     builder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
                     cardsList.add(builder.toString());
                 } else {
-                    builder.append("卡密：").append(cardInfo).append("\n");
+                    builder.append(cardInfo).append("\n");
                     cardsList.add(builder.toString());
                 }
             } else {
