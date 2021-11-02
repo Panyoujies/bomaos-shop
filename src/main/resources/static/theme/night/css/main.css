@@ -564,6 +564,7 @@ body .layui-util-face .layui-layer-content {
     top: 0;
     left: 0;
     right: 0;
+    -webkit-backdrop-filter: saturate(5) blur(20px);
     backdrop-filter: saturate(5) blur(20px);
     background: rgb(26 26 26 / 80%);
     box-shadow: 0px 0px 2px rgb(20 20 20 / 80%);

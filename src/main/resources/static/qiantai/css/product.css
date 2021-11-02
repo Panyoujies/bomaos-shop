@@ -537,6 +537,7 @@
         padding: 10px 15px 25px 15px;
         border-top: 1px solid #eeeeee;
         border-radius: 0;
+        -webkit-backdrop-filter: saturate(5) blur(20px);
         backdrop-filter: saturate(5) blur(20px);
         background: rgba(255, 255, 255, 0.8);
     }
@@ -579,6 +580,7 @@
 
     .zlian-card-bottom {
         margin-bottom: 0px;
+        -webkit-backdrop-filter: saturate(5) blur(20px);
         backdrop-filter: saturate(5) blur(20px);
         background: rgb(255 255 255 / 80%);
     }

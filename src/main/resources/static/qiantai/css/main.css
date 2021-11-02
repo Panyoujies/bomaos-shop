@@ -560,6 +560,7 @@ body .layui-util-face .layui-layer-content {
     top: 0;
     left: 0;
     right: 0;
+    -webkit-backdrop-filter: saturate(5) blur(20px);
     backdrop-filter: saturate(5) blur(20px);
     background: rgba(255, 255, 255, 0.8);
     z-index: 1000;
