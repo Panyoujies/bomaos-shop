@@ -108,7 +108,7 @@ public class OrdersController extends BaseController {
                         }
                         cardsList.add(cardInfoText.toString());
                     } else {
-                        cardInfoText.append(cardInfoText);
+                        cardInfoText.append(cardInfo);
                         cardsList.add(cardInfoText.toString());
                     }
                 }
@@ -379,6 +379,7 @@ public class OrdersController extends BaseController {
         Orders orders1 = new Orders();
         orders1.setId(orders.getId());
         orders1.setStatus(3);
+        orders1.setCardsInfo(shipInfo);
 
         if (ordersService.updateById(orders1)) { // 成功发送邮件
             if (FormCheckUtil.isEmail(email)) {
@@ -407,7 +408,7 @@ public class OrdersController extends BaseController {
     /**
      * 修改商品状态
      */
-    @OperLog(value = "商品列表管理", desc = "修改状态", result = true)
+    @OperLog(value = "商品列表管理", desc = "商品手动补单", result = true)
     @RequiresPermissions("orders:orders:update")
     @ResponseBody
     @RequestMapping("/status/update")
@@ -416,7 +417,7 @@ public class OrdersController extends BaseController {
         Orders member = ordersService.getById(id);
         if (member == null) return JsonResult.error("没有找到相关订单"); // 本地没有这个订单
 
-        boolean empty = StringUtils.isEmpty(member.getMember());
+        boolean empty = StringUtils.isEmpty(member.getCardsInfo());
         if (!empty) return JsonResult.ok("已经支付成功！自动发卡成功，补单失败");
 
         Products products = productsService.getById(productId);

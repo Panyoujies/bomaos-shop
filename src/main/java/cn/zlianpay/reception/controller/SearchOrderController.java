@@ -79,7 +79,7 @@ public class SearchOrderController extends BaseApiController {
                     }
                     cardsList.add(cardInfoText.toString());
                 } else {
-                    cardInfoText.append(cardInfoText);
+                    cardInfoText.append(cardInfo);
                     cardsList.add(cardInfoText.toString());
                 }
             }
