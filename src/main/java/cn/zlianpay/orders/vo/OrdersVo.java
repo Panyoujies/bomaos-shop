@@ -107,7 +107,7 @@ public class OrdersVo {
     /**
      * 卡密列表
      */
-    private List<Cards> cardInfo;
+    private List<String> cardInfo;
 
 
     /**

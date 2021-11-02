@@ -49,12 +49,6 @@ public class CardsController extends BaseController {
     }
 
     @RequiresPermissions("carmi:cards:view")
-    @RequestMapping("/sold")
-    public String viewSold() {
-        return "carmi/sold-cards.html";
-    }
-
-    @RequiresPermissions("carmi:cards:view")
     @RequestMapping("/add")
     public String ViewAdd(Model model) {
         List<Classifys> classifysList = classifysService.listAll(null);
@@ -71,31 +65,6 @@ public class CardsController extends BaseController {
     @RequestMapping("/page")
     public PageResult<CardsVo> page(HttpServletRequest request) {
         PageParam<Cards> pageParam = new PageParam<>(request);
-        pageParam.put("status", 0);
-        List<Cards> records = cardsService.page(pageParam, pageParam.getWrapper()).getRecords();
-        List<CardsVo> cardsVoList = records.stream().map((cards) -> {
-            CardsVo cardsVo = new CardsVo();
-            BeanUtils.copyProperties(cards, cardsVo);
-            // 查出商品的名称
-            Products products = productsService.getById(cards.getProductId());
-            cardsVo.setProductName(products.getName());
-            return cardsVo;
-        }).collect(Collectors.toList());
-        return new PageResult<>(cardsVoList, pageParam.getTotal());
-    }
-
-    /**
-     * 分页查询卡密
-     */
-    @RequiresPermissions("carmi:cards:list")
-    @OperLog(value = "卡密管理", desc = "分页查询")
-    @ResponseBody
-    @RequestMapping("/soldPage")
-    public PageResult<CardsVo> soldPage(HttpServletRequest request) {
-        PageParam<Cards> pageParam = new PageParam<>(request);
-        pageParam.put("status", 1);
-        pageParam.addOrderDesc("updated_at");
-
         List<Cards> records = cardsService.page(pageParam, pageParam.getWrapper()).getRecords();
         List<CardsVo> cardsVoList = records.stream().map((cards) -> {
             CardsVo cardsVo = new CardsVo();

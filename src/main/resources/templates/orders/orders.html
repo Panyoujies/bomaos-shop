@@ -202,6 +202,13 @@
     </div>
 </script>
 
+<script id="cardsInfoDialog" type="text/html">
+    <div style="padding: 15px">
+        <textarea placeholder="查看卡密信息" class="layui-textarea" style="height: 237px;">{{# layui.each(d,function(i,item){ }}{{item}}{{# }); }}</textarea>
+        <button class="layui-btn layui-btn-primary" style="margin-top: 15px" ew-event="closeDialog">关闭</button>
+    </div>
+</script>
+
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
 <script>
@@ -326,7 +333,7 @@
         });
 
         function doDel(mData) {
-            admin.confirm('该订单绑定卡密信息同时也会被删除、您确定要删除该订单吗？', function (i) {
+            admin.confirm('您确定要删除该订单吗？', function (i) {
                 layer.close(i);
                 var loadIndex = layer.load(2);
                 $.get('orders/deleteById', {id: mData.data.id}, function (res) {
@@ -477,30 +484,15 @@
             })
         }
 
-        /* 显示表单弹窗 */
+        /* 显示卡密信息弹窗 */
         function showEditModel(mData) {
-            layer.open({
-                type: 1
-                , offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-                , id: 'layerDemo' + mData.id //防止重复弹出
-                , content: getcardkey(mData)
-                , btn: '关闭'
-                , btnAlign: 'c' //按钮居中
-                , shade: 0 //不显示遮罩
-                , yes: function () {
-                    layer.closeAll();
-                }
+            admin.open({
+                type: 1,
+                title: '卡密信息',
+                content: $('#cardsInfoDialog').html(),
+                data: mData.cardInfo,
+                tpl: true
             });
-        }
-
-        // 获取卡密
-        function getcardkey(data) {
-            var list = data.cardInfo;
-            var html = '';
-            for (const listElement of list) {
-                html += '<div style="padding: 20px 100px;">卡密: ' + listElement.cardInfo + '</div>'
-            }
-            return html;
         }
 
     });

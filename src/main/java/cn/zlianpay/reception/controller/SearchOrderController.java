@@ -1,11 +1,6 @@
 package cn.zlianpay.reception.controller;
 
-import cn.zlianpay.carmi.entity.Cards;
-import cn.zlianpay.carmi.entity.OrderCard;
-import cn.zlianpay.carmi.service.CardsService;
-import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.web.BaseApiController;
-import cn.zlianpay.common.system.entity.User;
 import cn.zlianpay.orders.entity.Orders;
 import cn.zlianpay.orders.service.OrdersService;
 import cn.zlianpay.orders.vo.OrdersVo;
@@ -25,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,12 +48,6 @@ public class SearchOrderController extends BaseApiController {
     private ShopSettingsService shopSettingsService;
 
     @Autowired
-    private OrderCardService orderCardService;
-
-    @Autowired
-    private CardsService cardsService;
-
-    @Autowired
     private WebsiteService websiteService;
 
     @RequestMapping("/order")
@@ -75,26 +65,23 @@ public class SearchOrderController extends BaseApiController {
         Products products = productsService.getById(member.getProductId());
         Classifys classifys = classifysService.getById(products.getClassifyId());
 
-        List<OrderCard> ordersList = orderCardService.list(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
         List<String> cardsList = new ArrayList<>();
-        for (OrderCard orderCard : ordersList) {
-            Cards cards = cardsService.getById(orderCard.getCardId());
-
-            String cardInfo = cards.getCardInfo();
-            StringBuilder builder = new StringBuilder();
-
-            if (products.getShipType() == 0) {
-                if (cardInfo.contains(" ")) {
-                    String[] split = cardInfo.split(" ");
-                    builder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                    cardsList.add(builder.toString());
+        if (!StringUtils.isEmpty(member.getCardsInfo())) {
+            String[] cardsInfo = member.getCardsInfo().split(",");
+            for (String cardInfo : cardsInfo) {
+                StringBuilder cardInfoText = new StringBuilder();
+                if (products.getShipType() == 0) {
+                    if (cardInfo.contains(" ")) {
+                        String[] split = cardInfo.split(" ");
+                        cardInfoText.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                    } else {
+                        cardInfoText.append(cardInfo).append("\n");
+                    }
+                    cardsList.add(cardInfoText.toString());
                 } else {
-                    builder.append("卡密：").append(cardInfo).append("\n");
-                    cardsList.add(builder.toString());
+                    cardInfoText.append(cardInfoText);
+                    cardsList.add(cardInfoText.toString());
                 }
-            } else {
-                builder.append(cardInfo);
-                cardsList.add(builder.toString());
             }
         }
 

@@ -2,9 +2,7 @@ package cn.zlianpay.reception.controller;
 
 import cn.hutool.crypto.SecureUtil;
 import cn.zlianpay.carmi.entity.Cards;
-import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
-import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.pays.payjs.SignUtil;
 import cn.zlianpay.common.core.pays.paypal.PaypalSend;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
@@ -16,9 +14,7 @@ import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import com.alibaba.fastjson.JSON;
-import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
-import com.alipay.demo.trade.config.Configs;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
 import cn.zlianpay.common.core.utils.RequestParamsUtil;
@@ -30,7 +26,6 @@ import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.service.ProductsService;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
-import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.Transaction;
@@ -55,8 +50,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller
 @Transactional
@@ -73,9 +66,6 @@ public class NotifyController {
 
     @Autowired
     private CardsService cardsService;
-
-    @Autowired
-    private OrderCardService orderCardService;
 
     @Autowired
     private EmailService emailService;
@@ -678,8 +668,8 @@ public class NotifyController {
         Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
         if (member == null) return fiald; // 本地没有这个订单
 
-        int count = orderCardService.count(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
-        if (count >= 1)  return success;
+        boolean empty = StringUtils.isEmpty(member.getCardsInfo());
+        if (!empty)  return success;
 
         Products products = productsService.getById(param);
         if (products == null) return fiald; // 商品没了
@@ -688,22 +678,30 @@ public class NotifyController {
         ShopSettings shopSettings = shopSettingsService.getById(1);
 
         if (products.getShipType() == 0) { // 自动发货的商品
+
+            /**
+             * 卡密信息列表
+             * 通过商品购买数量来获取对应商品的卡密数量
+             */
             List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-            if (card == null) return fiald;
+            if (card == null) return fiald; // 空值的话直接返回错误提示
 
-            List<OrderCard> cardList = new ArrayList<>();
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+            StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
+
             for (Cards cards : card) {
-                OrderCard orderCard = new OrderCard();
-                orderCard.setCardId(cards.getId());
-                orderCard.setOrderId(member.getId());
-                orderCard.setCreatedAt(new Date());
-                cardList.add(orderCard);
+                orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
 
+                /**
+                 * 设置每条被购买的卡密的售出状态
+                 */
                 Cards cards1 = new Cards();
                 cards1.setId(cards.getId());
                 cards1.setStatus(1);
                 cards1.setUpdatedAt(new Date());
+
+                // 设置售出的卡密
+                cardsService.updateById(cards1);
 
                 if (cards.getCardInfo().contains(" ")) {
                     String[] split = cards.getCardInfo().split(" ");
@@ -711,10 +709,24 @@ public class NotifyController {
                 } else {
                     stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
                 }
-                // 设置售出的卡密
-                cardsService.updateById(cards1);
             }
 
+            // 去除多余尾部的逗号
+            String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+
+            Orders orders = new Orders();
+            orders.setId(member.getId());
+            orders.setCardsInfo(result);
+
+            // 更新售出卡密
+            ordersService.updateById(orders);
+
+            /**
+             * 微信的 wxpush 通知
+             * 本通知只针对站长
+             * 当用户购买成功后会给您设置的
+             * wxpush 微信公众号发送订单购买成功后的通知
+             */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
                 message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
@@ -724,6 +736,11 @@ public class NotifyController {
                 WxPusher.send(message);
             }
 
+            /**
+             * 邮件通知
+             * 后台开启邮件通知，
+             * 这里会给下单用户的邮箱发送一条邮件
+             */
             if (shopSettings.getIsEmail() == 1) {
                 if (!StringUtils.isEmpty(member.getEmail())) {
                     if (FormCheckUtil.isEmail(member.getEmail())) {
@@ -741,18 +758,18 @@ public class NotifyController {
                     }
                 }
             }
-
-            /**
-             * 关联卡密
-             */
-            orderCardService.saveBatch(cardList);
-
         } else { // 手动发货商品
             Products products1 = new Products();
             products1.setId(products.getId());
             products1.setInventory(products.getInventory() - member.getNumber());
             products1.setSales(products.getSales() + member.getNumber());
 
+            /**
+             * 微信的 wxpush 通知
+             * 本通知只针对站长
+             * 当用户购买成功后会给您设置的
+             * wxpush 微信公众号发送订单购买成功后的通知
+             */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
                 message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
@@ -762,9 +779,18 @@ public class NotifyController {
                 WxPusher.send(message);
             }
 
+            /**
+             * 邮件通知
+             * 后台开启邮件通知，
+             * 这里会给下单用户的邮箱发送一条邮件
+             */
             if (shopSettings.getIsEmail() == 1) {
                 if (FormCheckUtil.isEmail(member.getEmail())) {
-                    emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                    try {
+                        emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             productsService.updateById(products1);
@@ -786,7 +812,7 @@ public class NotifyController {
         orders.setPayNo(pay_no);
         orders.setPrice(new BigDecimal(price));
         orders.setMoney(new BigDecimal(money));
-        boolean b = ordersService.updateById(orders);// 更新售出
+        ordersService.updateById(orders); // 更新售出
         return success;
     }
 

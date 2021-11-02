@@ -1,9 +1,7 @@
 package cn.zlianpay.reception.controller;
 
 import cn.zlianpay.carmi.entity.Cards;
-import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
-import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.pays.alipay.SendAlipay;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.payjs.sendPayjs;
@@ -27,12 +25,9 @@ import cn.zlianpay.theme.entity.Theme;
 import cn.zlianpay.theme.service.ThemeService;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import cn.zlianpay.carmi.entity.Cards;
-import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
 import cn.zlianpay.common.core.pays.yungouos.YunGouosConfig;
-import cn.zlianpay.common.core.utils.StringUtil;
 import cn.zlianpay.orders.entity.Orders;
 import cn.zlianpay.orders.service.OrdersService;
 import cn.zlianpay.products.entity.Products;
@@ -46,9 +41,6 @@ import com.paypal.api.payments.Payment;
 import com.zjiecode.wxpusher.client.WxPusher;
 import com.zjiecode.wxpusher.client.bean.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DevicePlatform;
-import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -63,9 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.util.*;
 
 @Controller
@@ -95,9 +85,6 @@ public class OrderController extends BaseController {
 
     @Autowired
     private EmailService emailService;
-
-    @Autowired
-    private OrderCardService orderCardService;
 
     @Autowired
     private ShopSettingsService shopSettingsService;
@@ -356,8 +343,7 @@ public class OrderController extends BaseController {
             return false; // 本地没有这个订单
         }
 
-        int count = orderCardService.count(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
-        if (count >= 1) {
+        if (!StringUtils.isEmpty(member.getCardsInfo())) {
             return true;
         }
 
@@ -375,14 +361,8 @@ public class OrderController extends BaseController {
                 return false;
             }
 
-            List<OrderCard> cardList = new ArrayList<>();
             StringBuilder stringBuilder = new StringBuilder();
             for (Cards cards : card) {
-                OrderCard orderCard = new OrderCard();
-                orderCard.setCardId(cards.getId());
-                orderCard.setOrderId(member.getId());
-                orderCard.setCreatedAt(new Date());
-                cardList.add(orderCard);
 
                 Cards cards1 = new Cards();
                 cards1.setId(cards.getId());
@@ -418,18 +398,12 @@ public class OrderController extends BaseController {
                         map.put("info", stringBuilder.toString());
                         try {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
-                            // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }
             }
-
-            /**
-             * 关联卡密
-             */
-            orderCardService.saveBatch(cardList);
 
         } else { // 手动发货商品
             Products products1 = new Products();

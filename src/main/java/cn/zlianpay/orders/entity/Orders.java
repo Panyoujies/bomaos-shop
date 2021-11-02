@@ -123,4 +123,9 @@ public class Orders implements Serializable {
      * 订单密码
      */
     private String password;
+
+    /**
+     * 卡密信息
+     */
+    private String cardsInfo;
 }

@@ -1,8 +1,6 @@
 package cn.zlianpay.orders.service.impl;
 
-import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.mapper.CardsMapper;
-import cn.zlianpay.carmi.mapper.OrderCardMapper;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.PageParam;
 import cn.zlianpay.common.core.web.PageResult;
@@ -22,7 +20,6 @@ import cn.zlianpay.products.mapper.ProductsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,9 +40,6 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Autowired
     private CouponMapper couponMapper;
-
-    @Autowired
-    private OrderCardMapper orderCardMapper;
 
     @Autowired
     private CardsMapper cardsMapper;
@@ -222,33 +216,16 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         List<Orders> list = this.list(queryWrapper);
         List<Integer> ids = new ArrayList<>();
         for (Orders orders : list) {
-            List<OrderCard> orderCardList = orderCardMapper.selectList(new QueryWrapper<OrderCard>().eq("order_id", orders.getId()));
-            if (!ObjectUtils.isEmpty(orderCardList)) {
-                List<Integer> cardIds = new ArrayList<>();
-                for (OrderCard orderCard : orderCardList) {
-                    cardIds.add(orderCard.getCardId());
-                }
-                cardsMapper.deleteBatchIds(cardIds);
-            }
             ids.add(orders.getId());
         }
 
-        boolean b = this.removeByIds(ids);
-        return b;
+        boolean removeByIds = this.removeByIds(ids);
+        return removeByIds;
     }
 
     @Override
     public boolean deleteById(Integer id) {
-        List<OrderCard> orderCardList = orderCardMapper.selectList(new QueryWrapper<OrderCard>().eq("order_id", id));
-        if (!ObjectUtils.isEmpty(orderCardList)) {
-            List<Integer> cardIds = new ArrayList<>();
-            for (OrderCard orderCard : orderCardList) {
-                cardIds.add(orderCard.getCardId());
-            }
-            cardsMapper.deleteBatchIds(cardIds);
-        }
-        boolean delete = this.removeById(id);
-        return delete;
+        return this.removeById(id);
     }
 
     /**

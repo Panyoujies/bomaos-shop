@@ -1,15 +1,13 @@
 package cn.zlianpay.reception.controller;
 
 import cn.zlianpay.carmi.entity.Cards;
-import cn.zlianpay.carmi.entity.OrderCard;
 import cn.zlianpay.carmi.service.CardsService;
-import cn.zlianpay.carmi.service.OrderCardService;
 import cn.zlianpay.common.core.enmu.Alipay;
 import cn.zlianpay.common.core.enmu.Paypal;
 import cn.zlianpay.common.core.enmu.QQPay;
 import cn.zlianpay.common.core.enmu.Wxpay;
+import cn.zlianpay.common.core.utils.DateUtil;
 import cn.zlianpay.common.core.web.JsonResult;
-import cn.zlianpay.orders.vo.OrderVos;
 import cn.zlianpay.reception.dto.ProductDTO;
 import cn.zlianpay.reception.dto.SearchDTO;
 import cn.zlianpay.settings.entity.Coupon;
@@ -29,7 +27,6 @@ import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.service.ClassifysService;
 import cn.zlianpay.products.service.ProductsService;
 import cn.zlianpay.products.vo.ClassifysVo;
-import cn.zlianpay.products.vo.ProductsVo;
 import cn.zlianpay.products.vo.ProductsVos;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
@@ -76,9 +73,6 @@ public class IndexController {
 
     @Autowired
     private OrdersService ordersService;
-
-    @Autowired
-    private OrderCardService orderCardService;
 
     @Autowired
     private WebsiteService websiteService;
@@ -410,32 +404,31 @@ public class IndexController {
             }
         }
         Classifys classifys = classifysService.getById(products.getClassifyId());
-        List<OrderCard> ordersList = orderCardService.list(new QueryWrapper<OrderCard>().eq("order_id", member.getId()));
+
         List<String> cardsList = new ArrayList<>();
-        for (OrderCard orderCard : ordersList) {
-            Cards cards = cardsService.getById(orderCard.getCardId());
-            String cardInfo = cards.getCardInfo();
-            StringBuilder builder = new StringBuilder();
-            if (products.getShipType() == 0) {
-                if (cardInfo.contains(" ")) {
-                    String[] split = cardInfo.split(" ");
-                    builder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                    cardsList.add(builder.toString());
+        if (!StringUtils.isEmpty(member.getCardsInfo())) {
+            String[] cardsInfo = member.getCardsInfo().split(",");
+            for (String cardInfo : cardsInfo) {
+                StringBuilder cardInfoText = new StringBuilder();
+                if (products.getShipType() == 0) {
+                    if (cardInfo.contains(" ")) {
+                        String[] split = cardInfo.split(" ");
+                        cardInfoText.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                    } else {
+                        cardInfoText.append(cardInfo).append("\n");
+                    }
+                    cardsList.add(cardInfoText.toString());
                 } else {
-                    builder.append(cardInfo).append("\n");
-                    cardsList.add(builder.toString());
+                    cardInfoText.append(cardInfoText);
+                    cardsList.add(cardInfoText.toString());
                 }
-            } else {
-                builder.append(builder);
-                cardsList.add(builder.toString());
             }
         }
+
         OrdersVo ordersVo = new OrdersVo();
         BeanUtils.copyProperties(member, ordersVo);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
         if (member.getPayTime() != null) {
-            String date = df.format(member.getPayTime());// new Date()为获取当前系统时间，也可使用当前时间戳
-            ordersVo.setPayTime(date);
+            ordersVo.setPayTime(DateUtil.getDate());
         } else {
             ordersVo.setPayTime(null);
         }
