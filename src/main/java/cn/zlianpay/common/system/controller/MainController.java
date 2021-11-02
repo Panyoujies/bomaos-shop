@@ -115,7 +115,8 @@ public class MainController extends BaseController implements ErrorController {
             String jsonString = JSON.toJSONString(map);
             pays1.setConfig(jsonString);
             pays1.setComment("Paypal 境外支付（默认美元交易）");
-            pays1.setEnabled(0);
+            pays1.setIsMobile(0);
+            pays1.setIsPc(0);
             pays1.setCreatedAt(new Date());
             pays1.setUpdatedAt(new Date());
             paysService.save(pays1);
@@ -135,7 +136,8 @@ public class MainController extends BaseController implements ErrorController {
             String jsonString = JSON.toJSONString(map);
             pays1.setConfig(jsonString);
             pays1.setComment("易支付 - QQ钱包");
-            pays1.setEnabled(0);
+            pays1.setIsMobile(0);
+            pays1.setIsPc(0);
             pays1.setCreatedAt(new Date());
             pays1.setUpdatedAt(new Date());
             paysService.save(pays1);
