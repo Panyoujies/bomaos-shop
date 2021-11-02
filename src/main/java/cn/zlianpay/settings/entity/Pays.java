@@ -46,9 +46,14 @@ public class Pays implements Serializable {
     private String comment;
 
     /**
-     * 开关
+     * 移动端显示开关
      */
-    private Integer enabled;
+    private Integer isMobile;
+
+    /**
+     * 电脑端显示开关
+     */
+    private Integer isPc;
 
     /**
      * 创建时间

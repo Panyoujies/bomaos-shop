@@ -173,34 +173,36 @@ public class IndexController {
 
         Device currentDevice = DeviceUtils.getCurrentDevice(request);
         DevicePlatform devicePlatform = currentDevice.getDevicePlatform();
-        Integer isMobile;
+        AtomicInteger index = new AtomicInteger(0);
         if (devicePlatform.name().equals("IOS") || devicePlatform.name().equals("ANDROID")) {
-            isMobile = 1;
+            /**
+             * 查出启用的支付驱动列表
+             */
+            List<Pays> paysList = paysService.list(new QueryWrapper<Pays>().eq("is_mobile", 1));
+            List<PaysVo> paysVoList = paysList.stream().map((pays) -> {
+                PaysVo paysVo = new PaysVo();
+                BeanUtils.copyProperties(pays, paysVo);
+                int andIncrement = index.getAndIncrement();
+                paysVo.setAndIncrement(andIncrement); // 索引
+                return paysVo;
+            }).collect(Collectors.toList());
+            model.addAttribute("paysList", paysVoList);
         } else {
-            isMobile = 0;
+            /**
+             * 查出启用的支付驱动列表
+             */
+            List<Pays> paysList = paysService.list(new QueryWrapper<Pays>().eq("is_pc", 1));
+            List<PaysVo> paysVoList = paysList.stream().map((pays) -> {
+                PaysVo paysVo = new PaysVo();
+                BeanUtils.copyProperties(pays, paysVo);
+                int andIncrement = index.getAndIncrement();
+                paysVo.setAndIncrement(andIncrement); // 索引
+                return paysVo;
+            }).collect(Collectors.toList());
+            model.addAttribute("paysList", paysVoList);
         }
-        Pays isWxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "wxpay").eq("enabled", 1));
-        model.addAttribute("isWxPays", isWxPays);
-        Pays isWxH5Pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "wxpay_h5").eq("enabled", 1));
-        model.addAttribute("isWxH5Pays", isWxH5Pays);
-        model.addAttribute("isMobile", isMobile);
         model.addAttribute("products", products);
         model.addAttribute("classifyName", classifys.getName());
-
-        AtomicInteger index = new AtomicInteger(0);
-        /**
-         * 查出启用的支付驱动列表
-         */
-        List<Pays> paysList = paysService.list(new QueryWrapper<Pays>().eq("enabled", 1));
-        List<PaysVo> paysVoList = paysList.stream().map((pays) -> {
-            PaysVo paysVo = new PaysVo();
-            BeanUtils.copyProperties(pays, paysVo);
-            int andIncrement = index.getAndIncrement();
-            paysVo.setAndIncrement(andIncrement); // 索引
-            return paysVo;
-        }).collect(Collectors.toList());
-
-        model.addAttribute("paysList", paysVoList);
 
         if (products.getIsWholesale() == 1) {
             String wholesale = products.getWholesale();

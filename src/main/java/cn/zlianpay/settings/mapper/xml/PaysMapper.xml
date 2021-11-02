@@ -20,8 +20,11 @@
 				<if test="page.pageData.comment != null">
                     AND a.comment LIKE CONCAT('%', #{page.pageData.comment}, '%')
 				</if>
-				<if test="page.pageData.enabled != null">
-					AND a.enabled = #{page.pageData.enabled}
+				<if test="page.pageData.isMobile != null">
+					AND a.is_mobile = #{page.pageData.isMobile}
+                </if>
+                <if test="page.pageData.isPc != null">
+                    AND a.is_pc = #{page.pageData.isPc}
                 </if>
 				<if test="page.pageData.createdAt != null">
                     AND a.created_at LIKE CONCAT('%', #{page.pageData.createdAt}, '%')

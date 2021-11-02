@@ -332,21 +332,41 @@ public class PaysController extends BaseController {
     /**
      * 修改商品状态
      */
-    @OperLog(value = "分类列表管理", desc = "修改状态", result = true)
+    @OperLog(value = "分类列表管理", desc = "修改移动端状态", result = true)
     @RequiresPermissions("products:products:update")
     @ResponseBody
-    @RequestMapping("/status/update")
-    public JsonResult updateStates(Integer id, Integer enabled) {
+    @RequestMapping("/status/updateMobile")
+    public JsonResult updateIsMobileStates(Integer id, Integer enabled) {
         if (enabled == null || (enabled != 0 && enabled != 1)) {
             return JsonResult.error("状态值不正确");
         }
         Pays pays = new Pays();
         pays.setId(id);
-        pays.setEnabled(enabled);
+        pays.setIsMobile(enabled);
         if (paysService.updateById(pays)) {
-            return JsonResult.ok("修改成功");
+            return JsonResult.ok("移动端支付开启成功");
         }
         return JsonResult.error("修改失败");
+    }
+
+    /**
+     * 修改商品状态
+     */
+    @OperLog(value = "分类列表管理", desc = "修改电脑端状态", result = true)
+    @RequiresPermissions("products:products:update")
+    @ResponseBody
+    @RequestMapping("/status/updatePc")
+    public JsonResult updateIsPcStates(Integer id, Integer enabled) {
+        if (enabled == null || (enabled != 0 && enabled != 1)) {
+            return JsonResult.error("状态值不正确");
+        }
+        Pays pays = new Pays();
+        pays.setId(id);
+        pays.setIsPc(enabled);
+        if (paysService.updateById(pays)) {
+            return JsonResult.ok("电脑端支付开启成功");
+        }
+        return JsonResult.error("开启失败");
     }
 
 }

@@ -715,11 +715,18 @@
     </form>
 </script>
 
-<!-- 商品状态 -->
-<script type="text/html" id="paysTbStatus">
-    <input type="checkbox" lay-filter="paysTbStatuCk" value="{{d.id}}" lay-skin="switch"
-           lay-text="开启|关闭" {{d.enabled==1?'checked':''}}/>
+<!-- 移动端状态 -->
+<script type="text/html" id="paysMobileTbStatus">
+    <input type="checkbox" lay-filter="paysMobileTbStatuCk" value="{{d.id}}" lay-skin="switch"
+           lay-text="开启|关闭" {{d.isMobile==1?'checked':''}}/>
 </script>
+
+<!-- 电脑端状态 -->
+<script type="text/html" id="paysPcTbStatus">
+    <input type="checkbox" lay-filter="paysPcTbStatuCk" value="{{d.id}}" lay-skin="switch"
+           lay-text="开启|关闭" {{d.isPc==1?'checked':''}}/>
+</script>
+
 <:include file="../common/js.html"/>
 <script>
     layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice'], function () {
@@ -758,7 +765,8 @@
                 },
                 {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
-                {field: 'enabled', title: '开关', templet: '#paysTbStatus', width: 90},
+                {field: 'isMobile', title: '移动端', templet: '#paysMobileTbStatus', width: 90},
+                {field: 'isPc', title: '电脑端', templet: '#paysPcTbStatus', width: 90},
                 {field: 'updatedAt', title: '更新时间', width: 200},
                 {title: '操作', toolbar: '#paysTbBar', align: 'center', width: 130}
             ]]
@@ -859,10 +867,10 @@
             });
         }
 
-        /* 修改商品状态 */
-        form.on('switch(paysTbStatuCk)', function (obj) {
+        /* 修改移动端支付状态 */
+        form.on('switch(paysMobileTbStatuCk)', function (obj) {
             var loadIndex = layer.load(2);
-            $.post('pays/status/update', {
+            $.post('pays/status/updateMobile', {
                 id: obj.elem.value,
                 enabled: obj.elem.checked ? 1 : 0
             }, function (res) {
@@ -877,6 +885,23 @@
             });
         });
 
+        /* 修改移动端支付状态 */
+        form.on('switch(paysPcTbStatuCk)', function (obj) {
+            var loadIndex = layer.load(2);
+            $.post('pays/status/updatePc', {
+                id: obj.elem.value,
+                enabled: obj.elem.checked ? 1 : 0
+            }, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    notice.msg(res.msg, {icon: 1});
+                } else {
+                    notice.msg(res.msg, {icon: 2});
+                    $(obj.elem).prop('checked', !obj.elem.checked);
+                    form.render('checkbox', $('#paysTable').next().attr('lay-filter'));
+                }
+            });
+        });
     });
 </script>
 </body>

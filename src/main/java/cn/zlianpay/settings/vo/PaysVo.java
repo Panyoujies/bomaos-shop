@@ -62,9 +62,14 @@ public class PaysVo {
     private String comment;
 
     /**
-     * 是否启用
+     * 移动端显示开关
      */
-    private Integer enabled;
+    private Integer isMobile;
+
+    /**
+     * 电脑端显示开关
+     */
+    private Integer isPc;
 
     /**
      * 创建时间
