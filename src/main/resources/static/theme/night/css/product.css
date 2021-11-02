@@ -533,17 +533,19 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: #141414;
         z-index: 1000;
         padding: 10px 15px 25px 15px;
         border-top: 1px solid #2e2e2e;
+        border-radius: 0;
+        backdrop-filter: saturate(5) blur(20px);
+        background: rgb(26 26 26 / 80%);
     }
 
     .card-shows {
         margin-bottom: 80px !important;
     }
 
-    .uuip {
+    .zlian-ismobile {
         display: none !important;
     }
 
@@ -576,7 +578,7 @@
 
     .zlian-card-bottom {
         margin-bottom: 0px;
-        backdrop-filter: saturate(5) blur(20px);
+        backdrop-filter: saturate(5) blur(20xpx);
         background: rgb(20 20 20 / 80%);
     }
     .to-top {

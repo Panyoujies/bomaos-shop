@@ -20,7 +20,7 @@
         display: none;
     }
 
-    .uuip {
+    .zlian-ismobile {
         display: block !important;
     }
 }
@@ -110,6 +110,6 @@
     display: block;
 }
 
-.uuip {
+.zlian-ismobile {
     display: none;
 }

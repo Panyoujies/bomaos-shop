@@ -533,17 +533,19 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(0deg, #ececec, #ffffff);
         z-index: 1000;
         padding: 10px 15px 25px 15px;
         border-top: 1px solid #eeeeee;
+        border-radius: 0;
+        backdrop-filter: saturate(5) blur(20px);
+        background: rgba(255, 255, 255, 0.8);
     }
 
     .card-shows {
         margin-bottom: 80px !important;
     }
 
-    .uuip {
+    .zlian-ismobile {
         display: none !important;
     }
 
@@ -580,7 +582,7 @@
         backdrop-filter: saturate(5) blur(20px);
         background: rgb(255 255 255 / 80%);
     }
-    }
+
     .to-top {
         display: none;
     }
