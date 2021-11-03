@@ -24,6 +24,7 @@ import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.theme.entity.Theme;
 import cn.zlianpay.theme.service.ThemeService;
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
@@ -200,6 +201,47 @@ public class OrderController extends BaseController {
             e.printStackTrace();
             return JsonResult.error("订单创建失败");
         }
+    }
+
+    @OperLog(value = "支付", desc = "提交支付")
+    @ResponseBody
+    @RequestMapping(value = "/alipayPc/{member}", produces = "text/html")
+    public String payAlipayPc(@PathVariable("member") String member, HttpServletResponse response) throws IOException, NoSuchAlgorithmException {
+        Orders orders = ordersService.selectByMember(member);
+        Products products = productsService.getById(orders.getProductId());
+
+        String productDescription = products.getId().toString(); // 订单备注
+        String ordersMember = orders.getMember(); // 订单号
+        String goodsName = products.getName(); // 订单主题
+        String price = orders.getMoney().toString();
+
+        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()));
+
+        if (price.equals("0.00")) { // 0元商品 直接完成支付
+            String currentTime = Long.toString(System.currentTimeMillis());
+            boolean big = returnBig(price, price, orders.getMember(), currentTime, productDescription);
+            if (big) {
+                response.sendRedirect("/search/order/" + orders.getMember());
+                return null;
+            }
+        }
+        /**
+        * 创建支付接口
+        * 使用枚举加switch
+        */
+        switch (Objects.requireNonNull(PaysEnmu.getByValue(orders.getPayType()))) {
+            case ALIPAY_PC: // 支付宝pc支付
+                try {
+                    String payAlipayPc = SendAlipay.payAlipayPc(pays, price, ordersMember, goodsName, productDescription);
+                    return payAlipayPc;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
+        return null;
     }
 
     @OperLog(value = "支付", desc = "提交支付")

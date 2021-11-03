@@ -42,6 +42,9 @@
     {{# if(d.driver=='alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="alipay">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='alipay_pc'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="alipay">配置修改</a>
+    {{# } }}
     {{# if(d.driver=='paypal'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="paypal">配置修改</a>
     {{# } }}
@@ -756,6 +759,8 @@
                         return '<span class="layui-badge layui-badge-green">微信</span>'
                     } else if(res.name == '支付宝') {
                         return '<span class="layui-badge layui-badge-blue">支付宝</span>'
+                    } else if(res.name == '支付宝PC') {
+                        return '<span class="layui-badge layui-badge-blue">支付宝PC</span>'
                     } else if (res.name == 'Paypal'){
                         return '<span class="layui-badge layui-badge-paypal">Paypal</span>'
                     } else if (res.name == 'QQ钱包'){
@@ -831,7 +836,7 @@
                 var html = $('#wxpayh5EditDialog').html();
                 var forms = 'wxpayh5EditForm';
                 var submit = 'wxpayh5EditSubmit';
-            } else if (mData.driver == 'alipay') {
+            } else if (mData.driver == 'alipay' || mData.driver == 'alipay_pc') {
                 var html = $('#alipayEditDialog').html();
                 var forms = 'alipayEditForm';
                 var submit = 'alipayEditSubmit';

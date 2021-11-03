@@ -77,6 +77,7 @@ public class ShiroConfig {
 
         // 支付
         filterChainDefinitions.put("/pay/**", "anon");
+        filterChainDefinitions.put("/alipayPc/**", "anon");
         filterChainDefinitions.put("/order/state/**", "anon");
         filterChainDefinitions.put("/pay/state/**", "anon");
 
@@ -93,6 +94,7 @@ public class ShiroConfig {
         filterChainDefinitions.put("/payjs/notify", "anon");
         filterChainDefinitions.put("/wxpay/notify", "anon");
         filterChainDefinitions.put("/alipay/notify", "anon");
+        filterChainDefinitions.put("/alipay/return_url", "anon");
         filterChainDefinitions.put("/paypal/cancel", "anon");
         filterChainDefinitions.put("/paypal/success", "anon");
         filterChainDefinitions.put("/wxpusher/callback", "anon");

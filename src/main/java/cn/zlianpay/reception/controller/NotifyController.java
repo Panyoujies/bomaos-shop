@@ -14,6 +14,7 @@ import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
@@ -598,6 +599,74 @@ public class NotifyController {
             return failure;
         }
         return returnBig;
+    }
+
+    /**
+     * 支付宝PC支付返回接口
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("/alipay/return_url")
+    public void alipayReturnUrl(HttpServletRequest request, HttpServletResponse response) throws IOException, AlipayApiException {
+
+        // 签名方式
+        String sign_type = "RSA2";
+
+        // 字符编码格式
+        String charset = "utf-8";
+
+        /**
+         *验证通知 处理自己的业务
+         */;
+        // 获取支付宝GET过来反馈信息
+        Map<String, String> params = new HashMap<>();
+        Map<String, String[]> requestParams = request.getParameterMap();
+        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
+            String name = iter.next();
+            String[] values = requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
+            }
+            params.put(name, valueStr);
+        }
+
+        Pays aliPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay_pc"));
+        Map aliMap = JSON.parseObject(aliPays.getConfig());
+        String alipay_public_key = aliMap.get("alipay_public_key").toString();
+
+        // 调用SDK验证签名
+        boolean signVerified = AlipaySignature.rsaCheckV1(params,
+                alipay_public_key,
+                charset,
+                sign_type); //调用SDK验证签名
+
+        // 验签成功
+        if (signVerified) {
+
+            // 同步通知返回的参数（部分说明）
+            // out_trade_no :	商户订单号
+            // trade_no : 支付宝交易号
+            // total_amount ： 交易金额
+            // auth_app_id/app_id : 商户APPID
+            // seller_id ：收款支付宝账号对应的支付宝唯一用户号(商户UID )
+            System.out.println("****************** 支付宝同步通知成功   ******************");
+            System.out.println("同步通知返回参数：" + params.toString());
+            System.out.println("****************** 支付宝同步通知成功   ******************");
+            String pay_no = params.get("trade_no"); // 流水号
+            String member = params.get("out_trade_no");// 商户订单号
+
+            if (pay_no != null || pay_no != "") {
+                String url = "/search/order/" + member;
+                response.sendRedirect(url);
+            }
+        } else {
+            System.out.println("支付, 验签失败...");
+        }
+
     }
 
     /**

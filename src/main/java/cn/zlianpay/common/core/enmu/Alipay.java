@@ -7,7 +7,8 @@ public enum Alipay {
     XUNHUPAY_ALIPAY("xunhupay_alipay"),
     JIEPAY_ALIPAY("jiepay_alipay"),
     PAYJS_ALIPAY("payjs_alipay"),
-    ALIPAY("alipay");
+    ALIPAY("alipay"),
+    ALIPAY_PC("alipay_pc");
 
     Alipay(String code) {
         this.code = code;

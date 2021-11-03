@@ -3,6 +3,10 @@ package cn.zlianpay.common.core.pays.alipay;
 import cn.zlianpay.settings.entity.Pays;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.GoodsDetail;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
@@ -130,6 +134,72 @@ public class SendAlipay {
                 break;
         }
         return qr_code;
+    }
+
+
+    /**
+     * alipay pc端支付接口
+     * @param pays              支付接口
+     * @param price             支付金额
+     * @param ordersMember      订单ID
+     * @param goodsName         商品名称
+     * @param goodsDescription  预留内容
+     * @return
+     * @throws AlipayApiException
+     */
+    public static String payAlipayPc(Pays pays, String price, String ordersMember, String goodsName, String goodsDescription) throws AlipayApiException {
+
+        // 签名方式
+        String sign_type = "RSA2";
+
+        // 字符编码格式
+        String charset = "utf-8";
+
+        // 支付宝沙箱网关； https://openapi.alipaydev.com/gateway.do
+        // 支付宝正式网关； https://openapi.alipay.com/gateway.do
+        String gatewayUrl = "https://openapi.alipay.com/gateway.do";
+
+        Map mapTypes = JSON.parseObject(pays.getConfig());
+
+        String app_id = mapTypes.get("app_id").toString();
+        String merchant_private_key = mapTypes.get("private_key").toString();
+        String alipay_public_key = mapTypes.get("alipay_public_key").toString();
+        String url = mapTypes.get("notify_url").toString();
+
+        String notify_url = url + "/alipay/notify";
+        String return_url = url + "/alipay/return_url";
+
+        //AlipayClient alipayClient = new DefaultAlipayClient(AlipayTemplate.gatewayUrl, AlipayTemplate.app_id, AlipayTemplate.merchant_private_key, "json", AlipayTemplate.charset, AlipayTemplate.alipay_public_key, AlipayTemplate.sign_type);
+        //1、根据支付宝的配置生成一个支付客户端
+        AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl,
+                app_id, merchant_private_key, "json",
+                charset, alipay_public_key, sign_type);
+
+        //2、创建一个支付请求 //设置请求参数
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+        alipayRequest.setReturnUrl(return_url);
+        alipayRequest.setNotifyUrl(notify_url);
+
+        //商户订单号，商户网站订单系统中唯一订单号，必填
+        String out_trade_no = ordersMember;
+        //付款金额，必填
+        String total_amount = price;
+        //订单名称，必填
+        String subject = goodsName;
+        //商品描述，可空
+        String body = goodsDescription;
+
+        alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
+                + "\"total_amount\":\""+ total_amount +"\","
+                + "\"subject\":\""+ subject +"\","
+                + "\"body\":\""+ body +"\","
+                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+
+        String result = alipayClient.pageExecute(alipayRequest).getBody();
+
+        //会收到支付宝的响应，响应的是一个页面，只要浏览器显示这个页面，就会自动来到支付宝的收银台页面
+        // System.out.println("支付宝的响应："+result);
+        return result;
     }
 
 }

@@ -20,6 +20,7 @@ public enum PaysEnmu {
     PAYJS_ALIPAY("payjs_alipay"),
     WXPAY("wxpay"),
     ALIPAY("alipay"),
+    ALIPAY_PC("alipay_pc"),
     WXPAU_H5("wxpay_h5"),
     PAYPAL("paypal");
 

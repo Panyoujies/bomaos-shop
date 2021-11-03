@@ -253,7 +253,7 @@
                                         </div>
                                     </div>
                                 </:if>
-                                <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='alipay'}">
+                                <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='alipay' || item.driver=='alipay_pc'}">
                                     <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
                                         <div class="pay-type-ali active" data-id="${item.driver}">
                                             <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"
@@ -329,7 +329,7 @@
                                     </div>
                                 </:if>
 
-                                <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='alipay'}">
+                                <:if test="${item.driver=='mqpay_alipay' || item.driver=='zlianpay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='alipay' || item.driver=='alipay_pc'}">
                                     <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
                                         <div class="pay-type-ali" data-id="${item.driver}">
                                             <svg t="1602939269695" class="icon" viewBox="0 0 1024 1024"
@@ -573,7 +573,11 @@
                         title: '订单确认',
                         btn: ['<span style="color: rgb(255, 104, 104, 0.9)">立即支付</span>', '支付完成'] //按钮
                     }, function () {
-                        window.open('${ctxPath}/pay/' + res.data.member)
+                        if (payType == 'alipay_pc') {
+                            window.open('${ctxPath}/alipayPc/' + res.data.member)
+                        } else {
+                            window.open('${ctxPath}/pay/' + res.data.member)
+                        }
                     }, function () {
                         window.open('${ctxPath}/pay/state/' + res.data.member)
                     });

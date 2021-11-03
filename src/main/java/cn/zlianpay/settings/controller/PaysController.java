@@ -18,10 +18,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +39,7 @@ public class PaysController extends BaseController {
         Pays codepay_alipay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "codepay_alipay"));
         Pays yunfu_alipay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "yunfu_alipay"));
         Pays yunfu_wxpay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "yunfu_wxpay"));
+        Pays alipay_pc = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay_pc"));
 
         if (!ObjectUtils.isEmpty(codepay_wxpay)) {
             paysService.remove(new QueryWrapper<Pays>().eq("driver", "codepay_wxpay"));
@@ -57,6 +55,28 @@ public class PaysController extends BaseController {
 
         if (!ObjectUtils.isEmpty(yunfu_wxpay)) {
             paysService.remove(new QueryWrapper<Pays>().eq("driver", "yunfu_wxpay"));
+        }
+
+        if (ObjectUtils.isEmpty(alipay_pc)) {
+            Pays pays = new Pays();
+            pays.setName("支付宝PC");
+            pays.setDriver("alipay_pc");
+
+            Map<String,String> map = new HashMap<>();
+            map.put("app_id", "xxx");
+            map.put("private_key", "xxx");
+            map.put("alipay_public_key", "xxx");
+            map.put("notify_url", "11111");
+            String jsonString = JSON.toJSONString(map);
+
+            pays.setConfig(jsonString);
+            pays.setComment("支付宝官方pc端支付");
+            pays.setIsMobile(0);
+            pays.setIsPc(0);
+            pays.setCreatedAt(new Date());
+            pays.setUpdatedAt(new Date());
+
+            paysService.save(pays);
         }
 
         return "settings/pays.html";
@@ -130,6 +150,7 @@ public class PaysController extends BaseController {
                     paysVo.setNotifyUrl(configs.get("notify_url").toString());
                     break;
                 case ALIPAY:
+                case ALIPAY_PC:
                     paysVo.setAppid(configs.get("app_id").toString());
                     paysVo.setKey(configs.get("private_key").toString());
                     paysVo.setMpKey(configs.get("alipay_public_key").toString());
@@ -247,6 +268,7 @@ public class PaysController extends BaseController {
                 map.put("notify_url", paysVo.getNotifyUrl());
                 break;
             case ALIPAY:
+            case ALIPAY_PC:
                 map.put("app_id", paysVo.getAppid());
                 map.put("private_key", paysVo.getKey());
                 map.put("alipay_public_key", paysVo.getMpKey());
