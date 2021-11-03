@@ -256,7 +256,7 @@ public class OrderController extends BaseController {
         String cloudPayid = orders.getCloudPayid();
         String price = orders.getMoney().toString();
         UserAgentGetter agentGetter = new UserAgentGetter(request);
-        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()).eq("enabled", 1));
+        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()));
 
         if (price.equals("0.00")) { // 0元商品 直接完成支付
             String currentTime = Long.toString(System.currentTimeMillis());
