@@ -59,7 +59,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -113,11 +112,14 @@ public class OrderController extends BaseController {
             return JsonResult.error("请选择付款方式！");
         }
 
+        UserAgentGetter agentGetter = new UserAgentGetter(request);
+
         Products products = productsService.getById(goodsId);
+		
         Integer restricts = products.getRestricts();
-        /*判断是不是限购*/
+        /* 判断是不是限购 */
         if (restricts >= 1) {
-            JsonResult jsonResult = restricts(goodsId, number, restricts);
+            JsonResult jsonResult = restricts(goodsId, number, restricts, agentGetter.getIp());
             if (jsonResult != null) {
                 return jsonResult;
             }
@@ -498,31 +500,41 @@ public class OrderController extends BaseController {
         boolean b = ordersService.updateById(orders);// 更新售出
         return b;
     }
-	
+
     /**
-     * 限购判断
-     * @param goodsId
-     * @param number
-     * @param restricts
+     * 限制购买
+     * @param goodsId   商品id
+     * @param number    用户购买数量
+     * @param restricts 限制购买的数量
+     * @param userIp    当前用户的ip
      * @return
      */
-    public JsonResult restricts(Integer goodsId, Integer number, Integer restricts) {
+    public JsonResult restricts(Integer goodsId, Integer number, Integer restricts, String userIp) {
+
+        /**
+         * 通过商品id和当前用户
+         * 的ip来查询用户今天所购买的数量
+         */
         QueryWrapper queryWrapper = getQueryWrapper(DateStrUtil.getDayBegin(), DateStrUtil.getDayEnd());
         queryWrapper.eq("product_id", goodsId);
+        queryWrapper.eq("ip", userIp);
         List<Orders> orderList = ordersService.list(queryWrapper);
-        /*统计已付款的商品数*/
+
+        /* 统计已付款的商品数 */
         long payNumber = orderList.stream()
                 .filter(orders -> orders.getStatus() == 1)
                 .mapToLong(Orders::getNumber).sum();
         if (payNumber >= restricts) {
             return JsonResult.error("已达到每天限购的" + restricts + "个,每天0点重置！");
         }
-        /*判断已付款+待购买商品数是不是大于限购数*/
+
+        /* 判断已付款 + 待购买商品数是不是大于限购数 */
         if ((number + payNumber) > restricts) {
             long remain = restricts - payNumber;
             return JsonResult.error("每天限购" + restricts + "个,当前还可购买" + remain + "个,每天0点重置！");
         }
-        /*统计待付款未超时商品数*/
+
+        /* 统计待付款未超时商品数 */
         long waitPayNumber = orderList.stream()
                 .filter(order -> {
                     if (order.getStatus() == 0) {
@@ -531,7 +543,7 @@ public class OrderController extends BaseController {
                     return false;
                 })
                 .mapToLong(Orders::getNumber).sum();
-        /*判断购买商品数+已购买数+等待付款数是不是大于限购数*/
+        /* 判断购买商品数+已购买数+等待付款数是不是大于限购数 */
         if ((number + payNumber + waitPayNumber) > restricts) {
             long remain = restricts - payNumber;
             long createTime = orderList.stream()
@@ -548,7 +560,7 @@ public class OrderController extends BaseController {
             String format = dateFormat.format(new Date(expireTime));
 
             return JsonResult.error("每天限购" + restricts + "个,当天还剩" + remain + "个</br>" +
-                    "其他人付款中的商品数为" + waitPayNumber + "个," + format + "后支付超时释放商品");
+                    "等付款中的商品数为" + waitPayNumber + "个," + format + "后支付超时释放商品");
         }
         return null;
     }
