@@ -105,6 +105,15 @@ public class IndexController {
             classifysVo.setAndIncrement(andIncrement); // 索引
             return classifysVo;
         }).collect(Collectors.toList());
+
+        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("is_carousel", 1));
+        List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
+            ProductDTO productDTO = new ProductDTO();
+            BeanUtils.copyProperties(products, productDTO);
+            return productDTO;
+        }).collect(Collectors.toList());
+        model.addAttribute("productDTOList", productDTOList);
+
         model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
 
         Website website = websiteService.getById(1);
@@ -475,8 +484,8 @@ public class IndexController {
 
     @ResponseBody
     @GetMapping("/getProductSearchList")
-    public JsonResult getProductSearchList(Integer classifyId, String content) {
-        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("classify_id", classifyId).eq("status", 1).like("name", content));
+    public JsonResult getProductSearchList(String content) {
+        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("status", 1).like("name", content));
         List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
             ProductDTO productDTO = new ProductDTO();
             BeanUtils.copyProperties(products, productDTO);

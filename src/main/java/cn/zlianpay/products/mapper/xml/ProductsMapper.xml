@@ -62,8 +62,14 @@
                 <if test="page.pageData.sales != null">
                     AND a.sales = #{page.pageData.sales}
                 </if>
-                <if test="page.pageData.isPassword != null">
+		<if test="page.pageData.isPassword != null">
                     AND a.is_password = #{page.pageData.isPassword}
+                </if>
+                <if test="page.pageData.isCarousel != null">
+                    AND a.is_carousel = #{page.pageData.isCarousel}
+                </if>
+                <if test="page.pageData.carouselImage != null">
+                    AND a.carousel_image LIKE CONCAT('%', #{page.pageData.carouselImage}, '%')
                 </if>
             </if>
         </where>

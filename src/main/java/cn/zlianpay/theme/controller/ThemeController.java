@@ -30,17 +30,6 @@ public class ThemeController extends BaseController {
     @RequiresPermissions("theme:theme:view")
     @RequestMapping()
     public String view() {
-        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("driver", "easy-bright"));
-        if (ObjectUtils.isEmpty(theme)) {
-            Theme theme1 = new Theme();
-            theme1.setEnable(0);
-            theme1.setDriver("easy-bright");
-            theme1.setName("少女丝袜");
-            theme1.setDescription("少女白色透明丝袜般的质感");
-            theme1.setCreateDate(new Date());
-            theme1.setUpdateDate(new Date());
-            themeService.save(theme1);
-        }
         return "theme/theme.html";
     }
 

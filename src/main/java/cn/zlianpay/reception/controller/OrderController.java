@@ -294,19 +294,19 @@ public class OrderController extends BaseController {
          * 使用枚举加switch
          */
         switch (Objects.requireNonNull(PaysEnmu.getByValue(orders.getPayType()))) {
-            case MQPAY_ALIPAY:
-            case MQPAY_WXPAY:
+            case MQPAY_ALIPAY: // V免签支付宝接口
+            case MQPAY_WXPAY: // V免签微信接口
                 String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
                 response.sendRedirect(createMqPay);
                 break;
-            case ZLIANPAY_ALIPAY:
-            case ZLIANPAY_QQPAY:
-            case ZLIANPAY_WXPAY:
+            case ZLIANPAY_ALIPAY: // 易支付支付宝
+            case ZLIANPAY_QQPAY: // 易支付QQ钱包
+            case ZLIANPAY_WXPAY: // 易支付微信
                 String zlianSendPay = ZlianPay.zlianSendPay(pays, price, ordersMember, productDescription);
                 response.sendRedirect(zlianSendPay);
                 break;
-            case YUNGOUOS_WXPAY:
-            case YUNGOUOS_ALIPAY:
+            case YUNGOUOS_WXPAY: // yungouos微信
+            case YUNGOUOS_ALIPAY: // yungouos支付宝
                 String gouos = "";
                 if (orders.getPayType().equals("yungouos_wxpay")) {
                     model.addAttribute("type", 1);
@@ -317,8 +317,8 @@ public class OrderController extends BaseController {
                 }
                 model.addAttribute("result", JSON.toJSONString(gouos));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
-            case XUNHUPAY_WXPAY:
-            case XUNHUPAY_ALIPAY:
+            case XUNHUPAY_WXPAY: // 虎皮椒微信
+            case XUNHUPAY_ALIPAY: // 虎皮椒支付宝
                 if (orders.getPayType().equals("xunhupay_wxpay")) {
                     model.addAttribute("type", 1);
                 } else if (orders.getPayType().equals("xunhupay_alipay")) {
@@ -328,13 +328,13 @@ public class OrderController extends BaseController {
                 model.addAttribute("result", pay.get("url_qrcode"));
                 model.addAttribute("wap", pay.get("url1"));
                 return "theme/" + theme.getDriver() + "/xunhupay.html";
-            case JIEPAY_WXPAY:
-            case JIEPAY_ALIPAY:
+            case JIEPAY_WXPAY: // 捷支付微信
+            case JIEPAY_ALIPAY: // 捷支付支付宝
                 String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
                 response.sendRedirect(payUtils);
                 break;
-            case PAYJS_WXPAY:
-            case PAYJS_ALIPAY:
+            case PAYJS_WXPAY: // payjs 微信
+            case PAYJS_ALIPAY: // payjs 支付宝
                 String payjs = "";
                 if (orders.getPayType().equals("payjs_wxpay")) {
                     model.addAttribute("type", 1);
@@ -345,21 +345,22 @@ public class OrderController extends BaseController {
                 }
                 model.addAttribute("result", JSON.toJSONString(payjs));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
-            case WXPAY:
+            case WXPAY: // 微信官方扫码
                 String payNattve = SendWxPay.payNattve(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
                 model.addAttribute("type", 1); // 微信支付
                 model.addAttribute("result", JSON.toJSONString(payNattve));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
-            case ALIPAY:
+            case ALIPAY: // 支付宝当面付
                 String payAlipay = SendAlipay.payAlipay(pays, price, ordersMember, goodsName, productDescription, request);
                 model.addAttribute("type", 2); // 支付宝当面付
                 model.addAttribute("result", JSON.toJSONString(payAlipay));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
-            case WXPAU_H5:
+
+            case WXPAU_H5: // 微信h5支付
                 String payMweb = SendWxPay.payMweb(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
                 response.sendRedirect(payMweb);
                 break;
-            case PAYPAL:
+            case PAYPAL: // paypal贝宝国际化收款
                 try {
                     Payment payment = PaypalSend.createPayment(pays, price, "USD", PaypalPaymentMethod.paypal, PaypalPaymentIntent.sale, ordersMember);
                     for (Links links : payment.getLinks()) {
@@ -408,14 +409,20 @@ public class OrderController extends BaseController {
         Website website = websiteService.getById(1);
         ShopSettings shopSettings = shopSettingsService.getById(1);
 
+        Orders orders = new Orders();
+
         if (products.getShipType() == 0) { // 自动发货的商品
             List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
             if (card == null) {
                 return false;
             }
 
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+            StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
+
             for (Cards cards : card) {
+
+                orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
 
                 Cards cards1 = new Cards();
                 cards1.setId(cards.getId());
@@ -432,6 +439,16 @@ public class OrderController extends BaseController {
                 cardsService.updateById(cards1);
             }
 
+            // 去除多余尾部的逗号
+            String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+            orders.setCardsInfo(result);
+
+            /**
+             * 微信的 wxpush 通知
+             * 本通知只针对站长
+             * 当用户购买成功后会给您设置的
+             * wxpush 微信公众号发送订单购买成功后的通知
+             */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
                 message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
@@ -441,6 +458,11 @@ public class OrderController extends BaseController {
                 WxPusher.send(message);
             }
 
+            /**
+             * 邮件通知
+             * 后台开启邮件通知，
+             * 这里会给下单用户的邮箱发送一条邮件
+             */
             if (shopSettings.getIsEmail() == 1) {
                 if (!StringUtils.isEmpty(member.getEmail())) {
                     if (FormCheckUtil.isEmail(member.getEmail())) {
@@ -457,13 +479,18 @@ public class OrderController extends BaseController {
                     }
                 }
             }
-
         } else { // 手动发货商品
             Products products1 = new Products();
             products1.setId(products.getId());
             products1.setInventory(products.getInventory() - member.getNumber());
             products1.setSales(products.getSales() + member.getNumber());
 
+            /**
+             * 微信的 wxpush 通知
+             * 本通知只针对站长
+             * 当用户购买成功后会给您设置的
+             * wxpush 微信公众号发送订单购买成功后的通知
+             */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
                 message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
@@ -473,6 +500,11 @@ public class OrderController extends BaseController {
                 WxPusher.send(message);
             }
 
+            /**
+             * 邮件通知
+             * 后台开启邮件通知，
+             * 这里会给下单用户的邮箱发送一条邮件
+             */
             if (shopSettings.getIsEmail() == 1) {
                 if (FormCheckUtil.isEmail(member.getEmail())) {
                     emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
@@ -484,7 +516,6 @@ public class OrderController extends BaseController {
         /**
          * 更新订单
          */
-        Orders orders = new Orders();
         orders.setId(member.getId());
 
         if (products.getShipType() == 0) {

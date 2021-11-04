@@ -120,4 +120,14 @@ public class Products implements Serializable {
      * 是否开启密码查询
      */
     private Integer isPassword;
+
+    /**
+     * 置顶轮播
+     */
+    private Integer isCarousel;
+
+    /**
+     * 轮播图
+     */
+    private String carouselImage;
 }

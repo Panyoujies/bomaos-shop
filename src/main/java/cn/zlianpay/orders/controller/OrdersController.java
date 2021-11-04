@@ -359,7 +359,7 @@ public class OrdersController extends BaseController {
     @RequiresPermissions("orders:orders:update")
     @ResponseBody
     @RequestMapping("/sendShip")
-    public JsonResult sendShip(Integer id, String email, String shipInfo) throws MessagingException, IOException {
+    public JsonResult sendShip(Integer id, String shipInfo) throws MessagingException, IOException {
 
         /**
          * 查出订单
@@ -382,25 +382,7 @@ public class OrdersController extends BaseController {
         orders1.setCardsInfo(shipInfo);
 
         if (ordersService.updateById(orders1)) { // 成功发送邮件
-            if (FormCheckUtil.isEmail(email)) {
-                Website website = websiteService.getById(1);
-                Map<String, Object> map = new HashMap<>();  // 页面的动态数据
-                map.put("title", website.getWebsiteName());
-                map.put("member", orders.getMember());
-                map.put("date", new Date());
-                map.put("info", shipInfo);
-                try {
-                    ShopSettings shopSettings = shopSettingsService.getById(1);
-                    if (shopSettings.getIsEmail() == 1) {
-                        emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{email});
-                        return JsonResult.ok("发货成功、并邮件通知成功。");
-                    }
-                    return JsonResult.ok("发货成功！");
-                } catch (AuthenticationFailedException e) {
-                    return JsonResult.ok("发货成功、邮件提醒失败！");
-                }
-            }
-            return JsonResult.ok("发货成功！邮件提醒失败！");
+            return JsonResult.ok("发货成功！");
         }
         return JsonResult.error("发货失败！");
     }

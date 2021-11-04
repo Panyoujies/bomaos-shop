@@ -49,7 +49,6 @@ public class ShiroConfig {
         // 拦截配置
         Map<String, String> filterChainDefinitions = new LinkedHashMap<>();
         filterChainDefinitions.put("/assets/**", "anon");
-        filterChainDefinitions.put("/qiantai/**", "anon");
         filterChainDefinitions.put("/theme/**", "anon");
         filterChainDefinitions.put("/favicon.ico", "anon");
         filterChainDefinitions.put("/file/**", "anon");

@@ -1,4 +1,4 @@
-layui.config({base:getProjectUrl()+ "/qiantai/module/"}).extend({notice: "notice/notice"}).use(["jquery", "element", "util", "admin"], function () {
+layui.config({base:getProjectUrl() + "night/module/"}).extend({notice: "notice/notice"}).use(["jquery", "element", "util", "admin"], function () {
     var f = layui.jquery;
     var e = layui.element;
     var d = layui.util;
@@ -91,5 +91,5 @@ function getProjectUrl() {
         var d = f || e[b].src;
         c = d.substring(0, d.lastIndexOf("/") + 1)
     }
-    return c.substring(0, c.indexOf("qiantai"))
+    return c.substring(0, c.indexOf("night"))
 };

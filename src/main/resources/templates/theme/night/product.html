@@ -54,11 +54,11 @@
 
 <!-- banner -->
 <div class="ew-banner" style="top: -55px;">
-    <div class="layui-container" style="text-align: center; padding-bottom: 100px; padding-top: 150px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%); background-size: cover; background-attachment: scroll; background-position: center; box-sizing: border-box; overflow: hidden; background-image: linear-gradient(to top, rgb(0 0 0), rgba(0,0,0,0)),url(<:if test="${products.indexLogo == null || products.indexLogo == ''}">'../qiantai/images/index_logo.png'</:if><:if test="${products.indexLogo != null || products.indexLogo != ''}">${products.indexLogo!}</:if>); filter: blur(1px);">
+    <div class="layui-container" style="text-align: center; padding-bottom: 100px; padding-top: 150px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%); background-size: cover; background-attachment: scroll; background-position: center; box-sizing: border-box; overflow: hidden; background-image: linear-gradient(to top, rgb(0 0 0), rgba(0,0,0,0)),url(<:if test="${products.indexLogo == null || products.indexLogo == ''}">'../theme/default/images/index_logo.png'</:if><:if test="${products.indexLogo != null || products.indexLogo != ''}">${products.indexLogo!}</:if>); filter: blur(1px);">
     </div>
     <div class="_avatar">
         <div class="imgContainer user-info-head" id="userInfoHead">
-            <img src="<:if test="${products.imageLogo == null || products.imageLogo == ''}">../qiantai/images/info_logo.png</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>" alt="">
+            <img src="<:if test="${products.imageLogo == null || products.imageLogo == ''}">../theme/default/images/info_logo.png</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>" alt="">
         </div>
         <i class="i-work-sex-30-0 posa avatar-sex"></i>
     </div>
@@ -96,7 +96,7 @@
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px;">
                     <div class="layui-row layui-col-space15 goods-info-group">
                         <div class="layui-col-xs12 layui-col-sm5 layui-col-md4 zlian-col-image">
-                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../qiantai/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
+                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../theme/default/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
                         </div>
                         <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
                             <div style="padding: 0px;">
@@ -282,7 +282,6 @@
                                                  version="1.1"
                                                  xmlns="http://www.w3.org/2000/svg"
                                                  p-id="2555"
-                                                 width="auto"
                                                  height="25"
                                                  style="vertical-align: middle;">
                                                 <path d="M3249.722604 229.409369h-232.537679c-15.641548 0-29.197556 11.470468-32.325865 27.112016l-93.849287 595.421589c-2.08554 11.470468 7.299389 21.898167 18.769857 21.898167h118.875764c11.470468 0 20.855397-8.342159 21.898167-18.769858l27.112016-168.928717c2.08554-15.641548 15.641548-27.112016 32.325866-27.112016h72.99389c153.287169 0 240.879837-74.03666 263.820774-221.06721 10.427699-63.608961 0-114.704684-29.197556-150.158859-31.283096-38.582485-89.678208-58.395112-167.885947-58.395112z m27.112016 216.89613c-12.513238 83.421589-76.1222 83.421589-137.645621 83.421589h-35.454175l25.026476-155.372709c1.04277-9.384929 9.384929-16.684318 18.769858-16.684318h15.641547c41.710794 0 81.336049 0 102.191447 23.983707 12.513238 14.598778 15.641548 35.454175 11.470468 64.651731z"
@@ -358,7 +357,6 @@
                                                  version="1.1"
                                                  xmlns="http://www.w3.org/2000/svg"
                                                  p-id="2555"
-                                                 width="auto"
                                                  height="25"
                                                  style="vertical-align: middle;">
                                                 <path d="M3249.722604 229.409369h-232.537679c-15.641548 0-29.197556 11.470468-32.325865 27.112016l-93.849287 595.421589c-2.08554 11.470468 7.299389 21.898167 18.769857 21.898167h118.875764c11.470468 0 20.855397-8.342159 21.898167-18.769858l27.112016-168.928717c2.08554-15.641548 15.641548-27.112016 32.325866-27.112016h72.99389c153.287169 0 240.879837-74.03666 263.820774-221.06721 10.427699-63.608961 0-114.704684-29.197556-150.158859-31.283096-38.582485-89.678208-58.395112-167.885947-58.395112z m27.112016 216.89613c-12.513238 83.421589-76.1222 83.421589-137.645621 83.421589h-35.454175l25.026476-155.372709c1.04277-9.384929 9.384929-16.684318 18.769858-16.684318h15.641547c41.710794 0 81.336049 0 102.191447 23.983707 12.513238 14.598778 15.641548 35.454175 11.470468 64.651731z"

@@ -19,6 +19,11 @@ public class ProductDTO {
     private String price;
 
     /**
+     * 商品金额
+     */
+    private String link;
+
+    /**
      * 首页截图
      */
     private String indexLogo;
@@ -53,4 +58,13 @@ public class ProductDTO {
      */
     private Integer shipType;
 
+    /**
+     * 置顶轮播
+     */
+    private Integer isCarousel;
+
+    /**
+     * 轮播图
+     */
+    private String carouselImage;
 }
