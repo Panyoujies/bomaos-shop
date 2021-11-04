@@ -844,7 +844,6 @@ body .layui-util-face .layui-layer-content {
 .ew-footer {
     border-top: 1px solid #202020;
     background-color: #141414;
-    padding: 20px 0 20px 0
 }
 
 .ew-footer .footer-item-title {
@@ -2501,4 +2500,50 @@ div.tagsinput span.tag {
     background-color: #272424;
     border-color: #423a3a;
     color: #f56c6c;
+}
+
+.ew-header .layui-nav>.back-item>a:after {
+    background-color: transparent;
+}
+.img-item {
+    top: 19px;
+}
+.ew-header .layui-nav > .layui-nav-item > .test-btn{
+    background-color: #fff;
+    border: 1px solid #eee;
+    color: #666;
+    border-radius: 5px;
+    height: initial;
+    line-height: 38px;
+    font-size: 14px;
+    padding: 0 18px;
+}
+
+.ew-header .layui-nav>.back-items>a:after {
+    background-color: transparent !important;
+}
+
+.search-by {
+    border-radius: 5px !important;
+    color: #333 !important;
+    height: initial !important;
+    line-height: 38px !important;
+    font-size: 16px !important;
+    padding: 0 18px !important;
+}
+
+@media screen and (max-width: 935px) {
+    .img-item {
+        top: 11px;
+    }
+
+    .ew-header .layui-nav > .layui-nav-item > .test-btn {
+        border: 0px solid #eee !important;
+        color: #666 !important;
+        border-radius: 0 !important;
+    }
+
+    .ew-header .layui-nav .back-item {
+        padding: 10px !important;
+    }
 }

@@ -13,7 +13,7 @@
 <!-- goods-card -->
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md8">
             <div class="layui-card" style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
                 <!-- Swiper -->
                 <div class="swiper mySwiper">
@@ -32,6 +32,131 @@
                 </div>
             </div>
         </div>
+
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
+            <style>
+                .user-widget-content {
+                    background-color: #141414;
+                    border-radius: 5px;
+                    box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
+                    border: 1px solid #1d1d1d;
+                }
+
+                .user-w-logon {
+                    font-size: 13px;
+                    padding: 19px 20px;
+                    position: relative;
+                    border-bottom: 1px solid #2d2d2d;
+                }
+
+                .user-w-logon p {
+                    display: block;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    position: relative;
+                    text-align: center;
+                    z-index: 2;
+                }
+
+                .b2-color {
+                    color: #3860f4;
+                    font-size: 17px;
+                    font-weight: 500;
+                }
+
+                .user-w-logon:after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                }
+
+                .user-w-announcement {
+                    height: 116px;
+                }
+
+                .user-widget-content .user-w-announcement li {
+                    padding: 10px 20px;
+                }
+
+                .user-widget-content ul li {
+                    font-size: 13px;
+                    padding: 16px;
+                    box-sizing: border-box;
+                }
+
+                .user-w-announcement li a {
+                    display: block;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    font-size: 13px;
+                    position: relative;
+                    padding-left: 17px;
+                    color: #e1e1e1;
+                }
+
+                .user-w-announcement li a b {
+                    font-weight: 400;
+                }
+
+                .user-w-announcement li a:before {
+                    content: '';
+                    width: 8px;
+                    height: 8px;
+                    position: absolute;
+                    left: 0;
+                    top: 6px;
+                    border-radius: 10px;
+                }
+
+                .user-w-announcement li a::before {
+                    background-color: #f57070;
+                }
+
+                .widget-mission-footer a {
+                    padding: 15px 10px;
+                    font-size: 12px;
+                    text-align: center;
+                    display: block;
+                    border-top: 1px solid #2d2d2d;
+                    font-weight: 600;
+                    color: #d5d5d5;
+                }
+
+            </style>
+            <div class="user-widget-content">
+                <div style="">
+                    <div>
+                        <div class="user-w-logon">
+                            <p class="user-w-logon-title b2-color" style="margin-bottom: 5px">欢迎访问${website.websiteName}个人小店</p>
+                            <p>打开祝福的心扉，让梦想在晨光中翱翔。</p>
+                        </div>
+                    </div>
+                    <div class="user-w-announcement">
+                        <div>
+                            <ul>
+                                <:for items="${newProductDTOS}" var="item">
+                                    <li>
+                                        <a href="${ctxPath}/product/${item.link}" target="_blank">
+                                            <span>${item.name}</span>
+                                            <b style="float: right">热销</b>
+                                        </a>
+                                    </li>
+                                </:for>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-mission-footer">
+                    <a id="btnAnnouncement">购物须知</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!--<div class="layui-card" style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
@@ -131,7 +256,7 @@
 </script>
 
 <!-- js部分 -->
-<:include file="./common/qiantaijs.html"/>
+<:include file="./common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/js/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="${ctxPath}/assets/js/jquery.cookie.js"></script>
 <!-- Swiper JS -->
@@ -185,6 +310,31 @@
                 });
             }
         }
+
+        // 添加
+        $('#btnAnnouncement').click(function () {
+            //示范一个公告层
+            layer.open({
+                type: 1,
+                title: '购物须知',
+                closeBtn: false,
+                area: '300px',
+                shade: 0.4,
+                id: 'LAY_layuipro',
+                btn: ['我知道啦'],
+                btnAlign: 'c',
+                moveType: 1,
+                content: '<div style="padding: 20px; font-size: 16px; font-family: Content-font, Roboto, sans-serif; font-weight: 400;">' + shopSettingsJson.storeDetails + '</div>',
+                success: function (layero) {
+                    var btn = layero.find('.layui-layer-btn');
+                    btn.click(function () {
+                        /*var date = new Date();
+                        date.setTime(date.getTime() + (5 * 1000));*/
+                        // $.cookie('isWindow', 'yes', {expires: 1});
+                    })
+                }
+            });
+        });
 
         // 分类点击事件
         $('.pay-type-group>div').click(function () {

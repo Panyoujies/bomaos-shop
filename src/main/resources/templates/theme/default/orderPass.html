@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <:include file="${ctxPath}/common/title.html" websiteName="${website.websiteName} - 订单详情"
+    <:include file="./common/title.html" websiteName="${website.websiteName} - 订单详情"
               keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
     <style>
         .order-show {
@@ -17,7 +17,7 @@
 </head>
 <body>
 <!-- header -->
-<:include file="${ctxPath}/common/header.html" websiteName="${website.websiteName}"
+<:include file="./common/header.html" websiteName="${website.websiteName}"
           websiteLogo="${website.websiteLogo}"/>
 <!-- goods-card -->
 <div class="layui-container body-card">
@@ -48,10 +48,10 @@
 </div>
 
 <!-- footer -->
-<:include file="${ctxPath}/common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
 
 <!-- js部分 -->
-<:include file="${ctxPath}/common/qiantaijs.html"/>
+<:include file="./common/js.html"/>
 
 <script>
     layui.use(['layer', 'form', 'util', 'admin', 'dataGrid', 'admin'], function () {

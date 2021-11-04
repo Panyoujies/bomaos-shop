@@ -507,6 +507,10 @@
     display: none;
 }
 
+.zlian-card-pc {
+    margin-bottom: 0px;
+}
+
 @keyframes big2small {
     0% {
         transform: scale(1)
@@ -546,20 +550,12 @@
         margin-bottom: 80px !important;
     }
 
-    .zlian-ismobile {
-        display: none !important;
-    }
-
     .display-show {
         display: none !important;
     }
 
     .pay-type-group {
         padding: 15px !important;
-    }
-
-    .ew-footer {
-        display: none !important;
     }
 
     .product-info1 {
@@ -606,4 +602,13 @@
     .is-title-text {
         display: none;
     }
+
+    .ew-footer {
+        display: none;
+    }
+
+    .zlian-card-pc {
+        margin-bottom: 15px;
+    }
+
 }

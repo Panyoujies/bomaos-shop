@@ -1,11 +1,4 @@
 @media screen and (max-width: 768px) {
-    .ew-footer .layui-container {
-        display: none;
-    }
-
-    .ew-footer {
-        padding: 10px 0 20px 0;
-    }
 
     .ew-footer .link-box {
         display: inline;
@@ -14,14 +7,6 @@
 
     .ship-link .left {
         min-width: 72px;
-    }
-
-    .uuid {
-        display: none;
-    }
-
-    .zlian-ismobile {
-        display: block !important;
     }
 }
 
@@ -60,6 +45,7 @@
 .link-box .beian {
     text-align: center;
     padding-top: 18px;
+    padding-bottom: 18px;
     font-size: .8rem;
     font-weight: 400;
     font-family: Content-font, Roboto, sans-serif;
@@ -104,12 +90,4 @@
 
 .link-box .beian a {
     color: #727373;
-}
-
-.uuid {
-    display: block;
-}
-
-.zlian-ismobile {
-    display: none;
 }

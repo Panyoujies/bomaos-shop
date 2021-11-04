@@ -49,10 +49,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -95,7 +92,11 @@ public class IndexController {
 
         List<Classifys> classifysList = classifysService.list(queryWrapper);
 
-        AtomicInteger index = new AtomicInteger(0);
+        AtomicInteger index = new AtomicInteger(0); // 索引
+        /**
+         * 分类列表
+         * 查询出所有上架的分类
+         */
         List<ClassifysVo> classifysVoList = classifysList.stream().map((classifys) -> {
             ClassifysVo classifysVo = new ClassifysVo();
             BeanUtils.copyProperties(classifys, classifysVo);
@@ -113,6 +114,39 @@ public class IndexController {
             return productDTO;
         }).collect(Collectors.toList());
         model.addAttribute("productDTOList", productDTOList);
+
+        /**
+         * 条件构造器
+         * 根据分类id查询商品
+         * 状态为开启
+         * asc 排序方式
+         */
+        QueryWrapper<Products> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("status", 1);
+
+        List<Products> productsAllList = productsService.list(queryWrapper1);
+        List<ProductDTO> productDTOAllList = productsAllList.stream().map((products) -> {
+            ProductDTO productDTO = new ProductDTO();
+            BeanUtils.copyProperties(products, productDTO);
+            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+            productDTO.setCardMember(count); // 卡密数量
+            int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
+            productDTO.setSellCardMember(count2); // 出售数量
+            productDTO.setPrice(products.getPrice().toString());
+            int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
+            productDTO.setIsCoupon(count1);
+
+            if (products.getShipType() == 1) {
+                productDTO.setCardMember(products.getInventory());
+                productDTO.setSellCardMember(products.getSales());
+            }
+
+            return productDTO;
+        }).collect(Collectors.toList());
+
+        productDTOAllList.sort(Comparator.comparing(ProductDTO::getSellCardMember).reversed());
+        List<ProductDTO> newProductDTOS = productDTOAllList.subList(0, 3); // 热销商品
+        model.addAttribute("newProductDTOS", newProductDTOS);
 
         model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
 
