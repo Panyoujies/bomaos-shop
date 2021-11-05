@@ -53,6 +53,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static cn.zlianpay.dashboard.DashboardController.getOrderList;
+
 @Controller
 public class IndexController {
 
@@ -116,37 +118,23 @@ public class IndexController {
         model.addAttribute("productDTOList", productDTOList);
 
         /**
-         * 条件构造器
-         * 根据分类id查询商品
-         * 状态为开启
-         * asc 排序方式
+         * 统计今日的成功订单数量
          */
-        QueryWrapper<Products> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("status", 1);
+        Map<String, Object> orderList = getOrderList(ordersService);
+        Integer todayOrderCountAmount = (Integer) orderList.get("count");// 今日成功订单数量
+        model.addAttribute("todayOrderCountAmount", todayOrderCountAmount);
 
-        List<Products> productsAllList = productsService.list(queryWrapper1);
-        List<ProductDTO> productDTOAllList = productsAllList.stream().map((products) -> {
-            ProductDTO productDTO = new ProductDTO();
-            BeanUtils.copyProperties(products, productDTO);
-            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
-            productDTO.setCardMember(count); // 卡密数量
-            int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
-            productDTO.setSellCardMember(count2); // 出售数量
-            productDTO.setPrice(products.getPrice().toString());
-            int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
-            productDTO.setIsCoupon(count1);
+        /**
+         * 统计商品的数量
+         */
+        int productsTotalNumber = productsService.count(new QueryWrapper<Products>().eq("status", 1));
+        model.addAttribute("productsTotalNumber", productsTotalNumber);
 
-            if (products.getShipType() == 1) {
-                productDTO.setCardMember(products.getInventory());
-                productDTO.setSellCardMember(products.getSales());
-            }
-
-            return productDTO;
-        }).collect(Collectors.toList());
-
-        productDTOAllList.sort(Comparator.comparing(ProductDTO::getSellCardMember).reversed());
-        List<ProductDTO> newProductDTOS = productDTOAllList.subList(0, 3); // 热销商品
-        model.addAttribute("newProductDTOS", newProductDTOS);
+        /**
+         * 统计出售了多少订单
+         */
+        int  salesOrdersNumber = ordersService.count(new QueryWrapper<Orders>().ge("status", 1));
+        model.addAttribute("salesOrdersNumber", salesOrdersNumber);
 
         model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
 

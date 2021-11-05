@@ -38,15 +38,17 @@
                 .user-widget-content {
                     background-color: #141414;
                     border-radius: 5px;
-                    box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
                     border: 1px solid #1d1d1d;
+                    box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
                 }
 
                 .user-w-logon {
                     font-size: 13px;
-                    padding: 19px 20px;
+                    padding: 36px 20px;
+                    /*background-image: -webkit-gradient(linear,left top,right top,from(#fff2ec),color-stop(42%,#f0f1f6),to(#e1f0ff));
+                    background-image: linear-gradient(90deg,#fff2ec 0,#f0f1f6 42%,#e1f0ff 100%);*/
                     position: relative;
-                    border-bottom: 1px solid #2d2d2d;
+                    border-bottom: 1px solid rgb(255 255 255 / 10%);
                 }
 
                 .user-w-logon p {
@@ -63,19 +65,6 @@
                     color: #3860f4;
                     font-size: 17px;
                     font-weight: 500;
-                }
-
-                .user-w-logon:after {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                }
-
-                .user-w-announcement {
-                    height: 116px;
                 }
 
                 .user-widget-content .user-w-announcement li {
@@ -96,7 +85,6 @@
                     font-size: 13px;
                     position: relative;
                     padding-left: 17px;
-                    color: #e1e1e1;
                 }
 
                 .user-w-announcement li a b {
@@ -118,58 +106,88 @@
                 }
 
                 .widget-mission-footer a {
+                    color: #BFBFBF;
                     padding: 15px 10px;
-                    font-size: 12px;
+                    font-size: 15px;
                     text-align: center;
                     display: block;
-                    border-top: 1px solid #2d2d2d;
+                    border-top: 1px solid rgb(255 255 255 / 10%);
+                    font-weight: 400;
+                }
+
+                .bd {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+                    text-align: center;
+                    padding: 15px 0;
+                }
+
+                .bd dt {
+                    font-size: 15px;
+                    color: #666;
+                    font-family: Content-font, Roboto, sans-serif;
                     font-weight: 600;
-                    color: #d5d5d5;
+                    margin-bottom: 10px;
+                }
+
+                .bd dd {
+                    font-size: 12px;
+                    color: #999;
+                }
+
+                .dd-box:after {
+                    content: " ";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 1px;
+                    bottom: 0;
+                    border-left: 1px solid rgb(255 255 255 / 10%);
+                    color: rgba(0, 0, 0, 0.1);
+                    -webkit-transform-origin: 0 0;
+                    transform-origin: 0 0;
+                    -webkit-transform: scaleX(0.5);
+                    transform: scaleX(0.5);
+                }
+
+                @media screen and (max-width: 768px) {
+                    .user-w-logon {
+                        padding: 15px 20px;
+                    }
                 }
 
             </style>
             <div class="user-widget-content">
-                <div style="">
+                <div>
                     <div>
                         <div class="user-w-logon">
-                            <p class="user-w-logon-title b2-color" style="margin-bottom: 5px">欢迎访问${website.websiteName}个人小店</p>
-                            <p>打开祝福的心扉，让梦想在晨光中翱翔。</p>
+                            <p class="user-w-logon-title b2-color" style="margin-bottom: 5px; color: #5f79ff;">欢迎访问${website.websiteName}个人小店</p>
+                            <p style="color: #fff;">打开祝福的心扉，让梦想在晨光中翱翔。</p>
                         </div>
                     </div>
-                    <div class="user-w-announcement">
-                        <div>
-                            <ul>
-                                <:for items="${newProductDTOS}" var="item">
-                                    <li>
-                                        <a href="${ctxPath}/product/${item.link}" target="_blank">
-                                            <span>${item.name}</span>
-                                            <b style="float: right">热销</b>
-                                        </a>
-                                    </li>
-                                </:for>
-                            </ul>
-                        </div>
+
+                    <div class="bd">
+                        <dl style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                            <dt>${productsTotalNumber!}</dt>
+                            <dd>商品数量</dd>
+                        </dl>
+                        <dl class="dd-box" style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                            <dt>${salesOrdersNumber!}</dt>
+                            <dd>售出订单</dd>
+                        </dl>
+                        <dl class="dd-box" style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+                            <dt>${todayOrderCountAmount!}</dt>
+                            <dd>今日订单</dd>
+                        </dl>
                     </div>
                 </div>
                 <div class="widget-mission-footer">
-                    <a id="btnAnnouncement">购物须知</a>
+                    <a href="${ctxPath}/search">订单查询 <i class="layui-icon" style="transform: rotate(-0deg);">&#xe602;</i></a>
                 </div>
             </div>
         </div>
-
     </div>
-
-    <!--<div class="layui-card" style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
-        <div class="layui-card-header">
-            <img src="${ctxPath}/theme/default/images/notice.svg">
-            购物须知
-        </div>
-        <div class="layui-card-body">
-            <div class="zliaan-body-info">
-                ${shop.storeDetails}
-            </div>
-        </div>
-    </div>-->
 </div>
 
 <!-- goods-card -->
@@ -310,31 +328,6 @@
                 });
             }
         }
-
-        // 添加
-        $('#btnAnnouncement').click(function () {
-            //示范一个公告层
-            layer.open({
-                type: 1,
-                title: '购物须知',
-                closeBtn: false,
-                area: '300px',
-                shade: 0.4,
-                id: 'LAY_layuipro',
-                btn: ['我知道啦'],
-                btnAlign: 'c',
-                moveType: 1,
-                content: '<div style="padding: 20px; font-size: 16px; font-family: Content-font, Roboto, sans-serif; font-weight: 400;">' + shopSettingsJson.storeDetails + '</div>',
-                success: function (layero) {
-                    var btn = layero.find('.layui-layer-btn');
-                    btn.click(function () {
-                        /*var date = new Date();
-                        date.setTime(date.getTime() + (5 * 1000));*/
-                        // $.cookie('isWindow', 'yes', {expires: 1});
-                    })
-                }
-            });
-        });
 
         // 分类点击事件
         $('.pay-type-group>div').click(function () {
