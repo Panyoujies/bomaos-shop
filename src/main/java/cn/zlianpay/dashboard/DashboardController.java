@@ -129,10 +129,6 @@ public class DashboardController extends BaseController {
             total_amount = total_amount.add(new BigDecimal(orders.getMoney().toString())); // 统计今天的交易额
         }
 
-        for (BigDecimal bigDecimal : qqpayList) {
-            System.out.println(bigDecimal.toString());
-        }
-
         model.addAttribute("mapList", JSON.toJSONString(mapList));
         model.addAttribute("dayList", JSON.toJSONString(dayList));
         model.addAttribute("wxpayList", JSON.toJSONString(wxpayList));
