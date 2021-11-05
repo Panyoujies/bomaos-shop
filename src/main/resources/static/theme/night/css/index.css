@@ -512,6 +512,7 @@ img.avatar {
 
 .swiper-text h2 {
     font-size: 28px;
+    text-shadow: 0 1px 1px rgb(0 0 0 / 20%);
 }
 
 .swiper-wrapper a {
