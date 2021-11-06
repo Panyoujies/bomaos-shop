@@ -399,7 +399,7 @@
 
                 <div class="buy-btn-group">
                         <span class="price">
-                            <span class="small">￥</span>
+                            <span class="small" id="symbol">￥</span>
                             <span id="goodsprice2" style="font-size: 29px; font-weight: bold;">0.00</span>
                         </span>
                     <button id="btnPay" class="layui-btn layui-btn-warm layui-btn-lg btn-group-show">
@@ -423,7 +423,6 @@
             </div>
         </div>
     </div>
-
     <div class="to-top">
         <div id="phone-code">
             <img src="/file/enQrcode?url=${website.websiteUrl}/product/${products.link}" alt="微信二维码">
@@ -442,8 +441,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 <!-- footer -->
@@ -536,6 +533,13 @@
         $('.pay-type-group .layui-row .layui-col-md6>div').click(function () {
             $('.pay-type-group .layui-row .layui-col-md6>div').removeClass('active');
             $(this).addClass('active');
+
+            var payType = $('.pay-type-group .layui-row .layui-col-md6>div.active').data('id');
+            if (payType == 'paypal') {
+                $("#symbol").text('$');
+            } else {
+                $("#symbol").text('¥');
+            }
         });
 
         // 立即支付
