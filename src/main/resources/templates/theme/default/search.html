@@ -81,6 +81,37 @@
             background-color: #4282ff;
         }
 
+        .position-relative {
+            position: relative !important;
+        }
+
+        .overflow-hidden {
+            overflow: hidden!important;
+        }
+
+        .text-white {
+            color: #f2f2f2 !important;
+        }
+
+        .shape {
+            position: absolute;
+            pointer-events: none;
+            right: 0;
+            bottom: -2px;
+            left: 0;
+        }
+
+        svg {
+            overflow: hidden;
+            vertical-align: middle;
+        }
+
+        .shape>svg {
+            transform: scale(2);
+            width: 100%;
+            height: auto;
+            transform-origin: top center;
+        }
     </style>
 </head>
 <body>
@@ -97,7 +128,13 @@
         <h3 style="color: #fff; line-height: 25px;">订单号开头为TUD、或者用下单时填写的联系方式查询</h3>
     </div>
 </div>
-
+<div class="position-relative">
+    <div class="shape overflow-hidden text-white">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</div>
 <div class="layui-container body-card" style="margin-bottom: 15px; margin-top: -45px;">
     <div class="search-show">
         <form class="layui-form toolbar">

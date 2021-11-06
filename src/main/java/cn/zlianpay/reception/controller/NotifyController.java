@@ -576,15 +576,24 @@ public class NotifyController {
          */
         params.remove("sign_type");
 
-        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay"));
-        Map mapTypes = JSON.parseObject(pays.getConfig());
-        String alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
+        String out_trade_no = params.get("out_trade_no");// 商户订单号
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
+
+        String alipay_public_key = null;
+        if ("alipay".equals(orders.getPayType())) {
+            Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay"));
+            Map mapTypes = JSON.parseObject(pays.getConfig());
+            alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
+        } else if ("alipay_pc".equals(orders.getPayType())) {
+            Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay_pc"));
+            Map mapTypes = JSON.parseObject(pays.getConfig());
+            alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
+        }
 
         String returnBig = null;
         try {
             boolean alipayRSACheckedV2 = AlipaySignature.rsaCheckV2(params, alipay_public_key, "utf-8", "RSA2");
             if (alipayRSACheckedV2) {
-                String out_trade_no = params.get("out_trade_no");// 商户订单号
                 String total_amount = params.get("total_amount");// 付款金额
                 String trade_no = params.get("trade_no");// 流水
                 String receipt_amount = params.get("receipt_amount");// 实际支付金额
