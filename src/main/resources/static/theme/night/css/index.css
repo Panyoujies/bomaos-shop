@@ -525,6 +525,127 @@ img.avatar {
     background-position: center;
 }
 
+.user-widget-content {
+    background-color: #141414;
+    border-radius: 5px;
+    border: 1px solid #1d1d1d;
+    box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
+}
+
+.user-w-logon {
+    font-size: 13px;
+    padding: 36px 20px;
+    /*background-image: -webkit-gradient(linear,left top,right top,from(#fff2ec),color-stop(42%,#f0f1f6),to(#e1f0ff));
+    background-image: linear-gradient(90deg,#fff2ec 0,#f0f1f6 42%,#e1f0ff 100%);*/
+    position: relative;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+}
+
+.user-w-logon p {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+
+.b2-color {
+    color: #3860f4;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.user-widget-content .user-w-announcement li {
+    padding: 10px 20px;
+}
+
+.user-widget-content ul li {
+    font-size: 13px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.user-w-announcement li a {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    position: relative;
+    padding-left: 17px;
+}
+
+.user-w-announcement li a b {
+    font-weight: 400;
+}
+
+.user-w-announcement li a:before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    left: 0;
+    top: 6px;
+    border-radius: 10px;
+}
+
+.user-w-announcement li a::before {
+    background-color: #f57070;
+}
+
+.widget-mission-footer a {
+    color: #BFBFBF;
+    padding: 15px 10px;
+    font-size: 15px;
+    text-align: center;
+    display: block;
+    border-top: 1px solid rgb(255 255 255 / 10%);
+    font-weight: 400;
+}
+
+.bd {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    text-align: center;
+    padding: 15px 0;
+}
+
+.bd dt {
+    font-size: 15px;
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.bd dd {
+    font-size: 12px;
+    color: #999;
+}
+
+.dd-box:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    border-left: 1px solid rgb(255 255 255 / 10%);
+    color: rgba(0, 0, 0, 0.1);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+}
+
+@media screen and (max-width: 768px) {
+    .user-w-logon {
+        padding: 15px 20px;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .list-footer {
         padding: 12px;
