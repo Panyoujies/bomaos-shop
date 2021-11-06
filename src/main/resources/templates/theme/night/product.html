@@ -588,7 +588,7 @@
                 <:for items="${customizeList}" var="item">
                 ${item.field}: ${item.field},
                 </:for>
-                </:for>
+                </:if>
             }, function (res) {
                 if (res.code == 200) {
                     layer.confirm(getHtml(res.data), {
