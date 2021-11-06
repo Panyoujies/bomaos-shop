@@ -6,6 +6,7 @@ import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.pays.payjs.SignUtil;
 import cn.zlianpay.common.core.pays.paypal.PaypalSend;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
+import cn.zlianpay.common.core.utils.DateUtil;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.reception.dto.NotifyDTO;
@@ -825,7 +826,7 @@ public class NotifyController {
                         Map<String, Object> map = new HashMap<>();  // 页面的动态数据
                         map.put("title", website.getWebsiteName());
                         map.put("member", member.getMember());
-                        map.put("date", new Date());
+                        map.put("date", DateUtil.getDate());
                         map.put("info", stringBuilder.toString());
                         try {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});

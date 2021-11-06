@@ -502,7 +502,7 @@ public class OrdersController extends BaseController {
                         Map<String, Object> map = new HashMap<>();  // 页面的动态数据
                         map.put("title", website.getWebsiteName());
                         map.put("member", member.getMember());
-                        map.put("date", new Date());
+                        map.put("date", DateUtil.getDate());
                         map.put("info", stringBuilder.toString());
                         try {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
