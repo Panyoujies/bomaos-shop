@@ -65,6 +65,32 @@
                         </div>
 
                         <div class="layui-form-item">
+                            <label class="layui-form-label layui-form-required">限制购买:</label>
+                            <div class="layui-input-block">
+                                <input name="restricts" placeholder="请输入限制购买数量" class="layui-input" value="0"
+                                       lay-verify="required" required/>
+                                <div class="layui-word-aux">值为0时表示没有无限制</div>
+                            </div>
+                        </div>
+
+                        <!-- 自定义输入框配置 -->
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-form-required">自定义输入框:</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="isCustomize" lay-filter="isCustomize" value="0" title="关闭" checked>
+                                <input type="radio" name="isCustomize" lay-filter="isCustomize" value="1" title="开启">
+                            </div>
+                        </div>
+
+                        <!-- 重复使用出现，自定义输入框 -->
+                        <div class="layui-form-item" id="customize" style="display:none;">
+                            <div class="layui-input-block" id="customizeInput">
+                                <textarea name="customize" placeholder="请输入关键字" class="layui-textarea" lay-verType="tips"></textarea>
+                                <div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个 [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）</div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
                             <label class="layui-form-label layui-form-required">发货模式:</label>
                             <div class="layui-input-block">
                                 <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货"
@@ -87,14 +113,6 @@
                             </div>
                         </div>
 
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">限制购买:</label>
-                            <div class="layui-input-block">
-                                <input name="restricts" placeholder="请输入限制购买数量" class="layui-input" value="0"
-                                       lay-verify="required" required/>
-                                <div class="layui-word-aux">值为0时表示没有无限制</div>
-                            </div>
-                        </div>
                         <!-- 批发价配置 -->
                         <div class="layui-form-item">
                             <label class="layui-form-label layui-form-required">批发模式</label>
@@ -226,8 +244,15 @@
                 '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
                 '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
             );
-        }
-        ;
+        };
+
+        if (products.isCustomize == 1) {
+            $("#customize").attr("style", "display:block;");
+            $("#customizeInput").html(
+                '<textarea name="customizeInput" placeholder="请输入自定义关键字" class="layui-textarea"></textarea>' +
+                '<div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个 [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）</div>'
+            );
+        };
 
         if (products.shipType == 1) {
             $("#inventory").attr("style", "display:block;");
@@ -417,6 +442,22 @@
             } else {  // 不使用
                 $("#wholesale").attr("style", "display:none;");
                 $("#inputWholesale").html(null);
+            }
+        });
+
+        //监听指定开关
+        form.on('radio(isCustomize)', function (data) {
+            // 使用
+            if (data.value == 1) {
+                layer.msg("请输入需要自定义的输入框配置", {icon: 1});
+                $("#customize").attr("style", "display:block;");
+                $("#customizeInput").html(
+                    '<textarea name="customizeInput" placeholder="请输入自定义输入框配置" class="layui-textarea" lay-verType="tips" lay-verify="required" required></textarea>' +
+                    '<div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个 [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）</div>'
+                );
+            } else {  // 不使用
+                $("#customize").attr("style", "display:none;");
+                $("#customizeInput").html(null);
             }
         });
 

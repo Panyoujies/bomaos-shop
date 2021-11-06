@@ -1,7 +1,6 @@
 package cn.zlianpay.orders.service.impl;
 
-import cn.zlianpay.carmi.mapper.CardsMapper;
-import cn.zlianpay.common.core.utils.FormCheckUtil;
+import cn.zlianpay.common.core.utils.*;
 import cn.zlianpay.common.core.web.PageParam;
 import cn.zlianpay.common.core.web.PageResult;
 import cn.zlianpay.dashboard.DateStrUtil;
@@ -9,9 +8,6 @@ import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.mapper.CouponMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import cn.zlianpay.common.core.utils.DateUtil;
-import cn.zlianpay.common.core.utils.StringUtil;
-import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.orders.mapper.OrdersMapper;
 import cn.zlianpay.orders.entity.Orders;
 import cn.zlianpay.orders.service.OrdersService;
@@ -41,9 +37,6 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Autowired
     private CouponMapper couponMapper;
 
-    @Autowired
-    private CardsMapper cardsMapper;
-
     @Override
     public PageResult<Orders> listPage(PageParam<Orders> page) {
         List<Orders> records = baseMapper.listPage(page);
@@ -67,10 +60,38 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     public Map<String, String> buy(Integer productId, Integer number, String contact, Integer couponId, String payType, String password, HttpServletRequest request) {
 
+        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
+        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
+        for (Map.Entry<String, String> stringStringEntry : params.entrySet()) {
+            System.out.println(stringStringEntry);
+        }
+
         Products products = productsMapper.selectById(productId);
+
         Map<String, String> map = new HashMap<>();
 
         Orders orders = new Orders();
+
+        /**
+         * 是否为附加信息
+         */
+        Integer isCustomize = products.getIsCustomize();
+        if (isCustomize == 1) {
+            String customizeInput = products.getCustomizeInput();
+            String[] customize = customizeInput.split("\\n");
+
+            StringBuilder attachInfo = new StringBuilder();
+            for (String s : customize) {
+                String[] split = s.split("=");
+                String s1 = params.get(split[0]); // get到提交过来的字段内容
+                attachInfo.append(split[1]).append("=").append(s1).append(",");
+            }
+
+            // 去除多余尾部的逗号
+            String result = attachInfo.deleteCharAt(attachInfo.length() - 1).toString();
+            orders.setAttachInfo(result);
+        }
+
         orders.setPrice(products.getPrice());
         orders.setStatus(0); // 1 为支付，0未支付
         orders.setProductId(productId);

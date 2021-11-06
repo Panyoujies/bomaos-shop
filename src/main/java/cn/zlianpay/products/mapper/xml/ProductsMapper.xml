@@ -71,6 +71,12 @@
                 <if test="page.pageData.carouselImage != null">
                     AND a.carousel_image LIKE CONCAT('%', #{page.pageData.carouselImage}, '%')
                 </if>
+                <if test="page.pageData.isCustomize != null">
+                    AND a.is_customize = #{page.pageData.isCustomize}
+                </if>
+                <if test="page.pageData.customizeInput != null">
+                    AND a.customize_input LIKE CONCAT('%', #{page.pageData.customizeInput}, '%')
+                </if>
             </if>
         </where>
     </sql>

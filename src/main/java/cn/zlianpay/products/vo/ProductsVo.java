@@ -141,4 +141,14 @@ public class ProductsVo {
      * 轮播图
      */
     private String carouselImage;
+
+    /**
+     * 是否开启自定义输入框
+     */
+    private Integer isCustomize;
+
+    /**
+     * 自定义输入框
+     */
+    private String customizeInput;
 }

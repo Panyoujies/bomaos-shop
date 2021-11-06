@@ -127,4 +127,9 @@ public class OrderVos {
      * 是否为密码的方式查询
      */
     private Integer isPassword;
+
+    /**
+     * 附加信息
+     */
+    private String attachInfo;
 }

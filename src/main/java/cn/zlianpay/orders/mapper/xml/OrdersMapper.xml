@@ -65,6 +65,9 @@
                 <if test="page.pageData.cardsInfo != null">
                     AND a.cards_info LIKE CONCAT('%', #{page.pageData.cardsInfo}, '%')
                 </if>
+                <if test="page.pageData.attachInfo != null">
+                    AND a.attach_info LIKE CONCAT('%', #{page.pageData.attachInfo}, '%')
+                </if>
             </if>
         </where>
     </sql>

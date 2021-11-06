@@ -13,6 +13,7 @@ import cn.zlianpay.common.core.pays.wxpay.SendWxPay;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
+import cn.zlianpay.common.core.utils.RequestParamsUtil;
 import cn.zlianpay.common.core.utils.UserAgentGetter;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.common.core.web.JsonResult;
@@ -100,7 +101,16 @@ public class OrderController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/buy")
-    public JsonResult save(Integer goodsId, Integer number, String contact, String coupon, String payType, String password, HttpServletResponse response, HttpServletRequest request) {
+    public JsonResult save(HttpServletResponse response, HttpServletRequest request) {
+
+        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
+        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
+        Integer goodsId = Integer.parseInt(params.get("goodsId"));
+        Integer number = Integer.parseInt(params.get("number"));
+        String contact = params.get("contact");
+        String coupon = params.get("coupon");
+        String payType = params.get("payType");
+        String password = params.get("password");
 
         if (StringUtils.isEmpty(goodsId)) {
             return JsonResult.error("商品不能为空");
@@ -112,12 +122,11 @@ public class OrderController extends BaseController {
             return JsonResult.error("请选择付款方式！");
         }
 
-        UserAgentGetter agentGetter = new UserAgentGetter(request);
-
         Products products = productsService.getById(goodsId);
-		
+
+        UserAgentGetter agentGetter = new UserAgentGetter(request);
         Integer restricts = products.getRestricts();
-        /* 判断是不是限购 */
+        // 判断是不是限购
         if (restricts >= 1) {
             JsonResult jsonResult = restricts(goodsId, number, restricts, agentGetter.getIp());
             if (jsonResult != null) {
@@ -169,7 +178,11 @@ public class OrderController extends BaseController {
                     return JsonResult.error("该优惠券代码已被使用过，或不能使用在本商品，请核对后再试！");
                 }
             }
+            /**
+             * 处理订单业务
+             */
             Map<String, String> buy = ordersService.buy(goodsId, number, contact, couponId, payType, password, request);
+
             Cookie[] cookies = request.getCookies();
             if (ObjectUtils.isEmpty(cookies)) {
                 /**

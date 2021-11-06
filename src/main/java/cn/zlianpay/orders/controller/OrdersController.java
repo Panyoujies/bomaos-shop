@@ -127,6 +127,30 @@ public class OrdersController extends BaseController {
             // 发货模式
             ordersVo.setShipType(products.getShipType());
 
+            if (!StringUtils.isEmpty(orders.getAttachInfo())) {
+                String attachInfo = orders.getAttachInfo();
+                boolean contains = attachInfo.contains(",");
+                List<Map<String, String>> mapList = new ArrayList<>();
+                if (contains) {
+                    String[] split = attachInfo.split(",");
+                    for (String s : split) {
+                        String[] split1 = s.split("=");
+                        Map<String, String> map = new HashMap<>();
+                        map.put("name", split1[0]);
+                        map.put("value", split1[1]);
+                        mapList.add(map);
+                    }
+                    ordersVo.setAttachInfoList(mapList);
+                } else {
+                    String[] split1 = attachInfo.split("=");
+                    Map<String, String> map = new HashMap<>();
+                    map.put("name", split1[0]);
+                    map.put("value", split1[1]);
+                    mapList.add(map);
+                    ordersVo.setAttachInfoList(mapList);
+                }
+            }
+
             return ordersVo;
         }).collect(Collectors.toList());
 

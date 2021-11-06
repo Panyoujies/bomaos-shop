@@ -128,4 +128,9 @@ public class Orders implements Serializable {
      * 卡密信息
      */
     private String cardsInfo;
+
+    /**
+     * 附加信息
+     */
+    private String attachInfo;
 }

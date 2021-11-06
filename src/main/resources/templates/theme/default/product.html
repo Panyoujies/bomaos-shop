@@ -208,6 +208,16 @@
                                 </div>
                             </div>
                         </:if>
+                        <:if test="${isCustomize == 1}">
+                            <:for items="${customizeList!}" var="item">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label layui-form-required" style="width: auto; margin-right: 1em; min-width: 4em; text-align-last: justify;">${item.name}</label>
+                                    <div class="layui-input-block">
+                                        <input name="${item.field}" id="${item.field}" placeholder="输入${item.name}" class="layui-input" lay-verType="tips"/>
+                                    </div>
+                                </div>
+                            </:for>
+                        </:if>
                         <div class="layui-form-item">
                             <label class="layui-form-label layui-form-required">购买数量</label>
                             <div class="layui-input-block">
@@ -567,13 +577,19 @@
             var coupon = $("#coupon").val() // 优惠券
             var payType = $('.pay-type-group .layui-row .layui-col-md6>div.active').data('id');
             var password = $('#password').val();
+            <:for items="${customizeList}" var="item">
+            var ${item.field} = $('#${item.field}').val();
+            </:for>
             $.post('/buy', {
                 goodsId: product1.id,
                 number: number,
                 contact: contact,
                 coupon: coupon,
                 payType: payType,
-                password: password
+                password: password,
+                <:for items="${customizeList}" var="item">
+                ${item.field}: ${item.field},
+                </:for>
             }, function (res) {
                 if (res.code == 200) {
                     layer.confirm(getHtml(res.data), {

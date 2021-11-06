@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @ToString
@@ -109,7 +110,6 @@ public class OrdersVo {
      */
     private List<String> cardInfo;
 
-
     /**
      * 标记为使用优惠券
      */
@@ -130,4 +130,9 @@ public class OrdersVo {
      * 订单密码
      */
     private String password;
+
+    /**
+     * 附加信息
+     */
+    private List<Map<String, String>> attachInfoList;
 }

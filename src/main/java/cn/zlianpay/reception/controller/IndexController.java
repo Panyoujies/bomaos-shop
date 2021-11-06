@@ -256,6 +256,27 @@ public class IndexController {
         int isCoupon = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
         model.addAttribute("isCoupon", isCoupon);
 
+        // 是否启用自定义输入框
+        Integer isCustomize = products.getIsCustomize();
+        model.addAttribute("isCustomize", isCustomize);
+        if (isCustomize == 1) {
+            if (!StringUtils.isEmpty(products.getCustomizeInput())) {
+                String customizeInput = products.getCustomizeInput();
+                String[] customize = customizeInput.split("\\n");
+                List<Map<String, String>> list = new ArrayList<>();
+                for (String s : customize) {
+                    String[] split = s.split("=");
+
+                    Map<String, String> map = new HashMap<>();
+                    map.put("field", split[0]);
+                    map.put("name", split[1]);
+                    map.put("switch", split[2]);
+                    list.add(map);
+                }
+                model.addAttribute("customizeList", list);
+            }
+        }
+
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
 

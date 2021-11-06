@@ -113,6 +113,12 @@
 </script>
 
 <script type="text/html" id="shipEditDialog">
+    {{# layui.each(d,function(i,item){ }}
+    <div class="layui-form-item" style="margin-bottom: 0px">
+        <label class="layui-form-label" style="padding-bottom: 0px;">{{item.name}}:</label>
+        <div class="layui-input-block layui-word-aux" style="min-height: auto; padding: 9px 0 0 0 !important;">{{item.value}}</div>
+    </div>
+    {{# }); }}
     <form id="shipEditForm" lay-filter="shipEditForm" class="layui-form model-form">
         <input name="id" type="hidden"/>
         <div class="layui-form-item" style="margin-left: 30px">
@@ -124,7 +130,6 @@
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
-
 </script>
 
 <!-- 表单弹窗 -->
@@ -180,6 +185,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="layui-col-md12">
+                {{# layui.each(d.attachInfoList,function(i,item){ }}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{{item.name}}:</label>
+                    <div class="layui-input-block layui-word-aux">{{item.value}}</div>
+                </div>
+                {{# }); }}
             </div>
         </div>
         <div class="layui-form-item text-right" style="margin-top: 15px;">
@@ -358,8 +371,10 @@
         function showShipModel(mData) {
             admin.open({
                 type: 1,
-                title: '准备发货',
+                title: '我要发货',
                 content: $('#shipEditDialog').html(),
+                data: mData.attachInfoList,
+                tpl: true,
                 success: function (layero, dIndex) {
                     form.val('shipEditForm', mData); // 回显数据
                     form.on('submit(shipEditSubmit)', function (data) {
