@@ -582,9 +582,11 @@
             var coupon = $("#coupon").val() // 优惠券
             var payType = $('.pay-type-group .layui-row .layui-col-md6>div.active').data('id');
             var password = $('#password').val();
+            <:if test="${isCustomize == 1}">
             <:for items="${customizeList}" var="item">
             var ${item.field} = $('#${item.field}').val();
             </:for>
+            </:if>
             $.post('/buy', {
                 goodsId: product1.id,
                 number: number,
@@ -592,9 +594,11 @@
                 coupon: coupon,
                 payType: payType,
                 password: password,
+                <:if test="${isCustomize == 1}">
                 <:for items="${customizeList}" var="item">
                 ${item.field}: ${item.field},
                 </:for>
+                </:if>
             }, function (res) {
                 if (res.code == 200) {
                     layer.confirm(getHtml(res.data), {
