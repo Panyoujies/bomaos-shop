@@ -424,12 +424,13 @@ public class NotifyController {
 
     /**
      * 异步通知
+     *
      * @param notifyDTO
      * @return
      */
     @RequestMapping("/payjs/notify")
     @ResponseBody
-    public Object payjsNotify(NotifyDTO notifyDTO){
+    public Object payjsNotify(NotifyDTO notifyDTO) {
         Map<String, Object> notifyData = new HashMap<>();
         notifyData.put("return_code", notifyDTO.getReturn_code());
         notifyData.put("total_fee", notifyDTO.getTotal_fee());
@@ -460,7 +461,7 @@ public class NotifyController {
         }
 
         String sign = SignUtil.sign(notifyData, key);
-        if(sign.equals(notifyDTO.getSign())){
+        if (sign.equals(notifyDTO.getSign())) {
             // 验签通过，这里修改订单状态
             String returnBig = returnBig(notifyDTO.getTotal_fee(), notifyDTO.getTotal_fee(), notifyDTO.getOut_trade_no(), notifyDTO.getTransaction_id(), notifyDTO.getAttach(), "success", "failure");
             return returnBig;
@@ -471,13 +472,14 @@ public class NotifyController {
 
     /**
      * 微信官方异步通知
+     *
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("/wxpay/notify")
     @ResponseBody
-    public String wxPayNotify(HttpServletRequest request, HttpServletResponse response){
+    public String wxPayNotify(HttpServletRequest request, HttpServletResponse response) {
         String resXml = "";
         InputStream inStream;
         try {
@@ -532,7 +534,7 @@ public class NotifyController {
                 }
             }
         } catch (Exception e) {
-            System.out.println("wxnotify:支付回调发布异常：" +  e);
+            System.out.println("wxnotify:支付回调发布异常：" + e);
         } finally {
             try {
                 // 处理业务完毕
@@ -549,6 +551,7 @@ public class NotifyController {
 
     /**
      * 支付宝当面付 异步通知
+     *
      * @param request 接收
      * @return 返回
      */
@@ -599,7 +602,7 @@ public class NotifyController {
             boolean alipayRSAChecked = false;
             if (IS_ALIPAY_TYPE == 1) {
                 alipayRSAChecked = AlipaySignature.rsaCheckV2(params, alipay_public_key, "utf-8", "RSA2");
-            } else if (IS_ALIPAY_TYPE == 2){
+            } else if (IS_ALIPAY_TYPE == 2) {
                 alipayRSAChecked = AlipaySignature.rsaCheckV1(params, alipay_public_key, "utf-8", "RSA2");
             }
 
@@ -619,7 +622,7 @@ public class NotifyController {
         }
         return returnBig;
     }
-    
+
     /**
      * 支付宝PC支付返回接口
      *
@@ -690,6 +693,7 @@ public class NotifyController {
 
     /**
      * 取消订单
+     *
      * @return
      */
     @GetMapping("/paypal/cancel")
@@ -700,6 +704,7 @@ public class NotifyController {
 
     /**
      * 完成支付
+     *
      * @param paymentId
      * @param payerId
      * @param response
@@ -739,13 +744,14 @@ public class NotifyController {
 
     /**
      * 业务处理
-     * @param money 实收款金额
-     * @param price 订单金额
-     * @param payId 订单号
-     * @param pay_no 流水号
-     * @param param 自定义内容
+     *
+     * @param money   实收款金额
+     * @param price   订单金额
+     * @param payId   订单号
+     * @param pay_no  流水号
+     * @param param   自定义内容
      * @param success 返回成功
-     * @param fiald  返回失败
+     * @param fiald   返回失败
      * @return this
      */
     private String returnBig(String money, String price, String payId, String pay_no, String param, String success, String fiald) {
@@ -757,7 +763,7 @@ public class NotifyController {
         if (member == null) return fiald; // 本地没有这个订单
 
         boolean empty = StringUtils.isEmpty(member.getCardsInfo());
-        if (!empty)  return success;
+        if (!empty) return success;
 
         Products products = productsService.getById(param);
         if (products == null) return fiald; // 商品没了
@@ -767,26 +773,73 @@ public class NotifyController {
 
         if (products.getShipType() == 0) { // 自动发货的商品
 
+            StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
+
             /**
              * 卡密信息列表
              * 通过商品购买数量来获取对应商品的卡密数量
              */
-            List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-            if (card == null) return fiald; // 空值的话直接返回错误提示
+            if (products.getSellType() == 0) { // 一次性卡密类型
 
-            StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
-            StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
+                List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+                if (card == null) return fiald; // 空值的话直接返回错误提示
 
-            for (Cards cards : card) {
-                orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+                StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+
+                for (Cards cards : card) {
+                    orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+
+                    /**
+                     * 设置每条被购买的卡密的售出状态
+                     */
+                    Cards cards1 = new Cards();
+                    cards1.setId(cards.getId());
+                    cards1.setStatus(1);
+                    cards1.setNumber(0);
+                    cards1.setSellNumber(1);
+                    cards1.setUpdatedAt(new Date());
+
+                    // 设置售出的卡密
+                    cardsService.updateById(cards1);
+
+                    if (cards.getCardInfo().contains(" ")) {
+                        String[] split = cards.getCardInfo().split(" ");
+                        stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                    } else {
+                        stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
+                    }
+                }
+
+                // 去除多余尾部的逗号
+                String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+
+                Orders orders = new Orders();
+                orders.setId(member.getId());
+                orders.setCardsInfo(result);
+
+                // 更新售出卡密
+                ordersService.updateById(orders);
+
+            } else if (products.getSellType() == 1) { // 重复销售的卡密
+                StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+                if (cards == null) return fiald; // 空值的话直接返回错误提示
 
                 /**
                  * 设置每条被购买的卡密的售出状态
                  */
                 Cards cards1 = new Cards();
                 cards1.setId(cards.getId());
-                cards1.setStatus(1);
                 cards1.setUpdatedAt(new Date());
+                if (cards.getNumber() == 1) { // 还剩下一个卡密
+                    cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
+                    cards1.setNumber(cards.getNumber() - member.getNumber()); // 减完之后等于0
+                    cards1.setStatus(1); // 设置状态为已全部售出
+                } else {
+                    cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
+                    cards1.setNumber(cards.getNumber() - member.getNumber());
+                }
 
                 // 设置售出的卡密
                 cardsService.updateById(cards1);
@@ -797,17 +850,26 @@ public class NotifyController {
                 } else {
                     stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
                 }
+
+                /**
+                 * 看用户购买了多少个卡密
+                 * 正常重复的卡密不会购买1个以上
+                 * 这里做个以防万一呀（有钱谁不赚）
+                 */
+                for (int i = 0; i < member.getNumber(); i++) {
+                    orderInfo.append(cards.getCardInfo()).append(",");
+                }
+
+                // 去除多余尾部的逗号
+                String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+
+                Orders orders = new Orders();
+                orders.setId(member.getId());
+                orders.setCardsInfo(result);
+
+                // 更新售出卡密
+                ordersService.updateById(orders);
             }
-
-            // 去除多余尾部的逗号
-            String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
-
-            Orders orders = new Orders();
-            orders.setId(member.getId());
-            orders.setCardsInfo(result);
-
-            // 更新售出卡密
-            ordersService.updateById(orders);
 
             /**
              * 微信的 wxpush 通知
@@ -817,7 +879,7 @@ public class NotifyController {
              */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>" + member.getMoney() + "</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());
@@ -860,7 +922,7 @@ public class NotifyController {
              */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>" + member.getMoney() + "</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());
@@ -906,7 +968,7 @@ public class NotifyController {
 
     @GetMapping("/order/state/{orderid}")
     @ResponseBody
-    public JsonResult state(@PathVariable("orderid") String orderid){
+    public JsonResult state(@PathVariable("orderid") String orderid) {
         Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("id", orderid));
         if (!StringUtils.isEmpty(orders.getPayNo())) {
             return JsonResult.ok().setCode(200).setData(1);

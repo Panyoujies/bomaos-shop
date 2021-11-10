@@ -77,8 +77,8 @@
 
         .layui-btn-primary:hover {
             color: #fff;
-            border-color: #4282ff;
-            background-color: #4282ff;
+            border-color: #2aa781;
+            background-color: #2fb18a;
         }
 
         .position-relative {
@@ -114,7 +114,12 @@
         }
     </style>
 </head>
-<body>
+<body class="page-no-scroll">
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 

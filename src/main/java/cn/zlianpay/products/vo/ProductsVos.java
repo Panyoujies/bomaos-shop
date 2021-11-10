@@ -125,16 +125,6 @@ public class ProductsVos {
     private Integer isPassword;
 
     /**
-     * 置顶轮播
-     */
-    private Integer isCarousel;
-
-    /**
-     * 轮播图
-     */
-    private String carouselImage;
-
-    /**
      * 是否开启自定义输入框
      */
     private Integer isCustomize;
@@ -143,4 +133,9 @@ public class ProductsVos {
      * 自定义输入框
      */
     private String customizeInput;
+
+    /**
+     * 售卡类型
+     */
+    private Integer sellType;
 }

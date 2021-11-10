@@ -17,212 +17,179 @@
         </div>
         <div class="layui-card-body">
             <form class="layui-form" lay-filter="productForm" style="margin-top: 10px">
-                <div class="layui-row layui-col-space15">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-                        <input name="id" type="hidden"/>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">商品分类:</label>
-                            <div class="layui-input-block">
-                                <select name="classifyId" lay-verType="tips" lay-verify="required" required>
-                                    <option value="">请选择分类</option>
-                                    <:for items="${classifysList}" var="item">
-                                        <option value="${item.id}">${item.name}</option>
-                                    </:for>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">商品名称:</label>
-                            <div class="layui-input-block">
-                                <input name="name" placeholder="请输入商品名称" class="layui-input"
-                                       lay-verify="required" required/>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">商品金额:</label>
-                            <div class="layui-input-block">
-                                <input name="price" type="number" placeholder="请输入商品金额" class="layui-input"
-                                       lay-verify="required" required/>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">排序:</label>
-                            <div class="layui-input-block">
-                                <input name="sort" placeholder="请输入排序" class="layui-input" value="1000"
-                                       lay-verify="required"
-                                       required/>
-                            </div>
-                        </div>
 
-                        <!-- 是否开启密码查询 -->
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">密码查询:</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="isPassword" lay-filter="isPassword" value="1" title="开启"
-                                       checked>
-                                <input type="radio" name="isPassword" lay-filter="isPassword" value="0" title="关闭">
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">限制购买:</label>
-                            <div class="layui-input-block">
-                                <input name="restricts" placeholder="请输入限制购买数量" class="layui-input" value="0"
-                                       lay-verify="required" required/>
-                                <div class="layui-word-aux">值为0时表示没有无限制</div>
-                            </div>
-                        </div>
-
-                        <!-- 自定义输入框配置 -->
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">自定义输入框:</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="isCustomize" lay-filter="isCustomize" value="0" title="关闭" checked>
-                                <input type="radio" name="isCustomize" lay-filter="isCustomize" value="1" title="开启">
-                            </div>
-                        </div>
-
-                        <!-- 重复使用出现，自定义输入框 -->
-                        <div class="layui-form-item" id="customize" style="display:none;">
-                            <div class="layui-input-block" id="customizeInput">
-                                <textarea name="customize" placeholder="请输入关键字" class="layui-textarea" lay-verType="tips"></textarea>
-                                <div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个 [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）</div>
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">发货模式:</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货"
-                                       checked>
-                                <input type="radio" name="shipType" lay-filter="shipType" value="1" title="手动发货">
-                            </div>
-                        </div>
-
-                        <!-- 重复使用出现，券代码 -->
-                        <div class="layui-form-item" id="inventory" style="display: none">
-                            <label class="layui-form-label">库存:</label>
-                            <div class="layui-input-block" id="inputInventory">
-                            </div>
-                        </div>
-
-                        <!-- 重复使用出现，券代码 -->
-                        <div class="layui-form-item" id="sales" style="display: none">
-                            <label class="layui-form-label">销量:</label>
-                            <div class="layui-input-block" id="inputSales">
-                            </div>
-                        </div>
-
-                        <!-- 批发价配置 -->
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">批发模式</label>
-                            <div class="layui-input-inline" style="width: auto;">
-                                <input type="radio" name="isWholesale" lay-filter="isWholesale" value="0" title="关闭批发"
-                                       checked>
-                                <input type="radio" name="isWholesale" lay-filter="isWholesale" value="1" title="开启批发">
-                            </div>
-                        </div>
-                        <!-- 重复使用出现，券代码 -->
-                        <div class="layui-form-item" id="wholesale" style="display:none;">
-                            <div class="layui-input-block" id="inputWholesale">
-                                <textarea name="wholesale" placeholder="请输入关键字" class="layui-textarea"></textarea>
-                                <div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item" style="margin-top: 15px">
-                            <label class="layui-form-label">首页图片:</label>
-                            <div class="layui-input-block" style="width: auto">
-                                <input id="indexLogo" name="indexLogo" placeholder="商品图片/可使用外链" class="layui-input"/>
-                                <div class="layui-upload" style="margin-top: 10px">
-                                    <button type="button" class="layui-btn" id="test2">上传图片</button>
-                                    <div class="layui-upload-list">
-                                        <img class="layui-upload-img" id="demo2">
-                                        <p id="demoText1"></p>
-                                    </div>
-                                    <div style="width: 95px;">
-                                        <div class="layui-progress layui-progress-big" lay-showpercent="yes"
-                                             lay-filter="demo1">
-                                            <div class="layui-progress-bar" lay-percent=""></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-word-aux">推荐图片尺寸为【256x146】</div>
-                            </div>
-                        </div>
-
-                        <div class="layui-form-item" style="margin-top: 15px">
-                            <label class="layui-form-label">商品图片:</label>
-                            <div class="layui-input-block" style="width: auto">
-                                <input id="imageLogo" name="imageLogo" placeholder="商品图片/可使用外链" class="layui-input"/>
-                                <div class="layui-upload" style="margin-top: 10px">
-                                    <button type="button" class="layui-btn" id="test1">上传图片</button>
-                                    <div class="layui-upload-list">
-                                        <img class="layui-upload-img" id="demo1">
-                                        <p id="demoText"></p>
-                                    </div>
-                                    <div style="width: 95px;">
-                                        <div class="layui-progress layui-progress-big" lay-showpercent="yes"
-                                             lay-filter="demo">
-                                            <div class="layui-progress-bar" lay-percent=""></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-word-aux">推荐图片尺寸为【230x230】</div>
-                            </div>
-                        </div>
+                <input name="id" type="hidden"/>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品分类:</label>
+                    <div class="layui-input-block">
+                        <select name="classifyId" lay-verType="tips" lay-verify="required" required>
+                            <option value="">请选择分类</option>
+                            <:for items="${classifysList}" var="item">
+                                <option value="${item.id}">${item.name}</option>
+                            </:for>
+                        </select>
                     </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md6">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">首页轮播:</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="isCarousel" lay-filter="isCarousel" value="0" title="关闭轮播"
-                                       checked>
-                                <input type="radio" name="isCarousel" lay-filter="isCarousel" value="1" title="开启轮播">
-                            </div>
-                        </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品名称:</label>
+                    <div class="layui-input-block">
+                        <input name="name" placeholder="请输入商品名称" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品金额:</label>
+                    <div class="layui-input-block">
+                        <input name="price" type="number" placeholder="请输入商品金额" class="layui-input"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">排序:</label>
+                    <div class="layui-input-block">
+                        <input name="sort" placeholder="请输入排序" class="layui-input" value="1000"
+                               lay-verify="required"
+                               required/>
+                    </div>
+                </div>
 
-                        <div class="layui-form-item" style="margin-top: 15px">
-                            <label class="layui-form-label">轮播图片:</label>
-                            <div class="layui-input-block" style="width: auto">
-                                <input id="carouselImage" name="carouselImage" placeholder="轮播图片/可使用外链" class="layui-input"/>
-                                <div class="layui-upload" style="margin-top: 10px">
-                                    <button type="button" class="layui-btn" id="test3">上传图片</button>
-                                    <div class="layui-upload-list">
-                                        <img class="layui-upload-img" id="demo3">
-                                        <p id="demoText3"></p>
-                                    </div>
-                                    <div style="width: 95px;">
-                                        <div class="layui-progress layui-progress-big" lay-showpercent="yes"
-                                             lay-filter="demo3">
-                                            <div class="layui-progress-bar" lay-percent=""></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-word-aux">推荐图片尺寸为【710x250】</div>
-                            </div>
-                        </div>
+                <!-- 是否开启密码查询 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">密码查询:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="isPassword" lay-filter="isPassword" value="1" title="开启"
+                               checked>
+                        <input type="radio" name="isPassword" lay-filter="isPassword" value="0" title="关闭">
+                    </div>
+                </div>
 
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">商品详情:</label>
-                            <div class="layui-input-block">
-                                <textarea id="pdInfoEditor"></textarea>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label layui-form-required">商品状态:</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="status" value="1" title="上架" checked>
-                                <input type="radio" name="status" value="0" title="下架">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-input-block">
-                                <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit> 保存商品</button>
-                            </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">限制购买:</label>
+                    <div class="layui-input-block">
+                        <input name="restricts" placeholder="请输入限制购买数量" class="layui-input" value="0"
+                               lay-verify="required" required/>
+                        <div class="layui-word-aux">值为0时表示没有无限制</div>
+                    </div>
+                </div>
+
+                <!-- 自定义输入框配置 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">自定义输入框:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="isCustomize" lay-filter="isCustomize" value="0" title="关闭" checked>
+                        <input type="radio" name="isCustomize" lay-filter="isCustomize" value="1" title="开启">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，自定义输入框 -->
+                <div class="layui-form-item" id="customize" style="display:none;">
+                    <div class="layui-input-block" id="customizeInput">
+                        <textarea name="customize" placeholder="请输入关键字" class="layui-textarea"
+                                  lay-verType="tips"></textarea>
+                        <div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个
+                            [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）
                         </div>
                     </div>
                 </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">发货模式:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货"
+                               checked>
+                        <input type="radio" name="shipType" lay-filter="shipType" value="1" title="手动发货">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="inventory" style="display: none">
+                    <label class="layui-form-label">库存:</label>
+                    <div class="layui-input-block" id="inputInventory">
+                    </div>
+                </div>
+
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="sales" style="display: none">
+                    <label class="layui-form-label">销量:</label>
+                    <div class="layui-input-block" id="inputSales">
+                    </div>
+                </div>
+
+                <!-- 卡密类型 -->
+                <div class="layui-form-item" id="sellTypeDisplay">
+                    <label class="layui-form-label layui-form-required">卡密类型:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sellType" value="0" title="一次性卡密" checked>
+                        <input type="radio" name="sellType" value="1" title="重复卡销售">
+                    </div>
+                </div>
+
+                <!-- 批发价配置 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">批发模式</label>
+                    <div class="layui-input-inline" style="width: auto;">
+                        <input type="radio" name="isWholesale" lay-filter="isWholesale" value="0" title="关闭批发"
+                               checked>
+                        <input type="radio" name="isWholesale" lay-filter="isWholesale" value="1" title="开启批发">
+                    </div>
+                </div>
+                <!-- 重复使用出现，券代码 -->
+                <div class="layui-form-item" id="wholesale" style="display:none;">
+                    <div class="layui-input-block" id="inputWholesale">
+                        <textarea name="wholesale" placeholder="请输入关键字" class="layui-textarea"></textarea>
+                        <div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 15px">
+                    <label class="layui-form-label">首页图片:</label>
+                    <div class="layui-input-block" style="width: auto">
+                        <input id="indexLogo" name="indexLogo" placeholder="商品图片/可使用外链" class="layui-input"/>
+                        <div class="layui-upload" style="margin-top: 10px">
+                            <button type="button" class="layui-btn" id="test2">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo2">
+                            </div>
+                        </div>
+                        <div class="layui-word-aux">推荐图片尺寸为【256x146】</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 15px">
+                    <label class="layui-form-label">商品图片:</label>
+                    <div class="layui-input-block" style="width: auto">
+                        <input id="imageLogo" name="imageLogo" placeholder="商品图片/可使用外链" class="layui-input"/>
+                        <div class="layui-upload" style="margin-top: 10px">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="demo1">
+                            </div>
+                        </div>
+                        <div class="layui-word-aux">推荐图片尺寸为【230x230】</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品详情:</label>
+                    <div class="layui-input-block">
+                        <textarea id="pdInfoEditor"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">商品状态:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="上架" checked>
+                        <input type="radio" name="status" value="0" title="下架">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit> 保存商品</button>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
@@ -230,12 +197,11 @@
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
 <script>
-    layui.use(['layer', 'form', 'admin', 'upload', 'element'], function () {
+    layui.use(['layer', 'form', 'admin', 'fileChoose'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
-        var upload = layui.upload;
-        var element = layui.element;
+        var fileChoose = layui.fileChoose;
         var products = JSON.parse(JSON.stringify(${products!}));
 
         if (products.isWholesale == 1) {
@@ -271,7 +237,6 @@
         form.val('productForm', products);
         $('#demo1').attr('src', products.imageLogo); //图片链接
         $('#demo2').attr('src', products.indexLogo); //图片链接
-        $('#demo3').attr('src', products.carouselImage); //图片链接
 
         /* 渲染富文本编辑器 */
         tinymce.init({
@@ -295,9 +260,6 @@
         /* 表单提交 */
         form.on('submit(productsEditSubmit)', function (data) {
             data.field.pdInfo = tinymce.get('pdInfoEditor').getContent();
-            if (layui.admin.util.fullTextIsEmpty(data.field.pdInfo)) {
-                return layer.msg('请输入商品介绍正文', {icon: 2, anim: 6});
-            }
             var loadIndex = layer.load(2);
             $.post('/products/products/update', data.field, function (res) {
                 layer.close(loadIndex);
@@ -312,121 +274,34 @@
             return false;
         });
 
-        //常规使用 - 普通图片上传
-        var uploadInst = upload.render({
-            elem: '#test1',
-            url: '${ctxPath}/file/upload',
-            before: function (obj) {
-                //预读本地文件示例，不支持ie8
-                obj.preview(function (index, file, result) {
-                    $('#demo1').attr('src', result); //图片链接（base64）
-                });
-                element.progress('demo', '0%'); //进度条复位
-                layer.msg('上传中', {icon: 16, time: 0});
-            },
-            done: function (res) {
-                //如果上传失败
-                if (res.code > 0) {
-                    return layer.msg('上传失败');
-                }
-                //上传成功的一些操作
-                if (res.code == 0) {
-                    $("#imageLogo").val("/file/" + res.url);
-                }
-                $('#demoText').html(''); //置空上传失败的状态
-            },
-            error: function () {
-                //演示失败状态，并实现重传
-                var demoText = $('#demoText');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
-            },
-            progress: function (n, elem, e) { //进度条
-                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
-            }
+        $('#test1').click(function (res) {
+            fileChoose.open({
+                fileUrl: '${ctxPath}/file',
+                listUrl: '${ctxPath}/file/list',
+                upload: {url: '${ctxPath}/file/upload'},
+                num: 1,
+                onChoose: function (urls) {
+                    var list = urls;
+                    $("#imageLogo").val("/file" + list[0].url);
+                    $('#demo1').attr('src', "${ctxPath}/file" + list[0].url); //图片链接（base64）
+                },
+                response: {code: 0}
+            });
         });
 
-        //常规使用 - 普通图片上传
-        var uploadInst = upload.render({
-            elem: '#test2',
-            url: '${ctxPath}/file/upload',
-            before: function (obj) {
-                //预读本地文件示例，不支持ie8
-                obj.preview(function (index, file, result) {
-                    $('#demo2').attr('src', result); //图片链接（base64）
-                });
-                element.progress('demo1', '0%'); //进度条复位
-                layer.msg('上传中', {icon: 16, time: 0});
-            },
-            done: function (res) {
-                //如果上传失败
-                if (res.code > 0) {
-                    return layer.msg('上传失败');
-                }
-                //上传成功的一些操作
-                if (res.code == 0) {
-                    $("#indexLogo").val("/file/" + res.url);
-                }
-                $('#demoText1').html(''); //置空上传失败的状态
-            },
-            error: function () {
-                //演示失败状态，并实现重传
-                var demoText = $('#demoText1');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
-            },
-            progress: function (n, elem, e) { //进度条
-                element.progress('demo1', n + '%'); //可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
-            }
-        });
-
-        //常规使用 - 普通图片上传
-        var uploadInst = upload.render({
-            elem: '#test3',
-            url: '${ctxPath}/file/upload',
-            before: function (obj) {
-                //预读本地文件示例，不支持ie8
-                obj.preview(function (index, file, result) {
-                    $('#demo3').attr('src', result); //图片链接（base64）
-                });
-                element.progress('demo3', '0%'); //进度条复位
-                layer.msg('上传中', {icon: 16, time: 0});
-            },
-            done: function (res) {
-                //如果上传失败
-                if (res.code > 0) {
-                    return layer.msg('上传失败');
-                }
-                //上传成功的一些操作
-                if (res.code == 0) {
-                    $("#carouselImage").val("/file/" + res.url);
-                }
-                $('#demoText3').html(''); //置空上传失败的状态
-            },
-            error: function () {
-                //演示失败状态，并实现重传
-                var demoText = $('#demoText3');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
-            },
-            progress: function (n, elem, e) { //进度条
-                element.progress('demo3', n + '%'); //可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
-            }
+        $('#test2').click(function (res) {
+            fileChoose.open({
+                fileUrl: '${ctxPath}/file',
+                listUrl: '${ctxPath}/file/list',
+                upload: {url: '${ctxPath}/file/upload'},
+                num: 1,
+                onChoose: function (urls) {
+                    var list = urls;
+                    $("#indexLogo").val("/file" + list[0].url);
+                    $('#demo2').attr('src', "${ctxPath}/file" + list[0].url); //图片链接（base64）
+                },
+                response: {code: 0}
+            });
         });
 
         //监听指定开关
@@ -475,11 +350,13 @@
                     '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
                     '<div class="layui-word-aux">手动发货模式生效</div>'
                 );
+                $("#sellTypeDisplay").attr("style", "display:none;");
             } else {  // 不使用
                 $("#inventory").attr("style", "display:none;");
                 $("#inputInventory").html(null);
                 $("#sales").attr("style", "display:none;");
                 $("#inputSales").html(null);
+                $("#sellTypeDisplay").attr("style", "display:block;");
             }
         });
 

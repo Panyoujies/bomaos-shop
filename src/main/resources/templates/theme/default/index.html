@@ -5,8 +5,36 @@
               description="${website.description}" favicon="${website.favicon}"/>
     <link rel="stylesheet" href="${ctxPath}/theme/default/css/index.css"/>
     <link rel="stylesheet" href="${ctxPath}/assets/js/swiper/swiper-bundle.min.css"/>
+    <style>
+        .no-content {
+            padding: 60px 0 55px;
+            text-align: center;
+            color: #999;
+            border-radius: 5px;
+            box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);
+        }
+
+        .no-content .no-content-img {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        .no-content .user-no-contents {
+            margin-bottom: 0;
+            padding-bottom: 15px;
+            text-align: center;
+            font-size: 18px;
+            color: #c8c8c8;
+        }
+    </style>
 </head>
-<body>
+<body class="page-no-scroll">
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}"
           websiteLogo="${website.websiteLogo}"/>
@@ -19,11 +47,11 @@
                 <!-- Swiper -->
                 <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
-                        <:for items="${productDTOList}" var="item">
+                        <:for items="${carouselList}" var="item">
                             <div class="swiper-slide">
-                                <a href="${ctxPath}/product/${item.link}" style="height: 100%; background-image: url(<:if test="${item.carouselImage == null || item.carouselImage == ''}">../theme/default/images/carousel_logo.png</:if><:if test="${item.carouselImage != null || item.carouselImage != ''}">${item.carouselImage!}</:if>);">
+                                <a href="${item.link}" style="height: 100%; background-image: url(<:if test="${item.imageLogo == null || item.imageLogo == ''}">../theme/default/images/carousel_logo.png</:if><:if test="${item.imageLogo != null || item.imageLogo != ''}">${item.imageLogo!}</:if>);">
                                     <div class="swiper-text">
-                                        <h2>${item.name}</h2>
+                                        <h2>${item.title}</h2>
                                     </div>
                                 </a>
                             </div>
@@ -255,11 +283,9 @@
                     });
                 } else {
                     goodsHtml = '' +
-                        '<div style="text-align: center; padding: 30px;">' +
-                        '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                        '       <img src="/theme/default/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
-                        '       <span>暂无商品</span>' +
-                        '   </div>' +
+                        '<div class="no-content">\n' +
+                        '    <img src="/theme/default/images/error_ic_empty.png" class="no-content-img">\n' +
+                        '    <p class="user-no-contents">该分类下无商品</p>\n' +
                         '</div>';
                     $("#goodsList").html(goodsHtml);
                 }
@@ -286,11 +312,9 @@
                         });
                     } else {
                         goodsHtml = '' +
-                            '<div style="text-align: center; padding: 30px;">' +
-                            '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                            '       <img src="/theme/default/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
-                            '       <span>暂无商品</span>' +
-                            '   </div>' +
+                            '<div class="no-content">\n' +
+                            '    <img src="/theme/default/images/error_ic_empty.png" class="no-content-img">\n' +
+                            '    <p class="user-no-contents">该分类下无商品</p>\n' +
                             '</div>';
 
                         $("#goodsList").html(goodsHtml);
@@ -319,11 +343,9 @@
                             });
                         } else {
                             goodsHtml = '' +
-                                '<div style="text-align: center; padding: 30px;">' +
-                                '   <div class="classify-null" style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                                '       <img src="/theme/default/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
-                                '       <span>暂无商品</span>' +
-                                '   </div>' +
+                                '<div class="no-content">\n' +
+                                '    <img src="/theme/default/images/error_ic_empty.png" class="no-content-img">\n' +
+                                '    <p class="user-no-contents">没有搜索到商品</p>\n' +
                                 '</div>';
                             $("#goodsList").html(goodsHtml);
                         }

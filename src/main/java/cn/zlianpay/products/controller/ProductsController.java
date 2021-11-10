@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,6 +96,17 @@ public class ProductsController extends BaseController {
 
             int sellCount = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
             productsVo.setSellCardMember(sellCount);
+
+            if (products.getSellType() == 1) {
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()));
+                if (!ObjectUtils.isEmpty(cards)) {
+                    productsVo.setCardMember(cards.getNumber());
+                    productsVo.setSellCardMember(cards.getSellNumber());
+                } else {
+                    productsVo.setCardMember(0);
+                    productsVo.setSellCardMember(0);
+                }
+            }
 
             productsVo.setPrice(products.getPrice().toString());
             return productsVo;

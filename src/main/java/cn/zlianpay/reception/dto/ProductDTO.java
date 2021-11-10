@@ -59,12 +59,7 @@ public class ProductDTO {
     private Integer shipType;
 
     /**
-     * 置顶轮播
+     * 售卡类型
      */
-    private Integer isCarousel;
-
-    /**
-     * 轮播图
-     */
-    private String carouselImage;
+    private Integer sellType;
 }

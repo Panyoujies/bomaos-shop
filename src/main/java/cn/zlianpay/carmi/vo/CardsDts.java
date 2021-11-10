@@ -13,9 +13,19 @@ public class CardsDts {
     private Integer productId;
 
     /**
+     * 销售类型
+     */
+    private Integer sellType;
+
+    /**
      * 卡密信息
      */
     private String cardInfo;
+
+    /**
+     * 销售次数
+     */
+    private Integer sellNumber;
 
     /**
      * 过滤重复

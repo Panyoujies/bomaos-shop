@@ -20,6 +20,15 @@
 				<if test="page.pageData.status != null">
 					AND a.status = #{page.pageData.status}
                 </if>
+                <if test="page.pageData.sellType != null">
+                    AND a.sell_type = #{page.pageData.sellType}
+                </if>
+                <if test="page.pageData.number != null">
+                    AND a.number = #{page.pageData.number}
+                </if>
+                <if test="page.pageData.sellNumber != null">
+                    AND a.sell_number = #{page.pageData.sellNumber}
+                </if>
 				<if test="page.pageData.createdAt != null">
                     AND a.created_at LIKE CONCAT('%', #{page.pageData.createdAt}, '%')
 				</if>

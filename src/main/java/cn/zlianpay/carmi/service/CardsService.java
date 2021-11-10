@@ -1,5 +1,6 @@
 package cn.zlianpay.carmi.service;
 
+import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.common.core.web.PageParam;
 import cn.zlianpay.common.core.web.PageResult;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -25,7 +26,7 @@ public interface CardsService extends IService<Cards> {
      */
     List<Cards> listAll(Map<String, Object> page);
 
-    boolean addCards(CardsDts cardsDts);
+    JsonResult addCards(CardsDts cardsDts);
 
     List<Cards> getCard(Integer status, Integer productId, Integer number);
 

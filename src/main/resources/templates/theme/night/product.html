@@ -48,17 +48,22 @@
 
     </style>
 </head>
-<body>
+<body class="page-no-scroll">
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 
 <!-- banner -->
 <div class="ew-banner" style="top: -55px;">
-    <div class="layui-container" style="text-align: center; padding-bottom: 100px; padding-top: 150px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%); background-size: cover; background-attachment: scroll; background-position: center; box-sizing: border-box; overflow: hidden; background-image: linear-gradient(to top, rgb(0 0 0), rgba(0,0,0,0)),url(<:if test="${products.indexLogo == null || products.indexLogo == ''}">'../theme/default/images/index_logo.png'</:if><:if test="${products.indexLogo != null || products.indexLogo != ''}">${products.indexLogo!}</:if>); filter: blur(1px);">
+    <div class="layui-container" style="text-align: center; padding-bottom: 100px; padding-top: 150px; text-shadow: 0 1px 1px rgb(0 0 0 / 20%); background-size: cover; background-attachment: scroll; background-position: center; box-sizing: border-box; overflow: hidden; background-image: linear-gradient(to top, rgb(0 0 0), rgba(0,0,0,0)),url(<:if test="${products.indexLogo == null || products.indexLogo == ''}">'../theme/night/images/index_logo.png'</:if><:if test="${products.indexLogo != null || products.indexLogo != ''}">${products.indexLogo!}</:if>); filter: blur(1px);">
     </div>
     <div class="_avatar">
         <div class="imgContainer user-info-head" id="userInfoHead">
-            <img src="<:if test="${products.imageLogo == null || products.imageLogo == ''}">../theme/default/images/info_logo.png</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>" alt="">
+            <img src="<:if test="${products.imageLogo == null || products.imageLogo == ''}">../theme/night/images/info_logo.png</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>" alt="">
         </div>
         <i class="i-work-sex-30-0 posa avatar-sex"></i>
     </div>
@@ -96,7 +101,7 @@
                 <div class="layui-card-body" style="padding: 15px 15px; font-size: 17px;">
                     <div class="layui-row layui-col-space15 goods-info-group">
                         <div class="layui-col-xs12 layui-col-sm5 layui-col-md4 zlian-col-image">
-                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../theme/default/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
+                            <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">'../theme/night/images/info_logo.png'</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
                         </div>
                         <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
                             <div style="padding: 0px;">
@@ -576,17 +581,17 @@
             <:for items="${customizeList}" var="item">
             var ${item.field} = $('#${item.field}').val();
             </:for>
-            <:/if>
+            </:if>
             $.post('/buy', {
                 goodsId: product1.id,
                 number: number,
                 contact: contact,
                 coupon: coupon,
                 payType: payType,
-                password: password,
+                password: password
                 <:if test="${isCustomize == 1}">
                 <:for items="${customizeList}" var="item">
-                ${item.field}: ${item.field},
+                ,${item.field}: ${item.field}
                 </:for>
                 </:if>
             }, function (res) {

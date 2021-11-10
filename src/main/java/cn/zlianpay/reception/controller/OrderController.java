@@ -12,6 +12,7 @@ import cn.zlianpay.common.core.pays.paypal.config.PaypalPaymentMethod;
 import cn.zlianpay.common.core.pays.wxpay.SendWxPay;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
+import cn.zlianpay.common.core.utils.DateUtil;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.utils.RequestParamsUtil;
 import cn.zlianpay.common.core.utils.UserAgentGetter;
@@ -143,7 +144,17 @@ public class OrderController extends BaseController {
         }
 
         if (products.getShipType() == 0) { // 自动发货模式
-            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId).eq("status", 0));
+            int count = 0;
+            if (products.getSellType() == 1) {
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+                if (ObjectUtils.isEmpty(cards)) {
+                    count = 0;
+                } else {
+                    count = cards.getNumber();
+                }
+            } else {
+                count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId).eq("status", 0));
+            }
             if (count == 0) {
                 return JsonResult.error("本商品已售空，请联系店长补货！");
             } else if (number > count) {
@@ -250,9 +261,9 @@ public class OrderController extends BaseController {
             }
         }
         /**
-        * 创建支付接口
-        * 使用枚举加switch
-        */
+         * 创建支付接口
+         * 使用枚举加switch
+         */
         switch (Objects.requireNonNull(PaysEnmu.getByValue(orders.getPayType()))) {
             case ALIPAY_PC: // 支付宝pc支付
                 try {
@@ -282,11 +293,16 @@ public class OrderController extends BaseController {
         UserAgentGetter agentGetter = new UserAgentGetter(request);
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()));
 
-        if (price.equals("0.00")) { // 0元商品 直接完成支付
+
+        System.out.println(price);
+        if ("0.00".equals(price)) { // 0元商品 直接完成支付
             String currentTime = Long.toString(System.currentTimeMillis());
             boolean big = returnBig(price, price, orders.getMember(), currentTime, productDescription);
+            System.out.println(big);
             if (big) {
                 response.sendRedirect("/search/order/" + orders.getMember());
+                return null;
+            } else {
                 return null;
             }
         }
@@ -393,11 +409,12 @@ public class OrderController extends BaseController {
 
     /**
      * 业务处理
-     * @param money 实收款金额
-     * @param price 订单金额
-     * @param payId 订单号
+     *
+     * @param money  实收款金额
+     * @param price  订单金额
+     * @param payId  订单号
      * @param pay_no 流水号
-     * @param param 自定义内容
+     * @param param  自定义内容
      * @return this
      */
     private boolean returnBig(String money, String price, String payId, String pay_no, String param) {
@@ -406,41 +423,89 @@ public class OrderController extends BaseController {
          * 通过订单号查询
          */
         Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
-        if (member == null) {
-            return false; // 本地没有这个订单
-        }
+        if (member == null) return false; // 本地没有这个订单
 
-        if (!StringUtils.isEmpty(member.getCardsInfo())) {
-            return true;
-        }
+        boolean empty = StringUtils.isEmpty(member.getCardsInfo());
+        if (!empty) return true;
 
         Products products = productsService.getById(param);
-        if (products == null) {
-            return false; // 商品没了
-        }
+        if (products == null) return false; // 商品没了
 
         Website website = websiteService.getById(1);
         ShopSettings shopSettings = shopSettingsService.getById(1);
 
-        Orders orders = new Orders();
-
         if (products.getShipType() == 0) { // 自动发货的商品
-            List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-            if (card == null) {
-                return false;
-            }
 
-            StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
             StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
 
-            for (Cards cards : card) {
+            /**
+             * 卡密信息列表
+             * 通过商品购买数量来获取对应商品的卡密数量
+             */
+            if (products.getSellType() == 0) { // 一次性卡密类型
 
-                orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+                List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+                if (card == null) return false; // 空值的话直接返回错误提示
 
+                StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+
+                for (Cards cards : card) {
+                    orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+
+                    /**
+                     * 设置每条被购买的卡密的售出状态
+                     */
+                    Cards cards1 = new Cards();
+                    cards1.setId(cards.getId());
+                    cards1.setStatus(1);
+                    cards1.setNumber(0);
+                    cards1.setSellNumber(1);
+                    cards1.setUpdatedAt(new Date());
+
+                    // 设置售出的卡密
+                    cardsService.updateById(cards1);
+
+                    if (cards.getCardInfo().contains(" ")) {
+                        String[] split = cards.getCardInfo().split(" ");
+                        stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                    } else {
+                        stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
+                    }
+                }
+
+                // 去除多余尾部的逗号
+                String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+
+                Orders orders = new Orders();
+                orders.setId(member.getId());
+                orders.setCardsInfo(result);
+
+                // 更新售出卡密
+                ordersService.updateById(orders);
+
+            } else if (products.getSellType() == 1) { // 重复销售的卡密
+                StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+                if (cards == null) return false; // 空值的话直接返回错误提示
+
+                /**
+                 * 设置每条被购买的卡密的售出状态
+                 */
                 Cards cards1 = new Cards();
                 cards1.setId(cards.getId());
-                cards1.setStatus(1);
                 cards1.setUpdatedAt(new Date());
+                if (cards.getNumber() == 1) { // 还剩下一个卡密
+                    cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
+                    cards1.setNumber(cards.getNumber() - member.getNumber()); // 减完之后等于0
+                    cards1.setStatus(1); // 设置状态为已全部售出
+                } else {
+                    cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
+                    cards1.setNumber(cards.getNumber() - member.getNumber());
+                }
+
+                // 设置售出的卡密
+                cardsService.updateById(cards1);
 
                 if (cards.getCardInfo().contains(" ")) {
                     String[] split = cards.getCardInfo().split(" ");
@@ -448,13 +513,26 @@ public class OrderController extends BaseController {
                 } else {
                     stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
                 }
-                // 设置售出的卡密
-                cardsService.updateById(cards1);
-            }
 
-            // 去除多余尾部的逗号
-            String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
-            orders.setCardsInfo(result);
+                /**
+                 * 看用户购买了多少个卡密
+                 * 正常重复的卡密不会购买1个以上
+                 * 这里做个以防万一呀（有钱谁不赚）
+                 */
+                for (int i = 0; i < member.getNumber(); i++) {
+                    orderInfo.append(cards.getCardInfo()).append(",");
+                }
+
+                // 去除多余尾部的逗号
+                String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+
+                Orders orders = new Orders();
+                orders.setId(member.getId());
+                orders.setCardsInfo(result);
+
+                // 更新售出卡密
+                ordersService.updateById(orders);
+            }
 
             /**
              * 微信的 wxpush 通知
@@ -464,7 +542,7 @@ public class OrderController extends BaseController {
              */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>" + member.getMoney() + "</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());
@@ -482,10 +560,11 @@ public class OrderController extends BaseController {
                         Map<String, Object> map = new HashMap<>();  // 页面的动态数据
                         map.put("title", website.getWebsiteName());
                         map.put("member", member.getMember());
-                        map.put("date", new Date());
+                        map.put("date", DateUtil.getDate());
                         map.put("info", stringBuilder.toString());
                         try {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
+                            // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -506,7 +585,7 @@ public class OrderController extends BaseController {
              */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>" + member.getMoney() + "</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());
@@ -520,7 +599,11 @@ public class OrderController extends BaseController {
              */
             if (shopSettings.getIsEmail() == 1) {
                 if (FormCheckUtil.isEmail(member.getEmail())) {
-                    emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                    try {
+                        emailService.sendTextEmail(website.getWebsiteName() + " 订单提醒", "您的订单号为：" + member.getMember() + "  本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             productsService.updateById(products1);
@@ -529,6 +612,7 @@ public class OrderController extends BaseController {
         /**
          * 更新订单
          */
+        Orders orders = new Orders();
         orders.setId(member.getId());
 
         if (products.getShipType() == 0) {
@@ -547,6 +631,7 @@ public class OrderController extends BaseController {
 
     /**
      * 限制购买
+     *
      * @param goodsId   商品id
      * @param number    用户购买数量
      * @param restricts 限制购买的数量

@@ -12,7 +12,7 @@
             <form class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <div class="layui-input-inline">
+                        <div class="layui-input-inline" style="margin-left: 10px">
                             <select id="classifyId" lay-verType="tips" lay-verify="required" lay-filter="classifyId"
                                     required>
                                 <option value="">请选择分类</option>
@@ -26,10 +26,7 @@
                                 <option value="">请选择商品</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">状态:</label>
-                        <div class="layui-input-inline">
+                        <div class="layui-input-inline" style="margin-left: 10px">
                             <input type="radio" name="status" value="1" title="已出售" checked>
                             <input type="radio" name="status" value="0" title="未出售">
                         </div>
@@ -88,6 +85,21 @@
                           lay-verType="tips" lay-verify="required" required></textarea>
             </div>
         </div>
+        {{# if(d.sellType==1){ }}
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">剩余卡密:</label>
+            <div class="layui-input-block">
+                <input name="number" class="layui-input" placeholder="输入还能被购买多少次"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">已售出卡:</label>
+            <div class="layui-input-block">
+                <input name="sellNumber" class="layui-input" placeholder="输入卡密销量"/>
+            </div>
+        </div>
+        {{# } }}
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">卡密状态:</label>
             <div class="layui-input-block">
@@ -136,6 +148,21 @@
                         }
                     }
                 },
+                {field: 'sellType', title: '出售类型', templet: function (res) {
+                        if (res.sellType == 0) {
+                            return '<span class="layui-badge layui-badge-blue">一次性</span>';
+                        } else {
+                            return '<span class="layui-badge layui-badge-green">重复销售</span>';
+                        }
+                    }},
+                {field: 'sellNumber', title: '售出情况', templet: function (res) {
+                        if (res.sellType == 0) { // 一次性
+                            return '已售: ' + res.sellNumber + ' / ' + '共:' + res.number;
+                        } else { // 重复销售
+                            return '已售: ' + res.sellNumber + ' / ' + '共: ' + res.number;
+                        }
+                    }},
+                {field: 'cardInfo', title: '卡密'},
                 {field: 'createdAt', title: '创建时间', sort: true},
                 {title: '操作', toolbar: '#cardsTbBar', align: 'center', minWidth: 200}
             ]]
@@ -233,7 +260,9 @@
                         });
                         return false;
                     });
-                }
+                },
+                data: mData,
+                tpl: true
             });
         }
 

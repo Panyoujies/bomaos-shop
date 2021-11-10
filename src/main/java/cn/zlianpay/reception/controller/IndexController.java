@@ -8,8 +8,19 @@ import cn.zlianpay.common.core.enmu.QQPay;
 import cn.zlianpay.common.core.enmu.Wxpay;
 import cn.zlianpay.common.core.utils.DateUtil;
 import cn.zlianpay.common.core.web.JsonResult;
+import cn.zlianpay.common.core.web.PageParam;
+import cn.zlianpay.common.core.web.PageResult;
+import cn.zlianpay.common.system.entity.User;
+import cn.zlianpay.common.system.service.UserService;
+import cn.zlianpay.content.entity.Article;
+import cn.zlianpay.content.entity.Carousel;
+import cn.zlianpay.content.service.ArticleService;
+import cn.zlianpay.content.service.CarouselService;
+import cn.zlianpay.reception.dto.HotProductDTO;
 import cn.zlianpay.reception.dto.ProductDTO;
 import cn.zlianpay.reception.dto.SearchDTO;
+import cn.zlianpay.reception.util.ProductUtil;
+import cn.zlianpay.reception.vo.ArticleVo;
 import cn.zlianpay.settings.entity.Coupon;
 import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.CouponService;
@@ -85,6 +96,20 @@ public class IndexController {
     @Autowired
     private ShopSettingsService shopSettingsService;
 
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CarouselService carouselService;
+
+    /**
+     * 首页
+     * @param model
+     * @return
+     */
     @RequestMapping({"/", "/index"})
     public String IndexView(Model model) {
 
@@ -109,14 +134,6 @@ public class IndexController {
             return classifysVo;
         }).collect(Collectors.toList());
 
-        List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("is_carousel", 1));
-        List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
-            ProductDTO productDTO = new ProductDTO();
-            BeanUtils.copyProperties(products, productDTO);
-            return productDTO;
-        }).collect(Collectors.toList());
-        model.addAttribute("productDTOList", productDTOList);
-
         /**
          * 统计今日的成功订单数量
          */
@@ -138,6 +155,9 @@ public class IndexController {
 
         model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
 
+        List<Carousel> carouselList = carouselService.list(new QueryWrapper<Carousel>().eq("enabled", 1));
+        model.addAttribute("carouselList", carouselList);
+
         Website website = websiteService.getById(1);
         model.addAttribute("website", website);
 
@@ -148,6 +168,117 @@ public class IndexController {
 
         Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
         return "theme/" + theme.getDriver() + "/index.html";
+    }
+
+    @RequestMapping("/article")
+    public String articleView(Model model) {
+
+        /**
+         * 条件构造器
+         * 根据分类id查询商品
+         * 状态为开启
+         * asc 排序方式
+         */
+        QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", 1);
+
+        List<Products> productsList = productsService.list(queryWrapper);
+        List<ProductDTO> productDTOList = getProductDTOList(productsList);
+
+        /**
+         * 查出四个热门商品
+         */
+        List<HotProductDTO> hotProductList = ProductUtil.getHotProductList(productDTOList);
+        model.addAttribute("hotProductList", hotProductList);
+
+        Website website = websiteService.getById(1);
+        model.addAttribute("website", website);
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/article.html";
+    }
+
+    /**
+     * 文章内页
+     * @param model
+     * @return
+     */
+    @RequestMapping("/article/{id}")
+    public String articleContentView(Model model, @PathVariable("id") Integer id) {
+
+        Article article = articleService.getById(id);
+        ArticleVo articleVo = new ArticleVo();
+        BeanUtils.copyProperties(article, articleVo);
+        articleVo.setCreateTime(DateUtil.getSubDate(article.getCreateTime()));
+        articleVo.setUpdateTime(DateUtil.getSubDate(article.getUpdateTime()));
+        model.addAttribute("article", articleVo);
+
+        /**
+         * 每次点击自动统计加一
+         */
+        Article article1 = new Article();
+        article1.setId(article.getId());
+        article1.setSeeNumber(article.getSeeNumber() + 1);
+
+        articleService.updateById(article1);
+
+        /**
+         * 条件构造器
+         * 根据分类id查询商品
+         * 状态为开启
+         * asc 排序方式
+         */
+        QueryWrapper<Products> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", 1);
+
+        List<Products> productsList = productsService.list(queryWrapper);
+        List<ProductDTO> productDTOList = getProductDTOList(productsList);
+
+        /**
+         * 查出四个热门商品
+         */
+        List<HotProductDTO> hotProductList = ProductUtil.getHotProductList(productDTOList);
+        model.addAttribute("hotProductList", hotProductList);
+
+        Website website = websiteService.getById(1);
+        model.addAttribute("website", website);
+
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+
+        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        return "theme/" + theme.getDriver() + "/article-content.html";
+    }
+
+        /**
+         * 获取文章列表
+         * @param request
+         * @return
+         */
+    @ResponseBody
+    @RequestMapping("/getArticleList")
+    public PageResult<ArticleVo> getArticleList(HttpServletRequest request) {
+        PageParam<Article> pageParam = new PageParam<>(request);
+        pageParam.put("enabled", 1);
+
+        List<Article> articleList = articleService.page(pageParam, pageParam.getWrapper()).getRecords();
+        List<ArticleVo> articleVoList = articleList.stream().map((article) -> {
+            ArticleVo articleVo = new ArticleVo();
+            BeanUtils.copyProperties(article, articleVo);
+            User user = userService.getOne(new QueryWrapper<User>().eq("user_id", article.getUserId()));
+            articleVo.setUserName(user.getNickName());
+            articleVo.setUserHead(user.getAvatar());
+
+            articleVo.setCreateTime(DateUtil.getSubDate(article.getCreateTime()));
+            articleVo.setUpdateTime(DateUtil.getSubDate(article.getUpdateTime()));
+
+            return articleVo;
+        }).collect(Collectors.toList());
+
+        return new PageResult<>(articleVoList, pageParam.getTotal());
     }
 
     @ResponseBody
@@ -166,31 +297,12 @@ public class IndexController {
         queryWrapper.orderByAsc("sort");
 
         List<Products> productsList = productsService.list(queryWrapper);
-        List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
-            ProductDTO productDTO = new ProductDTO();
-            BeanUtils.copyProperties(products, productDTO);
-            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
-            productDTO.setCardMember(count);
-            int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
-            productDTO.setSellCardMember(count2);
-            productDTO.setPrice(products.getPrice().toString());
-
-            int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
-            productDTO.setIsCoupon(count1);
-
-            if (products.getShipType() == 1) {
-                productDTO.setCardMember(products.getInventory());
-                productDTO.setSellCardMember(products.getSales());
-            }
-
-            return productDTO;
-        }).collect(Collectors.toList());
+        List<ProductDTO> productDTOList = getProductDTOList(productsList);
         return JsonResult.ok("ok").setData(productDTOList);
     }
 
     /**
      * 商品购买页面
-     *
      * @param model
      * @param link
      * @return
@@ -302,6 +414,15 @@ public class IndexController {
             productsVos.setCardsCount(count.toString());
         } else { // 手动发货模式
             productsVos.setCardsCount(products.getInventory().toString());
+        }
+
+        if (products.getSellType() == 1) {
+            Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+            if (!ObjectUtils.isEmpty(cards)) {
+                productsVos.setCardsCount(cards.getNumber().toString());
+            } else {
+                productsVos.setCardsCount("0");
+            }
         }
 
         return JsonResult.ok().setData(productsVos);
@@ -529,9 +650,21 @@ public class IndexController {
     @GetMapping("/getProductSearchList")
     public JsonResult getProductSearchList(String content) {
         List<Products> productsList = productsService.list(new QueryWrapper<Products>().eq("status", 1).like("name", content));
+        List<ProductDTO> productDTOList = getProductDTOList(productsList);
+        return JsonResult.ok("查询成功！").setData(productDTOList);
+    }
+
+    /**
+     * 通用获取商品列表
+     * 统计商品的卡密使用信息
+     * @param productsList
+     * @return
+     */
+    public List<ProductDTO> getProductDTOList(List<Products> productsList) {
         List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
             ProductDTO productDTO = new ProductDTO();
             BeanUtils.copyProperties(products, productDTO);
+
             int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
             productDTO.setCardMember(count);
             int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1));
@@ -546,8 +679,19 @@ public class IndexController {
                 productDTO.setSellCardMember(products.getSales());
             }
 
+            if (products.getSellType() == 1) {
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()));
+                if (ObjectUtils.isEmpty(cards)) { // kon
+                    productDTO.setCardMember(0);
+                    productDTO.setSellCardMember(0);
+                } else {
+                    productDTO.setCardMember(cards.getNumber());
+                    productDTO.setSellCardMember(cards.getSellNumber());
+                }
+            }
+
             return productDTO;
         }).collect(Collectors.toList());
-        return JsonResult.ok("查询成功！").setData(productDTOList);
+        return productDTOList;
     }
 }

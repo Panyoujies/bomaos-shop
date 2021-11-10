@@ -277,7 +277,7 @@
 }
 
 .ribbon-two-danger span {
-    background: #4ab1fc;
+    background: #2eb28b;
 }
 
 .ribbon-two span:before {
@@ -291,13 +291,13 @@
 }
 
 .ribbon-two-danger span:before {
-    border-left: 3px solid #2880bd;
-    border-top: 3px solid #2880bd;
+    border-left: 3px solid #21896a;
+    border-top: 3px solid #21896a;
 }
 
 .ribbon-two-danger span:after {
-    border-right: 3px solid #2880bd;
-    border-top: 3px solid #2880bd;
+    border-right: 3px solid #21896a;
+    border-top: 3px solid #21896a;
 }
 
 .ribbon-two span:after {
@@ -552,7 +552,7 @@ img.avatar {
 }
 
 .b2-color {
-    color: #3860f4;
+    color: #2eb28b;
     font-size: 17px;
     font-weight: 500;
 }
@@ -603,6 +603,10 @@ img.avatar {
     display: block;
     border-top: 1px solid rgb(255 255 255 / 10%);
     font-weight: 400;
+}
+
+.widget-mission-footer a:hover {
+    color: #2eb28b;
 }
 
 .bd {

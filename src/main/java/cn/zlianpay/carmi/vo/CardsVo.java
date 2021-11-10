@@ -32,6 +32,21 @@ public class CardsVo {
     private Integer status;
 
     /**
+     *  售卡类型
+     */
+    private Integer sellType;
+
+    /**
+     * 总数
+     */
+    private Integer number;
+
+    /**
+     * 售出数量
+     */
+    private Integer sellNumber;
+
+    /**
      * 创建时间
      */
     private Date createdAt;

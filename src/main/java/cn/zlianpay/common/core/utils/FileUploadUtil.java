@@ -3,6 +3,7 @@ package cn.zlianpay.common.core.utils;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.zlianpay.common.core.Constants;
 import cn.zlianpay.common.core.web.JsonResult;
 import org.apache.tika.Tika;
@@ -35,10 +36,21 @@ public class FileUploadUtil {
         String path;  // 文件保存路径
         // 文件原始名称
         String orgName = file.getOriginalFilename(), dir = getDateDir();
+
         if (orgName == null) return JsonResult.error("上传失败");
         File outFile;
         String suffix = orgName.substring(orgName.lastIndexOf(".") + 1);  // 获取文件后缀
-        if (Constants.UPLOAD_UUID_NAME) {  // uuid命名
+
+        if (Constants.UPLOAD_MD5_NAME) { // 使用md5命名方式解决图片重复上传问题
+            try {
+                String md5 = SecureUtil.md5(file.getInputStream());
+                path = dir + md5 + "." + suffix;
+                outFile = new File(UPLOAD_FILE_DIR, path);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return JsonResult.error("上传失败").put("error", e.getMessage());
+            }
+        } else if (Constants.UPLOAD_UUID_NAME) {  // uuid命名
             path = dir + UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
             outFile = new File(UPLOAD_FILE_DIR, path);
         } else {  // 使用原名称，存在相同着加(1)
@@ -182,6 +194,7 @@ public class FileUploadUtil {
                 return;
             }
         }
+        System.out.println("4444");
         preview(smFile, response);
     }
 

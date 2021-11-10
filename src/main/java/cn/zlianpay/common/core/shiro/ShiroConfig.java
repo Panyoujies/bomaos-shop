@@ -58,6 +58,9 @@ public class ShiroConfig {
          */
         filterChainDefinitions.put("/", "anon");
         filterChainDefinitions.put("/index", "anon");
+        filterChainDefinitions.put("/article", "anon");
+        filterChainDefinitions.put("/article/**", "anon");
+        filterChainDefinitions.put("/getArticleList", "anon");
         filterChainDefinitions.put("/search", "anon");
         filterChainDefinitions.put("/search/order/**", "anon");
         filterChainDefinitions.put("/orders/orders/pageAll", "anon");

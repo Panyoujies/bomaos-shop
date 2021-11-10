@@ -52,12 +52,6 @@
                             <button type="button" class="layui-btn" id="test1">上传图片</button>
                             <div class="layui-upload-list">
                                 <img class="layui-upload-img" id="demo1">
-                                <p id="demoText"></p>
-                            </div>
-                            <div style="width: 95px;">
-                                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                                    <div class="layui-progress-bar" lay-percent=""></div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -94,16 +88,11 @@
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
 <script>
-    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'upload', 'element'], function () {
+    layui.use(['layer', 'form', 'fileChoose'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
-        var table = layui.table;
-        var tableX = layui.tableX;
-        var util = layui.util;
-        var admin = layui.admin;
-        var upload = layui.upload;
-        var element = layui.element;
+        var fileChoose = layui.fileChoose;
         var shopSettings = JSON.parse(JSON.stringify(${shopSettings!}));
         form.val('shopSettingsForm', shopSettings);
         $('#demo1').attr('src', '${ctxPath}' + shopSettings.isBackground);
@@ -126,43 +115,19 @@
             }
         });
 
-        //常规使用 - 普通图片上传
-        var uploadInst = upload.render({
-            elem: '#test1',
-            url: '${ctxPath}/file/upload',
-            before: function (obj) {
-                //预读本地文件示例，不支持ie8
-                obj.preview(function (index, file, result) {
-                    $('#demo1').attr('src', result); //图片链接（base64）
-                });
-                element.progress('demo', '0%'); //进度条复位
-                layer.msg('上传中', {icon: 16, time: 0});
-            },
-            done: function (res) {
-                //如果上传失败
-                if (res.code > 0) {
-                    return layer.msg('上传失败');
-                }
-                //上传成功的一些操作
-                if (res.code == 0) {
-                    $("#isBackground").val("/file/" + res.url);
-                }
-                $('#demoText').html(''); //置空上传失败的状态
-            },
-            error: function () {
-                //演示失败状态，并实现重传
-                var demoText = $('#demoText');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
-            },
-            progress: function (n, elem, e) { // 进度条
-                element.progress('demo', n + '%'); // 可配合 layui 进度条元素使用
-                if (n == 100) {
-                    layer.msg('上传完毕', {icon: 1});
-                }
-            }
+        $('#test1').click(function (res) {
+            fileChoose.open({
+                fileUrl: '${ctxPath}/file',
+                listUrl: '${ctxPath}/file/list',
+                upload: {url: '${ctxPath}/file/upload'},
+                num: 1,
+                onChoose: function (urls) {
+                    var list = urls;
+                    $("#isBackground").val("/file" + list[0].url);
+                    $('#demo1').attr('src', "${ctxPath}/file" + list[0].url); //图片链接（base64）
+                },
+                response: {code: 0}
+            });
         });
 
         /* 表单提交 */

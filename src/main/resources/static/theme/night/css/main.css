@@ -215,7 +215,7 @@ input.layui-disabled, input.layui-disabled:hover {
     right: 0;
     bottom: 0;
     z-index: 19891017;
-    background-color: #fff
+    background-color: #000000
 }
 
 .page-no-scroll {
@@ -235,7 +235,7 @@ input.layui-disabled, input.layui-disabled:hover {
 }
 
 .ball-loader > span {
-    background-color: #1890ff;
+    background-color: #2fb18a;
     display: inline-block
 }
 
@@ -601,7 +601,7 @@ body .layui-util-face .layui-layer-content {
 .ew-header .layui-nav > .layui-nav-item > a {
     height: 70px;
     line-height: 70px;
-    color: #666;
+    color: #FFF;
     font-size: 16px;
     padding: 0 5px;
     position: relative;
@@ -618,7 +618,7 @@ body .layui-util-face .layui-layer-content {
 }
 
 .ew-header .layui-nav > .layui-nav-item > a:hover, .ew-header .layui-nav > .layui-nav-item.layui-this > a {
-    color: #4282ff
+    color: #2eb28b
 }
 
 .ew-header .layui-nav .layui-nav-more {
@@ -650,12 +650,12 @@ body .layui-util-face .layui-layer-content {
     width: 0;
     margin: 0 auto;
     height: 3px;
-    background-color: #4282ff;
+    background-color: #2eb28b;
     transition: width .2s ease-out
 }
 
 .ew-header .layui-nav > .layui-nav-item.layui-this > a:after, .ew-header .layui-nav > .layui-nav-item > a:hover:after {
-    width: 100%
+    width: 30%
 }
 
 .ew-header .layui-nav > .layui-nav-item > .layui-nav-child {
@@ -762,7 +762,7 @@ body .layui-util-face .layui-layer-content {
 
     .ew-header .layui-nav .layui-nav-item.layui-this > a {
         color: #fff;
-        background-color: #4282ff
+        background-color: #2fb189
     }
 
     .ew-header .layui-nav > .layui-nav-item.nav-btn-login {
@@ -849,7 +849,7 @@ body .layui-util-face .layui-layer-content {
 }
 
 .ew-footer .footer-item-title {
-    color: #407fff;
+    color: #2fb18a;
     font-size: 22px;
     margin-bottom: 30px
 }
@@ -1003,7 +1003,7 @@ body .layui-util-face .layui-layer-content {
     top: 20px;
     left: 20px;
     background-color: rgb(66 130 255 / 20%);
-    color: #4282ff;
+    color: #2fb18a;
     padding: 15px;
     border-radius: 50%;
     font-size: 22px;
@@ -1497,11 +1497,10 @@ body .layui-util-face .layui-layer-content {
 
 .buy-btn-group .layui-btn {
     border-radius: 0;
-    min-width: 150px
+    min-width: 140px
 }
 
 .buy-btn-group .layui-btn-warm {
-    margin-left: 20px;
     background-color: #ff6700
 }
 
@@ -1782,7 +1781,7 @@ body .layui-util-face .layui-layer-content {
 }
 
 .login-wrapper .layui-form .layui-btn-fluid {
-    background-color: #407fff;
+    background-color: #2fb18a;
     line-height: 46px;
     height: 46px
 }
@@ -2071,7 +2070,7 @@ body .layui-util-face .layui-layer-content {
 
 .ew-vip-code-group .ew-vip-scan {
     position: relative;
-    color: #4282ff;
+    color: #2fb18a;
     cursor: pointer
 }
 
@@ -2128,8 +2127,8 @@ a.icon-text > .layui-icon {
 
 .ew-tab-coupon > .layui-tab-title .layui-this {
     color: #fff;
-    background-color: #4282ff;
-    border-color: #4282ff
+    background-color: #2fb18a;
+    border-color: #2fb18a
 }
 
 .ew-tab-coupon > .layui-tab-title .layui-this:after {
@@ -2192,19 +2191,19 @@ a.icon-text > .layui-icon {
 }
 
 .layui-laypage .layui-laypage-curr .layui-laypage-em {
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-table-page .layui-laypage input:focus {
-    border-color: #4282ff !important
+    border-color: #2fb18a !important
 }
 
 .layui-table-view select:focus {
-    border-color: #4282ff !important
+    border-color: #2fb18a !important
 }
 
 .layui-table-page .layui-laypage a:hover {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-fixbar li {
@@ -2219,8 +2218,8 @@ a.icon-text > .layui-icon {
     padding: 18px 5px;
     text-align: center;
     text-decoration: none;
-    background-color: #4282ff;
-    background-image: linear-gradient(to right, #4282ff, #5fb878);
+    background-color: #2fb18a;
+    background-image: linear-gradient(to right, #2fb18a, #5fb878);
     cursor: pointer
 }
 
@@ -2250,66 +2249,66 @@ a.icon-text > .layui-icon {
 }
 
 .layui-input:focus, .layui-textarea:focus, xm-select:hover {
-    border-color: #407fff !important
+    border-color: #2fb18a !important
 }
 
 .layui-form-onswitch {
-    border-color: #4282ff;
-    background-color: #4282ff
+    border-color: #2fb18a;
+    background-color: #2fb18a
 }
 
 .layui-form-radio > i:hover, .layui-form-radioed > i, .layui-form-checked i, .layui-form-checked:hover i {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-form-checked[lay-skin=primary] i, .layui-form-checked span, .layui-form-checked:hover span {
-    border-color: #407fff !important;
-    background-color: #407fff
+    border-color: #2fb18a !important;
+    background-color: #2fb18a
 }
 
 .layui-form-checkbox[lay-skin=primary] i:hover, .layui-form-checkbox[lay-skin=primary]:hover i {
-    border-color: #407fff
+    border-color: #2fb18a
 }
 
 .layui-form-select dl dd.layui-this {
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-laypage .layui-laypage-curr .layui-laypage-em {
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-laypage input:focus, select:focus {
-    border-color: #4282ff !important
+    border-color: #2fb18a !important
 }
 
 .layui-laypage a:hover {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-tab-brief > .layui-tab-title .layui-this {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-tab-brief > .layui-tab-more li.layui-this:after, .layui-tab-brief > .layui-tab-title .layui-this:after {
-    border-color: #4282ff !important
+    border-color: #2fb18a !important
 }
 
 .layui-tab.layui-tab-vertical > .layui-tab-title > li.layui-this {
-    border-color: #4282ff;
-    color: #4282ff
+    border-color: #2fb18a;
+    color: #2fb18a
 }
 
 .layui-breadcrumb a:hover {
-    color: #4282ff !important
+    color: #2fb18a !important
 }
 
 .layui-laydate-footer span:hover, .layui-laydate-header i:hover, .layui-laydate-header span:hover {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-laydate .layui-this {
-    background-color: #4282ff !important
+    background-color: #2fb18a !important
 }
 
 .layui-laydate-content td.laydate-selected {
@@ -2321,36 +2320,36 @@ a.icon-text > .layui-icon {
 }
 
 .layui-timeline-axis {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-transfer-active .layui-btn {
-    background-color: #4282ff !important;
-    border-color: #4282ff !important
+    background-color: #2fb18a !important;
+    border-color: #2fb18a !important
 }
 
 .layui-progress-bar {
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-slider-bar {
-    background-color: #4282ff !important
+    background-color: #2fb18a !important
 }
 
 .theme-colorful .layui-slider-wrap-btn {
-    border-color: #4282ff !important
+    border-color: #2fb18a !important
 }
 
 .layui-tab.layui-steps > .layui-tab-title > li > .layui-icon {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-tab.layui-steps > .layui-tab-title > li > .layui-icon.layui-icon-ok, .layui-elem-quote {
-    border-color: #4282ff
+    border-color: #2fb18a
 }
 
 .layui-tab.layui-steps > .layui-tab-title > li:before, .layui-tab.layui-steps > .layui-tab-title > li.layui-this > .layui-icon.layui-icon-ok {
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-tab.layui-steps.layui-steps-simple > .layui-tab-title > li {

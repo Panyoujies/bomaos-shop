@@ -216,9 +216,9 @@
             }, function (res) {
                 layer.close(loadIndex);
                 if (0 === res.code) {
-                    notice.msg(res.msg, {icon: 1});
+                    layer.msg(res.msg, {icon: 1});
                 } else {
-                    notice.msg(res.msg, {icon: 2});
+                    layer.msg(res.msg, {icon: 2});
                     $(obj.elem).prop('checked', !obj.elem.checked);
                     form.render('checkbox', $('#classifyTable').next().attr('lay-filter'));
                 }

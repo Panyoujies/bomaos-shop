@@ -396,6 +396,8 @@ public class OrdersController extends BaseController {
         cards.setCreatedAt(new Date());
         cards.setProductId(products.getId());
         cards.setStatus(1); // 默认已使用
+        cards.setNumber(0);
+        cards.setSellNumber(1);
         cards.setUpdatedAt(new Date());
 
         cardsService.save(cards);
@@ -434,26 +436,71 @@ public class OrdersController extends BaseController {
 
         if (products.getShipType() == 0) { // 自动发货的商品
 
-            /**
-             * 卡密信息列表
-             * 通过商品购买数量来获取对应商品的卡密数量
-             */
-            List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-            if (card == null) return JsonResult.error("卡密为空！请补充后再试。");
-
-            StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
             StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
 
-            for (Cards cards : card) {
-                orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+            if (products.getSellType() == 0) { // 一次性卡密类型
+                /**
+                 * 卡密信息列表
+                 * 通过商品购买数量来获取对应商品的卡密数量
+                 */
+                List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
+                if (card == null) return JsonResult.error("卡密为空！请补充后再试。");
+
+                StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+
+                for (Cards cards : card) {
+                    orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+
+                    /**
+                     * 设置每条被购买的卡密的售出状态
+                     */
+                    Cards cards1 = new Cards();
+                    cards1.setId(cards.getId());
+                    cards1.setStatus(1);
+                    cards1.setNumber(0);
+                    cards1.setSellNumber(1);
+                    cards1.setUpdatedAt(new Date());
+
+                    // 设置售出的卡密
+                    cardsService.updateById(cards1);
+
+                    if (cards.getCardInfo().contains(" ")) {
+                        String[] split = cards.getCardInfo().split(" ");
+                        stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
+                    } else {
+                        stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
+                    }
+                }
+
+                // 去除多余尾部的逗号
+                String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
+
+                Orders orders = new Orders();
+                orders.setId(member.getId());
+                orders.setCardsInfo(result);
+
+                // 更新售出卡密
+                ordersService.updateById(orders);
+            } else if (products.getSellType() == 1) { // 重复销售的卡密
+                StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
+
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+                if (cards == null) return JsonResult.error("卡密为空！请补充后再试。");
 
                 /**
                  * 设置每条被购买的卡密的售出状态
                  */
                 Cards cards1 = new Cards();
                 cards1.setId(cards.getId());
-                cards1.setStatus(1);
                 cards1.setUpdatedAt(new Date());
+                if (cards.getNumber() == 1) { // 还剩下一个卡密
+                    cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
+                    cards1.setNumber(cards.getNumber() - member.getNumber()); // 减完之后等于0
+                    cards1.setStatus(1); // 设置状态为已全部售出
+                } else {
+                    cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
+                    cards1.setNumber(cards.getNumber() - member.getNumber());
+                }
 
                 // 设置售出的卡密
                 cardsService.updateById(cards1);
@@ -464,17 +511,23 @@ public class OrdersController extends BaseController {
                 } else {
                     stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
                 }
+
+                /**
+                 * 看用户购买了多少个卡密
+                 * 正常重复的卡密不会购买1个以上
+                 * 这里做个以防万一呀（有钱谁不赚）
+                 */
+                for (int i = 0; i < member.getNumber(); i++) {
+                    orderInfo.append(cards.getCardInfo()).append(",");
+                }
+
+                Orders orders = new Orders();
+                orders.setId(member.getId());
+                orders.setCardsInfo(cards.getCardInfo());
+
+                // 更新售出卡密
+                ordersService.updateById(orders);
             }
-
-            // 去除多余尾部的逗号
-            String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
-
-            Orders orders = new Orders();
-            orders.setId(member.getId());
-            orders.setCardsInfo(result);
-
-            // 更新售出卡密
-            ordersService.updateById(orders);
 
             /**
              * 微信的 wxpush 通知
@@ -484,7 +537,7 @@ public class OrdersController extends BaseController {
              */
             if (shopSettings.getIsWxpusher() == 1) {
                 Message message = new Message();
-                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>"+ member.getMoney() +"</span><br>支付状态：<span style='color:green;'>成功</span><br>");
+                message.setContent(website.getWebsiteName() + "新订单提醒<br>订单号：<span style='color:red;'>" + member.getMember() + "</span><br>商品名称：<span>" + products.getName() + "</span><br>购买数量：<span>" + member.getNumber() + "</span><br>订单金额：<span>" + member.getMoney() + "</span><br>支付状态：<span style='color:green;'>成功</span><br>");
                 message.setContentType(Message.CONTENT_TYPE_HTML);
                 message.setUid(shopSettings.getWxpushUid());
                 message.setAppToken(shopSettings.getAppToken());

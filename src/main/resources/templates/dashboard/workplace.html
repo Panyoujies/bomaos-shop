@@ -27,7 +27,8 @@
                             昨日成交<span class="layui-badge layui-badge-blue pull-right">昨日</span>
                         </div>
                         <div class="layui-card-body">
-                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span> ${YesterDayMoney!}
+                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>
+                                ${YesterDayMoney!}
                             </p>
                         </div>
                     </div>
@@ -101,7 +102,7 @@
 
                 <div class="layui-col-xs12 layui-col-md12">
                     <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                        <div class="layui-card-header">最新支付订单</div>
+                        <div class="layui-card-header">最新订单</div>
                         <div class="layui-card-body dynamic-card-body mini-bar">
                             <!-- 数据表格 -->
                             <table id="ordersTable" lay-filter="ordersTable"></table>
@@ -112,18 +113,16 @@
         </div>
 
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md3">
-
-                <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                    <div class="layui-card-header">
-                        总交易金额<span class="layui-badge layui-badge-red pull-right">总</span>
-                    </div>
-                    <div class="layui-card-body">
-                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>
-                            ${total_amount!}
-                        </p>
-                    </div>
+            <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                <div class="layui-card-header">
+                    总交易金额<span class="layui-badge layui-badge-red pull-right">总</span>
                 </div>
-
+                <div class="layui-card-body">
+                    <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>
+                        ${total_amount!}
+                    </p>
+                </div>
+            </div>
             <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-body" style="padding: 25px; font-size: 18px">
                     Hi ${user.nickName}, 欢迎来到后台管理系统！
@@ -172,15 +171,11 @@
             <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header">友情链接</div>
                 <div class="layui-card-body">
-                    <a class="ew-adv-item sm" href="https://www.zlianpay.cn" target="_blank">
-                        值联社
-                    </a>
-                    <a class="ew-adv-item sm" href="https://shop.zlianpay.cn" target="_blank">
-                        云卡官网
-                    </a>
-                    <a class="ew-adv-item sm" href="http://www.awphp.cn" target="_blank">
-                        云服务器
-                    </a>
+                    <:for items="${adsEntityList!}" var="item">
+                        <a class="ew-adv-item sm" href="${item.link!}" target="_blank">
+                            ${item.title!}
+                        </a>
+                    </:for>
                 </div>
             </div>
         </div>
@@ -217,7 +212,7 @@
                     field: 'payType', title: '支付类型', templet: function (res) {
                         if (res.payType == 'mqpay_alipay' || res.payType == 'zlianpay_alipay' || res.payType == 'yungouos_alipay' || res.payType == 'xunhupay_alipay' || res.payType == 'jiepay_alipay' || res.payType == 'payjs_alipay' || res.payType == 'alipay') {
                             return '<span class="layui-badge layui-badge-blue">支付宝</span>'
-                        } else if (res.payType == 'mqpay_wxpay' || res.payType == 'zlianpay_wxpay' || res.payType == 'yungouos_wxpay' || res.payType == 'xunhupay_wxpay' || res.payType == 'jiepay_wxpay' || res.payType == 'payjs_wxpay' || res.payType == 'wxpay' || res.payType == 'wxpay_h5'){
+                        } else if (res.payType == 'mqpay_wxpay' || res.payType == 'zlianpay_wxpay' || res.payType == 'yungouos_wxpay' || res.payType == 'xunhupay_wxpay' || res.payType == 'jiepay_wxpay' || res.payType == 'payjs_wxpay' || res.payType == 'wxpay' || res.payType == 'wxpay_h5') {
                             return '<span class="layui-badge layui-badge-green">微信</span>'
                         } else if (res.payType == 'paypal') {
                             return '<span class="layui-badge layui-badge-paypal">Paypal</span>'

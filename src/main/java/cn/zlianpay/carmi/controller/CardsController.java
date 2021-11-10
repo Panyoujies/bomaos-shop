@@ -108,10 +108,13 @@ public class CardsController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(CardsDts cardsDts) {
-        if (cardsService.addCards(cardsDts)) {
-            return JsonResult.ok("添加成功");
+
+        Products products = productsService.getById(cardsDts.getProductId());
+        if (products.getSellType() != cardsDts.getSellType()) { // 重复销售
+            return JsonResult.error("本商品为重复售卡类型、请使用重复售卡来导入卡密！！");
         }
-        return JsonResult.error("添加失败");
+
+        return cardsService.addCards(cardsDts);
     }
 
     /**

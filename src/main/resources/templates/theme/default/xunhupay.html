@@ -5,7 +5,12 @@
     <link rel="stylesheet" href="${ctxPath}/theme/default/css/pay.css"/>
     <script src="https://lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script>
 </head>
-<body>
+<body class="page-no-scroll">
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
 
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>

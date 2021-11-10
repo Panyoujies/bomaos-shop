@@ -126,7 +126,6 @@
 
         /* 监听表单提交 */
         form.on('submit(formBasSubmit)', function (data) {
-
             $.post('save', data.field, function (res) {
                 if (0 === res.code) {
                     notice.msg(res.msg, {icon: 1});

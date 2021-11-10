@@ -1,15 +1,18 @@
 <div class="ew-header">
     <div class="layui-container">
         <a class="layui-logo" href="/" style="letter-spacing: 1.5px;position: relative;">
-            <img src="${ctxPath}/file/${websiteLogo!}" class="img-item"
+            <img src="<:if test="${websiteLogo == null || websiteLogo == ''}">${ctxPath}/theme/default/images/logo.svg</:if><:if test="${websiteLogo != null || websiteLogo != ''}">${websiteLogo!}</:if>" class="img-item"
                  style="width: 32px;height: 32px;position: absolute;left: 0;">
             <span>${websiteName!}</span>
         </a>
         <div class="ew-nav-group">
             <div class="nav-toggle"><i class="layui-icon layui-icon-more-vertical"></i></div>
-            <ul class="layui-nav" lay-filter="ew-header-nav">
-                <li class="layui-nav-item">
+            <ul class="layui-nav">
+                <li class="layui-nav-item layui-this">
                     <a href="${ctxPath}/index">商店首页</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="${ctxPath}/article">热门文章</a>
                 </li>
                 <li class="layui-nav-item back-item" style="padding: 0px; padding-left: 15px;">
                     <a href="${ctxPath}/search" class="layui-btn search-by" style="background-color: #ffffff; border-width: 1px; border-style: solid; border-color: #d9d9d9;">

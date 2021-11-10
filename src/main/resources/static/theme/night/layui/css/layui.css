@@ -91,7 +91,7 @@ hr {
 }
 
 a {
-    color: #8194ff;
+    color: #ffffff;
     text-decoration: none
 }
 
@@ -984,7 +984,7 @@ a cite {
     height: 100%;
     line-height: 60px;
     text-align: center;
-    color: #4282ff;
+    color: #2fb18a;
     font-size: 16px
 }
 
@@ -1677,7 +1677,7 @@ a cite {
     margin-bottom: 10px;
     padding: 15px;
     line-height: 22px;
-    border-left: 5px solid #4282ff;
+    border-left: 5px solid #2fb18a;
     border-radius: 0 2px 2px 0;
     background-color: #f2f2f2
 }
@@ -1818,6 +1818,17 @@ a cite {
     font-size: 14px
 }
 
+.layui-card-footer {
+    position: relative;
+    height: auto;
+    line-height: normal;
+    padding: 5px 15px;
+    border-top: 1px solid #2d2d2d;
+    color: #333;
+    border-radius: 2px 2px 0 0;
+    font-size: 14px
+}
+
 .layui-bg-black, .layui-bg-blue, .layui-bg-cyan, .layui-bg-green, .layui-bg-orange, .layui-bg-red {
     color: #fff !important
 }
@@ -1877,7 +1888,7 @@ a cite {
 }
 
 .layui-bg-green {
-    background-color: #4282ff !important
+    background-color: #2fb18a !important
 }
 
 .layui-bg-cyan {
@@ -1955,7 +1966,7 @@ a cite {
     height: 38px;
     line-height: 38px;
     padding: 0 18px;
-    background-color: #4282ff;
+    background-color: #2eb28b;
     color: #fff;
     white-space: nowrap;
     text-align: center;
@@ -2015,7 +2026,7 @@ a cite {
 }
 
 .layui-btn-primary:hover {
-    border-color: #4282ff;
+    border-color: #2fb18a;
     color: #333
 }
 
@@ -2091,7 +2102,7 @@ a cite {
 
 .layui-btn-group .layui-btn-primary:hover {
     border-color: #C9C9C9;
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-btn-group .layui-btn:first-child {
@@ -2840,7 +2851,7 @@ a cite {
 }
 
 .layui-laypage a:hover {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-laypage em {
@@ -2872,7 +2883,7 @@ a cite {
     padding: 1px;
     width: 100%;
     height: 100%;
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-laypage-em {
@@ -2930,7 +2941,7 @@ a cite {
 }
 
 .layui-laypage input:focus, .layui-laypage select:focus {
-    border-color: #4282ff !important
+    border-color: #2fb18a !important
 }
 
 .layui-laypage button {
@@ -3557,11 +3568,11 @@ body .layui-table-tips .layui-layer-content {
 
 .layui-upload-drag .layui-icon {
     font-size: 50px;
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-upload-drag[lay-over] {
-    border-color: #4282ff
+    border-color: #2fb18a
 }
 
 .layui-upload-iframe {
@@ -3847,11 +3858,11 @@ body .layui-table-tips .layui-layer-content {
 .layui-nav-tree .layui-nav-bar {
     width: 5px;
     height: 0;
-    background-color: #4282ff
+    background-color: #2fb18a
 }
 
 .layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
-    background-color: #4282ff;
+    background-color: #2fb18a;
     color: #fff
 }
 
@@ -4080,7 +4091,7 @@ body .layui-table-tips .layui-layer-content {
 }
 
 .layui-tab-brief > .layui-tab-title .layui-this {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-tab-brief > .layui-tab-more li.layui-this:after, .layui-tab-brief > .layui-tab-title .layui-this:after {
@@ -4960,7 +4971,7 @@ body .layui-util-face .layui-layer-content {
 }
 
 .layui-slider-input-btn i:hover {
-    color: #4282ff
+    color: #2fb18a
 }
 
 .layui-slider-vertical {
@@ -5425,7 +5436,7 @@ body .layui-util-face .layui-layer-content {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     flex: 1;
-    color: #6597ff !important;
+    color: #2fb18a !important;
     font-weight: 700;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0,0,0,0);

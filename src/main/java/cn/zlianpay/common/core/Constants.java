@@ -21,7 +21,9 @@ public class Constants {
         }
     }
 
-    public static final boolean UPLOAD_UUID_NAME = true;  // 文件上传是否用uuid命名
+    public static final boolean UPLOAD_UUID_NAME = false;  // 文件上传是否用uuid命名
+    public static final boolean UPLOAD_MD5_NAME = true;  // 文件上传是否用MD5命名
+
     // OpenOffice在不同操作系统上的安装路径
     public static final String OPEN_OFFICE_PATH_WINDOWS = "C:/OpenOffice";
     public static final String OPEN_OFFICE_PATH_LINUX = "/opt/openoffice.org3";

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <:include file="./common/title.html" websiteName="${website.websiteName} - 热门文章" keywords="${website.keywords}"
+              description="${website.description}" favicon="${website.favicon}"/>
+    <link rel="stylesheet" href="${ctxPath}/theme/night/css/article.css"/>
+
+
+    <style>
+        .box, .side-fixed {
+            position: relative;
+        }
+
+        .b2-radius {
+            border-radius: 4px;
+        }
+
+        .post-3 .b2_gap {
+            display: flex;
+            flex-flow: wrap;
+        }
+
+        .post-3 .b2_gap, .post-5 .b2_gap {
+            margin: 0;
+        }
+
+        .post-list ul.b2_gap {
+            padding: 0;
+        }
+
+        .b2_gap > li {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .post-item-1 ul.b2_gap > li {
+            width: 100%;
+        }
+
+        .post-3 .item-in {
+            display: flex;
+            position: relative;
+            padding: 16px;
+            align-items: stretch;
+        }
+
+        .b2_gap > li .item-in, .shop-list-item, .shop-normal-item-in, .user-search-list li > div, .home-collection .home-collection-content, .post-3.post-3-li-dubble .b2_gap > li .item-in {
+            margin-bottom: 16px;
+            margin-right: 16px;
+            overflow: hidden;
+        }
+
+        .post-3 .post-3-li .item-in {
+            border-bottom: 1px solid rgb(255 255 255 / 10%);
+            margin: 0;
+        }
+
+        .mobile-hidden {
+            display: block;
+        }
+
+        .post-module-thumb {
+            position: relative;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .post-module-thumb {
+            width: 150px;
+            min-width: 150px;
+        }
+
+        .post-3 .post-module-thumb {
+            height: auto;
+            margin-right: 16px;
+        }
+
+        .post-3 .post-module-thumb > div {
+            position: relative;
+        }
+
+        .post-3 .post-module-thumb .b2-radius {
+            overflow: hidden;
+        }
+
+        .post-module-thumb a.thumb-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .post-thumb {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            background-color: #f5f6f7;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .post-3 .post-info {
+            width: 100%;
+            display: flex;
+            flex-flow: column;
+            padding: 4px 0;
+        }
+
+        .post-3 .post-info > div:first-child {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-info h2 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+            margin: 11px 16px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .post-3 .post-info h2 {
+            font-size: 18px;
+            margin-left: 0;
+            margin-top: 0;
+        }
+
+        .post-list-item .item-in .post-info h2 {
+            -webkit-line-clamp: 1;
+        }
+
+        .post-excerpt {
+            font-size: 12px;
+            color: #797c80;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+            text-justify: inter-ideograph;
+            word-break: break-all;
+            margin: 0 16px 13px;
+            margin-top: -6px;
+        }
+
+        .post-3 .post-excerpt {
+            margin: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .post-list-meta-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 16px;
+            color: #aaaeb3;
+        }
+
+        .post-3 .post-list-meta-box {
+            margin: 0;
+            margin-top: auto;
+        }
+
+        .post-list-meta {
+            display: flex;
+            font-size: 12px;
+            align-items: center;
+        }
+
+        .post-3 .post-list-meta {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            width: 100%;
+            color: #bcbcbc;
+        }
+
+        .post-3 .post-list-meta {
+            justify-content: flex-end;
+        }
+
+        .post-3 .post-list-meta li:nth-child(1) {
+            flex: 1;
+            padding: 0;
+        }
+
+        .post-list-meta-avatar {
+            display: flex;
+            align-items: center;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            line-height: 1;
+        }
+
+        img.avatar {
+            background-color: #eee;
+            width: 100%;
+            height: 100%;
+        }
+
+        .post-list-meta-avatar img {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            border-radius: 100%;
+            margin-right: 4px;
+            position: relative;
+        }
+
+        .post-info span {
+            font-size: 12px;
+            height: 14px;
+        }
+
+        .post-3 .post-list-meta li:nth-child(1) span {
+            margin-left: 0;
+        }
+
+        .post-list-meta-show {
+            border-right: 1px solid rgb(255 255 255 / 10%);
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        .post-list-meta-show:first-child {
+            padding-left: 0;
+        }
+
+        .post-list-meta-show:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .post-list-meta .star-active {
+            color: #01AAED;
+        }
+
+
+        .b2-widget-post-thumb .b2-widget-post-thumb-product-img {
+            height: 0;
+            padding-top: 65%;
+            position: relative;
+            width: 100%;
+        }
+
+        .shop-normal-tips {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            height: 20px;
+            font-size: 12px;
+            background-color: #fdd6d3;
+            color: #f44336;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .b2-widget-post-thumb .shop-normal-tips {
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .b2-widget-post-thumb .b2-widget-post-thumb-product-img img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .b2-widget-post-thumb .b2-widget-post-title {
+            padding: 0;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        .b2-widget-post-title h2 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .widget ul li h2 {
+            font-size: 13px;
+        }
+
+        .b2-widget-post-title h2 {
+            font-size: 12px;
+        }
+
+        .red {
+            color: #FF3355;
+        }
+
+        .products-price {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .link-overlay {
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        @media screen and (max-width: 750px) {
+            .mobile-hidden {
+                display: none;
+            }
+        }
+
+    </style>
+
+</head>
+<body class="page-no-scroll">
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+<!-- header -->
+<:include file="./common/header-article.html" websiteName="${website.websiteName}"
+          websiteLogo="${website.websiteLogo}"/>
+
+<div class="layui-container body-card">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md8">
+            <div class="layui-card">
+                <div class="box b2-radius post-3 post-item-1 post-list hidden-line">
+                    <ul class="b2_gap" id="demoCardList3">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <img src="${ctxPath}/theme/night/images/classifys.svg">
+                    热门商品
+                </div>
+                <div class="layui-card-body" style="padding: 15px 15px;">
+                    <div class="layui-row layui-col-space15">
+                        <:for items="${hotProductList}" var="item">
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <div class="b2-widget-post-thumb box-in b2-radius">
+                                    <div class="b2-widget-post-thumb-product-img">
+                                        <img class="lazy loaded" src="<:if test="${item.image == null || item.image == ''}">../theme/night/images/index_logo.png</:if><:if test="${item.image != null || item.image != ''}">${item.image!}</:if>">
+                                    </div>
+                                    <div class="b2-widget-post-title">
+                                        <h2>${item.name}</h2>
+                                        <div class="products-price red">
+                                            ￥ ${item.price}
+                                        </div>
+                                    </div>
+                                    <a ref="nofollow" class="link-overlay" href="${ctxPath}/product/${item.link}"></a>
+                                </div>
+                            </div>
+                        </:for>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 文章模板 -->
+<script type="text/html" id="demoCardItem3">
+    <li class="post-3-li post-list-item">
+        <div class="item-in ">
+            <div class="post-module-thumb mobile-hidden" style="">
+                <div style="padding-top:70%" class="b2-radius">
+                    <a href="${ctxPath}/article/{{d.id}}" rel="nofollow" class="thumb-link">
+                        <picture class="picture">
+                            <img class="post-thumb lazy loaded"
+                                 src="{{# if(d.picture == null || d.picture == ''){ }}../theme/night/images/index_logo.png{{# } }}  {{# if(d.picture != null){ }} {{d.picture}} {{# } }}">
+                        </picture>
+                    </a>
+                </div>
+            </div>
+            <div class="post-info">
+                <h2>
+                    <a href="${ctxPath}/article/{{d.id}}">{{d.title}}</a>
+                </h2>
+                <div class="post-excerpt">
+                    {{d.excerpt}}
+                </div>
+                <div class="post-list-meta-box ">
+                    <ul class="post-list-meta">
+                        <li class="post-list-meta-user">
+                            <a class="post-list-meta-avatar">
+                                <picture class="picture">
+                                    <img class="avatar b2-radius lazy loaded"
+                                         src="${ctxPath}/file/${user.avatar!'../assets/images/head.jpg'}">
+                                </picture>
+                                <span>{{d.userName}}</span>
+                            </a>
+                        </li>
+                        <li class="post-list-meta-show">
+                            <span>
+                                <time class="b2timeago" datetime="{{d.createTime}}" itemprop="datePublished">
+                                    {{d.createTime}}
+                                </time>
+                            </span>
+                        </li>
+                        <li class="post-list-meta-show {{d.isLike?'star-active':''}}" lay-event="like">
+                            <span>
+                                <i class="layui-icon layui-icon-praise" style="vertical-align: middle;"></i>&nbsp;
+                                <span style="vertical-align: middle;">{{d.likes}}</span>
+                            </span>
+                        </li>
+                        <li class="post-list-meta-show">
+                            <span>
+                                <i class="layui-icon layui-icon-light" style="vertical-align: middle;"></i>&nbsp;
+                                <span style="vertical-align: middle;">{{d.seeNumber}}</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>
+
+<!-- footer -->
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+
+<!-- js部分 -->
+<:include file="./common/js.html"/>
+<script>
+    layui.use(['layer', 'form', 'dataGrid', 'element', 'dropdown'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var dataGrid = layui.dataGrid;
+
+        /** 文章 */
+        dataGrid.render({
+            elem: '#demoCardList3',
+            templet: '#demoCardItem3',
+            data: '${ctxPath}/getArticleList',
+            loadMore: {limit: 10}
+        });
+
+        dataGrid.on('tool(demoCardList3)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'like') {
+                data.isLike = !data.isLike;
+                data.isLike ? data.likes++ : data.likes--;
+                obj.update(data);
+
+                $.post('/content/article/updateLike', {
+                    articleId: data.id,
+                    isLike: data.isLike
+                }, function (res) {
+                    if (res.code == 200) {
+                        layer.msg(res.msg);
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }, 'json');
+            }
+        });
+
+    })
+</script>
+</body>
+</html>
