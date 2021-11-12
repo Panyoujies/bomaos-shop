@@ -125,6 +125,24 @@ public class OrderController extends BaseController {
 
         Products products = productsService.getById(goodsId);
 
+        /**
+         * 检查附加内容是否为已填写
+         */
+        Integer isCustomize = products.getIsCustomize();
+        if (isCustomize == 1) {
+            String customizeInput = products.getCustomizeInput();
+            String[] customize = customizeInput.split("\\n");
+            for (String s : customize) {
+                String[] split = s.split("=");
+                String s1 = params.get(split[0]); // get到提交过来的字段内容
+                if ("true".equals(split[2])) {
+                    if(StringUtils.isEmpty(s1)) {
+                        return JsonResult.error(split[1] + "没有填写、请填写后再下单。");
+                    }
+                }
+            }
+        }
+        
         UserAgentGetter agentGetter = new UserAgentGetter(request);
         Integer restricts = products.getRestricts();
         // 判断是不是限购

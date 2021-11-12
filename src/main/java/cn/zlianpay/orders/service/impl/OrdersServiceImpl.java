@@ -62,9 +62,6 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
         // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
         Map<String, String> params = RequestParamsUtil.getParameterMap(request);
-        for (Map.Entry<String, String> stringStringEntry : params.entrySet()) {
-            System.out.println(stringStringEntry);
-        }
 
         Products products = productsMapper.selectById(productId);
 

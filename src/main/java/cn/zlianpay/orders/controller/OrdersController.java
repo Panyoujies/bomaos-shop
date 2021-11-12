@@ -137,15 +137,22 @@ public class OrdersController extends BaseController {
                         String[] split1 = s.split("=");
                         Map<String, String> map = new HashMap<>();
                         map.put("name", split1[0]);
-                        map.put("value", split1[1]);
+                        if (split1.length == 2) {
+                            map.put("value", split1[1]);
+                        } else {
+                            map.put("value", "");
+                        }
                         mapList.add(map);
                     }
                     ordersVo.setAttachInfoList(mapList);
                 } else {
                     String[] split1 = attachInfo.split("=");
                     Map<String, String> map = new HashMap<>();
-                    map.put("name", split1[0]);
-                    map.put("value", split1[1]);
+                    if (split1.length == 2) {
+                        map.put("value", split1[1]);
+                    } else {
+                        map.put("value", "");
+                    }
                     mapList.add(map);
                     ordersVo.setAttachInfoList(mapList);
                 }
