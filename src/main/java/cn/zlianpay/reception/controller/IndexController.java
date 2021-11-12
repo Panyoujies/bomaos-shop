@@ -253,11 +253,11 @@ public class IndexController {
         return "theme/" + theme.getDriver() + "/article-content.html";
     }
 
-        /**
-         * 获取文章列表
-         * @param request
-         * @return
-         */
+    /**
+     * 获取文章列表
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/getArticleList")
     public PageResult<ArticleVo> getArticleList(HttpServletRequest request) {
@@ -603,7 +603,7 @@ public class IndexController {
         OrdersVo ordersVo = new OrdersVo();
         BeanUtils.copyProperties(member, ordersVo);
         if (member.getPayTime() != null) {
-            ordersVo.setPayTime(DateUtil.getDate());
+            ordersVo.setPayTime(DateUtil.getSubDate(member.getPayTime()));
         } else {
             ordersVo.setPayTime(null);
         }

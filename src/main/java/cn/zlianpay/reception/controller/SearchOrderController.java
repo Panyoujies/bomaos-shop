@@ -1,5 +1,6 @@
 package cn.zlianpay.reception.controller;
 
+import cn.zlianpay.common.core.utils.DateUtil;
 import cn.zlianpay.common.core.web.BaseApiController;
 import cn.zlianpay.orders.entity.Orders;
 import cn.zlianpay.orders.service.OrdersService;
@@ -87,10 +88,8 @@ public class SearchOrderController extends BaseApiController {
 
         OrdersVo ordersVo = new OrdersVo();
         BeanUtils.copyProperties(member,ordersVo);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
         if (member.getPayTime() != null) {
-            String date = df.format(member.getPayTime());// new Date()为获取当前系统时间，也可使用当前时间戳
-            ordersVo.setPayTime(date);
+            ordersVo.setPayTime(DateUtil.getSubDate(member.getPayTime()));
         } else {
             ordersVo.setPayTime(null);
         }

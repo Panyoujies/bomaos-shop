@@ -117,7 +117,7 @@ public class OrdersController extends BaseController {
             ordersVo.setCardInfo(cardsList);
 
             if (orders.getPayTime() != null) {
-                ordersVo.setPayTime(DateUtil.getDate());
+                ordersVo.setPayTime(DateUtil.getSubDate(orders.getPayTime()));
             } else {
                 ordersVo.setPayTime(null);
             }

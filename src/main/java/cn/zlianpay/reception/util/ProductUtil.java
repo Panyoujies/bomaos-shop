@@ -1,6 +1,5 @@
 package cn.zlianpay.reception.util;
 
-import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.reception.dto.HotProductDTO;
 import cn.zlianpay.reception.dto.ProductDTO;
 
