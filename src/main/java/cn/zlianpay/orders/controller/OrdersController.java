@@ -117,7 +117,7 @@ public class OrdersController extends BaseController {
             ordersVo.setCardInfo(cardsList);
 
             if (orders.getPayTime() != null) {
-                ordersVo.setPayTime(DateUtil.getSubDate(orders.getPayTime()));
+                ordersVo.setPayTime(DateUtil.getSubDateMiao(orders.getPayTime()));
             } else {
                 ordersVo.setPayTime(null);
             }
@@ -148,6 +148,7 @@ public class OrdersController extends BaseController {
                 } else {
                     String[] split1 = attachInfo.split("=");
                     Map<String, String> map = new HashMap<>();
+                    map.put("name", split1[0]);
                     if (split1.length == 2) {
                         map.put("value", split1[1]);
                     } else {
@@ -205,6 +206,7 @@ public class OrdersController extends BaseController {
             searchDTO.setAndIncrement(andIncrement.toString());
             searchDTO.setCreateTime(date);
             searchDTO.setMoney(orders.getMoney().toString());
+
             if (Alipay.getByValue(orders.getPayType())) {
                 searchDTO.setPayType("支付宝");
             } else if (Wxpay.getByValue(orders.getPayType())) {
@@ -407,17 +409,39 @@ public class OrdersController extends BaseController {
         cards.setSellNumber(1);
         cards.setUpdatedAt(new Date());
 
-        cardsService.save(cards);
-
         Orders orders1 = new Orders();
         orders1.setId(orders.getId());
         orders1.setStatus(3);
         orders1.setCardsInfo(shipInfo);
 
-        if (ordersService.updateById(orders1)) { // 成功发送邮件
-            return JsonResult.ok("发货成功！");
+        Website website = websiteService.getById(1);
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+
+        if (ordersService.updateById(orders1)) {
+            cardsService.save(cards);
+            /**
+             * 邮件通知
+             * 后台开启邮件通知，
+             * 这里会给下单用户的邮箱发送一条邮件
+             */
+            if (shopSettings.getIsEmail() == 1) {
+                if (FormCheckUtil.isEmail(orders.getEmail())) {
+                    try {
+                        Map<String, Object> map = new HashMap<>();  // 页面的动态数据
+                        map.put("title", website.getWebsiteName());
+                        map.put("member", orders.getMember());
+                        map.put("date", DateUtil.getDate());
+                        map.put("info", shipInfo);
+                        emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{orders.getEmail()});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return JsonResult.error("发货成功、邮箱提醒用户失败、请检查邮箱系统配置。");
+                    }
+                }
+            }
+            return JsonResult.ok("手动发货成功！");
         }
-        return JsonResult.error("发货失败！");
+        return JsonResult.error("手动发货失败！");
     }
 
     /**
@@ -568,12 +592,10 @@ public class OrdersController extends BaseController {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
                         } catch (Exception e) {
                             e.printStackTrace();
-                            return JsonResult.error("补单失败、邮箱系统配置错误！！");
                         }
                     }
                 }
             }
-
         } else { // 手动发货商品
             Products products1 = new Products();
             products1.setId(products.getId());
@@ -605,7 +627,7 @@ public class OrdersController extends BaseController {
                     try {
                         emailService.sendTextEmail("订单提醒", "您的订单号为：" + member.getMember() + " 本商品为手动发货，请耐心等待！", new String[]{member.getEmail()});
                     } catch (Exception e) {
-                        return JsonResult.error("补单失败、邮箱系统配置错误！！");
+                        e.printStackTrace();
                     }
                 }
             }

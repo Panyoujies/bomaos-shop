@@ -142,7 +142,7 @@ public class OrderController extends BaseController {
                 }
             }
         }
-        
+
         UserAgentGetter agentGetter = new UserAgentGetter(request);
         Integer restricts = products.getRestricts();
         // 判断是不是限购

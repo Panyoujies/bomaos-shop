@@ -614,14 +614,19 @@ img.avatar {
     flex-wrap: wrap;
     justify-content: space-around;
     text-align: center;
-    padding: 15px 0;
+    padding: 13px 0;
 }
 
 .bd dt {
     font-size: 15px;
     color: #666;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.bd dt img {
+    width: 30px;
+    height: 30px;
 }
 
 .bd dd {

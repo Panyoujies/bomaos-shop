@@ -106,6 +106,8 @@ public class ArticleController extends BaseController {
      * 修改文章表
      */
     @RequiresPermissions("content:article:view")
+    @OperLog(value = "文章表管理", desc = "编辑文章", param = false, result = true)
+    @ResponseBody
     @RequestMapping("/editArticle/{articleId}")
     public String editArticle(Model model, @PathVariable("articleId") Integer articleId) {
         Article article = articleService.getById(articleId);
@@ -116,28 +118,16 @@ public class ArticleController extends BaseController {
     /**
      * 修改文章表
      */
-    @RequiresPermissions("content:article:update")
     @OperLog(value = "文章表管理", desc = "点赞文章", param = false, result = true)
     @ResponseBody
     @RequestMapping("/updateLike")
-    public JsonResult updateLike(Integer articleId, boolean isLike) {
-
+    public JsonResult updateLike(Integer articleId) {
         Article articleEntity = articleService.getById(articleId);
-
         Article article = new Article();
         article.setId(articleId);
-        if (isLike) {
-            article.setLikes(articleEntity.getLikes() + 1);
-        } else {
-            article.setLikes(articleEntity.getLikes() - 1);
-        }
-
+        article.setLikes(articleEntity.getLikes() + 1);
         if (articleService.updateById(article)) {
-            if (isLike) {
-                return JsonResult.ok("点赞成功啦！");
-            } else {
-                return JsonResult.ok("已取消点赞！");
-            }
+            return JsonResult.ok("点赞成功！");
         }
         return JsonResult.error("哎呀！点赞失败了。");
     }

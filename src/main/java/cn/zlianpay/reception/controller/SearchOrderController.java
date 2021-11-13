@@ -89,7 +89,7 @@ public class SearchOrderController extends BaseApiController {
         OrdersVo ordersVo = new OrdersVo();
         BeanUtils.copyProperties(member,ordersVo);
         if (member.getPayTime() != null) {
-            ordersVo.setPayTime(DateUtil.getSubDate(member.getPayTime()));
+            ordersVo.setPayTime(DateUtil.getSubDateMiao(member.getPayTime()));
         } else {
             ordersVo.setPayTime(null);
         }

@@ -26,6 +26,17 @@ public class DateUtil {
         return dateToString;
     }
 
+    /**
+     * 设置到秒
+     * @param date
+     * @return
+     */
+    public static String getSubDateMiao(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//设置日期格式
+        String dateToString = df.format(date);// new Date()为获取当前系统时间，也可使用当前时间戳
+        return dateToString;
+    }
+
     // 获取当天的开始时间
     public static Date getDayBegin() {
         Calendar cal = new GregorianCalendar();
