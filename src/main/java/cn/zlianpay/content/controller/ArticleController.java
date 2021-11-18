@@ -106,8 +106,6 @@ public class ArticleController extends BaseController {
      * 修改文章表
      */
     @RequiresPermissions("content:article:view")
-    @OperLog(value = "文章表管理", desc = "编辑文章", param = false, result = true)
-    @ResponseBody
     @RequestMapping("/editArticle/{articleId}")
     public String editArticle(Model model, @PathVariable("articleId") Integer articleId) {
         Article article = articleService.getById(articleId);
