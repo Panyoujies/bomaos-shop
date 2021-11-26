@@ -28,7 +28,7 @@
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-    align-items: center;
+    align-items: flex-start;
     border-bottom: 1px solid #2d2d2d;
 }
 
@@ -40,7 +40,7 @@
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .weui-cells .weui-cell .weui-cell__bd {
@@ -51,6 +51,7 @@
 }
 
 .weui-cells .weui-cell .weui-cell__ft {
+    margin-left: 15px;
     font-weight: normal;
     text-align: right;
     color: rgba(0,0,0,0.5);

@@ -60,7 +60,6 @@ public class Orders implements Serializable {
     /**
      * 订单数量
      */
-    @Autowired
     private Integer number;
 
     /**

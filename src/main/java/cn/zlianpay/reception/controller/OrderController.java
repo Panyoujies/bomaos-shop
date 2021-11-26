@@ -452,6 +452,13 @@ public class OrderController extends BaseController {
         Website website = websiteService.getById(1);
         ShopSettings shopSettings = shopSettingsService.getById(1);
 
+        Orders orders = new Orders();
+        orders.setId(member.getId());
+        orders.setPayTime(new Date());
+        orders.setPayNo(pay_no);
+        orders.setPrice(new BigDecimal(price));
+        orders.setMoney(new BigDecimal(money));
+
         if (products.getShipType() == 0) { // 自动发货的商品
 
             StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
@@ -462,12 +469,18 @@ public class OrderController extends BaseController {
              */
             if (products.getSellType() == 0) { // 一次性卡密类型
 
-                List<Cards> card = cardsService.getCard(0, products.getId(), member.getNumber());
-                if (card == null) return false; // 空值的话直接返回错误提示
+                List<Cards> cardsList = cardsService.getBaseMapper().selectList(new QueryWrapper<Cards>()
+                        .eq("status", 0)
+                        .eq("product_id", products.getId())
+                        .eq("sell_type", 0)
+                        .orderBy(true, false, "rand()")
+                        .last("LIMIT " + member.getNumber() + ""));
+
+                if (cardsList == null) return false; // 空值的话直接返回错误提示
 
                 StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
-
-                for (Cards cards : card) {
+                List<Cards> updateCardsList = new ArrayList<>();
+                for (Cards cards : cardsList) {
                     orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
 
                     /**
@@ -480,9 +493,7 @@ public class OrderController extends BaseController {
                     cards1.setSellNumber(1);
                     cards1.setUpdatedAt(new Date());
 
-                    // 设置售出的卡密
-                    cardsService.updateById(cards1);
-
+                    updateCardsList.add(cards1);
                     if (cards.getCardInfo().contains(" ")) {
                         String[] split = cards.getCardInfo().split(" ");
                         stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
@@ -494,18 +505,24 @@ public class OrderController extends BaseController {
                 // 去除多余尾部的逗号
                 String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
 
-                Orders orders = new Orders();
                 orders.setId(member.getId());
                 orders.setCardsInfo(result);
 
-                // 更新售出卡密
-                ordersService.updateById(orders);
+                // 更新售出的订单
+                if (ordersService.updateById(orders)) {
+                    // 设置售出的卡密
+                    cardsService.updateBatchById(updateCardsList);
+                } else {
+                    return false;
+                }
 
             } else if (products.getSellType() == 1) { // 重复销售的卡密
                 StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
 
-                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
-                if (cards == null) return false; // 空值的话直接返回错误提示
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 1));
+                if (cards == null) {
+                    return false; // 空值的话直接返回错误提示
+                }
 
                 /**
                  * 设置每条被购买的卡密的售出状态
@@ -521,9 +538,6 @@ public class OrderController extends BaseController {
                     cards1.setSellNumber(cards.getSellNumber() + member.getNumber());
                     cards1.setNumber(cards.getNumber() - member.getNumber());
                 }
-
-                // 设置售出的卡密
-                cardsService.updateById(cards1);
 
                 if (cards.getCardInfo().contains(" ")) {
                     String[] split = cards.getCardInfo().split(" ");
@@ -543,13 +557,15 @@ public class OrderController extends BaseController {
 
                 // 去除多余尾部的逗号
                 String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
-
-                Orders orders = new Orders();
-                orders.setId(member.getId());
+                orders.setStatus(1); // 设置已售出
                 orders.setCardsInfo(result);
 
-                // 更新售出卡密
-                ordersService.updateById(orders);
+                // 设置售出的商品
+                if (ordersService.updateById(orders)) {
+                    cardsService.updateById(cards1);
+                } else {
+                    return false;
+                }
             }
 
             /**
@@ -595,6 +611,14 @@ public class OrderController extends BaseController {
             products1.setInventory(products.getInventory() - member.getNumber());
             products1.setSales(products.getSales() + member.getNumber());
 
+            orders.setStatus(2); // 手动发货模式 为待处理
+            if (ordersService.updateById(orders)) {
+                // 更新售出
+                productsService.updateById(products1);
+            } else {
+                return false;
+            }
+
             /**
              * 微信的 wxpush 通知
              * 本通知只针对站长
@@ -624,27 +648,9 @@ public class OrderController extends BaseController {
                     }
                 }
             }
-            productsService.updateById(products1);
         }
 
-        /**
-         * 更新订单
-         */
-        Orders orders = new Orders();
-        orders.setId(member.getId());
-
-        if (products.getShipType() == 0) {
-            orders.setStatus(1); // 设置已售出
-        } else {
-            orders.setStatus(2); // 手动发货模式 为待处理
-        }
-
-        orders.setPayTime(new Date());
-        orders.setPayNo(pay_no);
-        orders.setPrice(new BigDecimal(price));
-        orders.setMoney(new BigDecimal(money));
-        boolean b = ordersService.updateById(orders);// 更新售出
-        return b;
+        return true;
     }
 
     /**
