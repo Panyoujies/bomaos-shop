@@ -17,7 +17,7 @@
 
 ## 介绍
 
-新版 2.0 已进入测试阶段，详情请看 [https://shop.zlianpay.cn/](https://shop.zlianpay.cn/)
+新版 2.0.0 已正式推出，详情请看 [https://shop.zlianpay.cn/](https://shop.zlianpay.cn/)
 一款高效安全的发卡平台。
 
 支持的支付渠道：
