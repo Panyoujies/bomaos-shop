@@ -12,6 +12,9 @@
 
 ## 仅供开发学习使用、不可用于违法用途。
 
+## 专业版已上线
+可前往 [https://zdins.cn](https://zdins.cn)
+
 ## 介绍
 
 新版 2.0 已进入测试阶段，详情请看 [https://shop.zlianpay.cn/](https://shop.zlianpay.cn/)
