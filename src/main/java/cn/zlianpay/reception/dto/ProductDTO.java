@@ -26,6 +26,11 @@ public class ProductDTO {
     /**
      * 首页截图
      */
+    private String imageLogo;
+
+    /**
+     * 首页截图
+     */
     private String indexLogo;
 
     /**

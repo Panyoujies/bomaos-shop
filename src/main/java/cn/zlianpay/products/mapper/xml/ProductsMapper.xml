@@ -88,4 +88,12 @@
         <include refid="relSelect"></include>
     </select>
 
+    <select id="getRandomProductList" resultType="cn.zlianpay.products.entity.Products">
+        SELECT * FROM `sys_products`
+        WHERE id >= (SELECT floor( RAND() * ((SELECT MAX(id) FROM `sys_products`)-(SELECT MIN(id) FROM `sys_products`)) + (SELECT MIN(id) FROM `sys_products`)))
+          and status=1
+        ORDER
+            BY id LIMIT #{limit}
+    </select>
+
 </mapper>

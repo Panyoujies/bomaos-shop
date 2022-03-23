@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 常用工具方法
@@ -295,6 +297,23 @@ public class CoreUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 去除回车和空格
+     * @param str
+     * @return
+     */
+    public static String getStringNoBlank(String str) {
+        if(str!=null && !"".equals(str)) {
+            str.replaceAll("\n", "");
+            Pattern p = Pattern.compile("(^\\s*)|(\\s*$)");
+            Matcher m = p.matcher(str);
+            String strNoBlank = m.replaceAll("");
+            return strNoBlank;
+        }else {
+            return  "";
+        }
     }
 
 }

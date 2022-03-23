@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-    <:include file="./common/title.html" websiteName="${website.websiteName} - 订单详情"
-              keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/theme/default/css/order.css"/>
-    <script type="text/javascript" src="${ctxPath}/theme/default/js/clipboard.min.js"></script>
+    <:include file="./common/title.html" websiteName="订单详情 - ${website.websiteName}"
+              keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}" shop="${shop}"/>
+    <link rel="stylesheet" href="${ctxPath}/default/css/order.css"/>
 </head>
 <body class="page-no-scroll">
 <div class="page-loading">
@@ -14,16 +12,41 @@
     </div>
 </div>
 <!-- header -->
-<:include file="./common/header.html" websiteName="${website.websiteName}"
-          websiteLogo="${website.websiteLogo}"/>
-
+<:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
 <!-- goods-card -->
 <div class="layui-container body-card">
     <div class="layui-row layui-col-space15">
         <!-- 左 -->
         <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
             <div class="layui-card order-show">
-
+                <:if test="${orders.status == 0}">
+                    <div class="layui-text">
+                        <span>订单还未付款！</span>
+                    </div>
+                </:if>
+                <!-- 自动发货 -->
+                <:if test="${orders.status == 2}">
+                    <div class="layui-text">
+                        <span>请耐心等待店主发货哦！</span>
+                    </div>
+                </:if>
+                <!-- 自动发货 -->
+                <:if test="${orders.status == 1 || orders.status == 3}">
+                    <div class="layui-text" style="font-size: 18px; height: auto">
+                        <div class="user-info-list-item">
+                            <textarea id="card-txt" placeholder="查看卡密信息" class="layui-textarea" style="height: 237px;"><:for items="${cardsList}" var="item">${item!}</:for></textarea>
+                        </div>
+                    </div>
+                    <div class="reset">
+                        <a id="card-copy" href="#" data-clipboard-target="#card-txt" class="reset-left layui-btn">复制卡密</a>
+                        <a href="/exportCards?orderId=${orders.id!}" class="reset-left layui-btn">下载卡密</a>
+                    </div>
+                </:if>
+            </div>
+        </div>
+        <!-- 右 -->
+        <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+            <div class="layui-card order-show">
                 <div class="weui-cells">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">联系方式</div>
@@ -61,102 +84,28 @@
                 </div>
             </div>
         </div>
-        <!-- 左 -->
-        <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
-            <div class="layui-card order-show">
-                <:if test="${orders.status == 0}">
-                    <div class="layui-text">
-                        <span>订单还未付款！</span>
-                    </div>
-                </:if>
-
-                <!-- 自动发货 -->
-                <:if test="${orders.status == 2}">
-                    <div class="layui-text">
-                        <span>请耐心等待店主发货哦！</span>
-                    </div>
-                </:if>
-
-                <!-- 自动发货 -->
-                <:if test="${orders.status == 1 || orders.status == 3}">
-                    <div class="layui-text" style="font-size: 18px; height: auto">
-                        <div class="user-info-list-item">
-                            <textarea id="card-txt" placeholder="查看卡密信息" class="layui-textarea" style="height: 237px;"><:for items="${cardsList}" var="item">${item!}</:for></textarea>
-                        </div>
-                    </div>
-                    <div class="reset">
-                        <a id="card-copy1" href="#" data-clipboard-target="#card-txt"
-                           class="reset-left layui-btn">复制卡密</a>
-                        <script type="text/javascript"> new ClipboardJS('#card-copy1'); </script>
-                    </div>
-                </:if>
-            </div>
-        </div>
-
-        <!-- 左 -->
-        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-            <!-- 使用说明 -->
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    <img src="${ctxPath}/theme/default/images/present.svg">
-                    使用说明
-                    <span class="pull-right" style="font-weight: 400; font-size: 16px;">请详细阅读如下说明</span>
-                </div>
-                <div class="layui-card-body" style="padding: 15px 15px;">
-                    <div class="list_info">
-                        ${goods.pdInfo!}
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-
 <!-- 表单弹窗 -->
 <script type="text/html" id="ordersInfoDialog">
     <div id="imgView"
          style="padding: 10px; border-radius: 5px;">
     </div>
 </script>
-
 <!-- footer -->
-<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
-
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}" shop="${shop}"/>
 <!-- js部分 -->
 <:include file="./common/js.html"/>
 <script>
-    layui.use(['layer', 'form', 'QRCode', 'admin'], function () {
+    layui.use(['layer', 'form', 'QRCode', 'admin', 'ClipboardJS'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
-        var QRCode = layui.QRCode;
-        var admin = layui.admin;
-
-        /* 生成二维码 - 仅支持自动发货的商品 */
-        form.on('submit(qrcodeSubmit)', function () {
-            var content = $('#card-txt').val();
-            layer.open({
-                type: 1
-                , title: '查看二维码'
-                , offset: 'auto'
-                , id: 'layerDemo' + 'auto'
-                , content: shows(content)
-                , btn: '关闭窗口'
-                , btnAlign: 'c' //按钮居中
-                , shade: 0 //不显示遮罩
-                , yes: function () {
-                    layer.closeAll();
-                }
-            });
+        var ClipboardJS = layui.ClipboardJS;
+        var clipboard = new ClipboardJS('#card-copy');
+        clipboard.on('success', function(e) {
+            layer.msg("卡密复制成功<br>" + e.text);
         });
-
-        function shows(mData) {
-            html = '<div id="payQrCode" style="width: 260px; height: 260px; text-align: center">' +
-                '<img style="margin-top: 10px" src="/file/enQrcode?url=' + mData + '">' +
-                '</div>';
-            return html;
-        }
-
     })
 </script>
 </body>

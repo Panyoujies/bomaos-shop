@@ -202,16 +202,20 @@
 </script>
 
 <script id="cardsInfoDialog" type="text/html">
-    <div style="padding: 15px">
-        <textarea placeholder="查看卡密信息" class="layui-textarea" style="height: 237px;">{{# layui.each(d,function(i,item){ }}{{item}}{{# }); }}</textarea>
-        <button class="layui-btn layui-btn-primary" style="margin-top: 15px" ew-event="closeDialog">关闭</button>
-    </div>
+    <form id="editForm" lay-filter="editForm" class="layui-form">
+        <div style="padding: 15px">
+            <input name="id" type="hidden"/>
+            <textarea placeholder="查看卡密信息" name="cardsInfo" class="layui-textarea" style="height: 237px;"></textarea>
+            <button class="layui-btn" style="margin-top: 15px" lay-filter="editSubmit" lay-submit>保存卡密</button>
+            <button class="layui-btn layui-btn-primary" style="margin-top: 15px" ew-event="closeDialog">关闭</button>
+        </div>
+    </form>
 </script>
 
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
 <script>
-    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice', 'laydate'], function () {
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice', 'laydate', 'cascader'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -221,6 +225,7 @@
         var laydate = layui.laydate;
         var admin = layui.admin;
         var notice = layui.notice;
+        var cascader = layui.cascader;
 
         /* 渲染表格 */
         var insTb = tableX.render({
@@ -236,8 +241,8 @@
             cols: [[
                 {type: 'numbers', unresize: true, totalRowText: '合计'},
                 {field: 'member', title: '订单号', minWidth: 140},
-                {field: 'productName', title: '商品名称', width: 120},
-                {field: 'contact', title: '联系方式', align: 'center', width: 120, templet: function (res) {
+                {field: 'productName', title: '商品名称', width: 130},
+                {field: 'contact', title: '联系方式', align: 'center', width: 140, templet: function (res) {
                         if (res.contact == '' || res.contact == null) {
                             return res.email;
                         } else {
@@ -467,8 +472,45 @@
                 type: 1,
                 title: '卡密信息',
                 content: $('#cardsInfoDialog').html(),
-                data: mData.cardInfo,
-                tpl: true
+                success: function (layero, dIndex) {
+                    form.val('editForm', mData); // 回显数据
+                    form.on('submit(editSubmit)', function (data) {
+                        var loadIndex = layer.load(2);
+                        $.post('orders/updateCards', data.field, function (res) {
+                            layer.close(loadIndex);
+                            if (0 === res.code) {
+                                layer.close(dIndex);
+                                notice.msg(res.msg, {icon: 1});
+                                insTb.reload({page: {curr: 1}});
+                            } else {
+                                notice.msg(res.msg, {icon: 2});
+                            }
+                        });
+                        return false;
+                    })
+
+                    var ins1 = cascader.render({
+                        elem: '#demoCascader1',
+                        filterable: true,
+                        reqData: function (values, callback, data) {
+                            // values是当前所有选中的值，data是当前选中的对象
+                            $.post('/products/products/list', null, function(res){
+                                var item = res.data;
+                                var newList = [];
+                                for(var i = 0; i < item.length; i++){
+                                    var item1 = item[i];
+                                    newList.push({
+                                        value: item1.id,
+                                        label: item1.name,
+                                        haveChildren: false
+                                    });
+                                }
+                                callback(newList);  // 数据请求完成通过callback回调
+                            },'json');
+                        }
+                    });
+                    ins1.removeLoading();
+                }
             });
         }
 

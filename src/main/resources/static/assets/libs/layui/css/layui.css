@@ -1129,7 +1129,7 @@ a cite {
     margin-left: 100%
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 991px) {
     .layui-hide-xs {
         display: none !important
     }

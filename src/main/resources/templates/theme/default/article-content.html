@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName} - 热门文章" keywords="${website.keywords}"
-              description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/theme/default/css/article-content.css"/>
+    <:include file="./common/title.html" websiteName="热门文章 - ${website.websiteName}" keywords="${website.keywords}"
+              description="${website.description}" favicon="${website.favicon}" shop="${shop}"/>
+    <link rel="stylesheet" href="${ctxPath}/default/css/article-content.css"/>
     <link rel="stylesheet" type="text/css" id="u0" href="${ctxPath}/assets/libs/tinymce/skins/ui/oxide/skin.min.css">
 </head>
 <body class="page-no-scroll">
@@ -21,7 +21,6 @@
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md8">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <img src="${ctxPath}/theme/default/images/present.svg">
                     文章详情
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px;">
@@ -41,13 +40,13 @@
                             </li>
                             <li class="post-list-meta-show" id="btnLikes">
                             <span>
-                                <i class="layui-icon layui-icon-praise" style="vertical-align: middle; position: relative; top: 2px;"></i>&nbsp;
+                                <i class="layui-icon layui-icon-praise" style="vertical-align: middle; position: relative; top: 2px; font-size: 12px;"></i>&nbsp;
                                 <span style="vertical-align: middle;">${article.likes}</span>
                             </span>
                             </li>
                             <li class="post-list-meta-show">
                             <span>
-                                <i class="layui-icon layui-icon-light" style="vertical-align: middle; position: relative; top: 1px;"></i>&nbsp;
+                                <i class="layui-icon layui-icon-light" style="vertical-align: middle; position: relative; top: 1px; font-size: 12px;"></i>&nbsp;
                                 <span style="vertical-align: middle;">${article.seeNumber}</span>
                             </span>
                             </li>
@@ -56,10 +55,9 @@
                 </div>
             </div>
         </div>
-        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4 sticky">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <img src="${ctxPath}/theme/default/images/classifys.svg">
                     热门商品
                 </div>
                 <div class="layui-card-body" style="padding: 15px 15px;">
@@ -68,7 +66,7 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <div class="b2-widget-post-thumb box-in b2-radius">
                                     <div class="b2-widget-post-thumb-product-img">
-                                        <img class="lazy loaded" src="<:if test="${item.image == null || item.image == ''}">../theme/default/images/index_logo.png</:if><:if test="${item.image != null || item.image != ''}">${item.image!}</:if>">
+                                        <img class="lazy loaded" src="<:if test="${item.image == null || item.image == ''}">../default/images/commodity.svg</:if><:if test="${item.image != null || item.image != ''}">${item.image!}?width=200&height=200</:if>">
                                     </div>
                                     <div class="b2-widget-post-title">
                                         <h2>${item.name}</h2>
@@ -89,8 +87,9 @@
 </div>
 
 <!-- footer -->
-<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
-
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}" shop="${shop}"/>
+<!-- footer -->
+<:include file="./common/footer-menu-help.html"/>
 <!-- js部分 -->
 <:include file="./common/js.html"/>
 <script>

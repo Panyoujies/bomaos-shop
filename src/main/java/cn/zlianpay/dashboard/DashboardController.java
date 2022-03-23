@@ -1,34 +1,21 @@
 package cn.zlianpay.dashboard;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.zlianpay.common.core.enmu.Alipay;
 import cn.zlianpay.common.core.enmu.Paypal;
 import cn.zlianpay.common.core.enmu.QQPay;
 import cn.zlianpay.common.core.enmu.Wxpay;
-import cn.zlianpay.common.core.pays.xunhupay.HttpUtils;
 import cn.zlianpay.common.core.web.BaseController;
-import cn.zlianpay.reception.common.PaysEnmu;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.utils.DateUtil;
-import cn.zlianpay.common.core.utils.RmbUtil;
 import cn.zlianpay.orders.entity.Orders;
 import cn.zlianpay.orders.service.OrdersService;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -139,26 +126,6 @@ public class DashboardController extends BaseController {
             total_amount = total_amount.add(new BigDecimal(orders.getMoney().toString())); // 统计今天的交易额
         }
 
-        try {
-            String httpget = doGet("https://shop.zlianpay.cn/ads/getAds", null);
-
-            JSONObject jsonObject = JSONObject.parseObject(httpget);
-            Integer code = (Integer) jsonObject.get("code");
-            if (code == 0) {
-                String data = jsonObject.get("data").toString();
-                Gson gson = new Gson();
-                List<AdsEntity> adsEntityList = gson.fromJson(data, new TypeToken<List<AdsEntity>>() {
-                }.getType());
-                model.addAttribute("adsEntityList", adsEntityList);
-            } else {
-                List<AdsEntity> adsEntityList = new ArrayList<>();
-                model.addAttribute("adsEntityList", adsEntityList);
-            }
-        } catch (Exception e) {
-            List<AdsEntity> adsEntityList = new ArrayList<>();
-            model.addAttribute("adsEntityList", adsEntityList);
-        }
-
         model.addAttribute("mapList", JSON.toJSONString(mapList));
         model.addAttribute("dayList", JSON.toJSONString(dayList));
         model.addAttribute("wxpayList", JSON.toJSONString(wxpayList));
@@ -169,30 +136,6 @@ public class DashboardController extends BaseController {
 
         model.addAttribute("user", getLoginUser());
         return "dashboard/workplace.html";
-    }
-
-    //get请求
-    public static String doGet(String url, String authValue) {
-        String result = null;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        try {
-            HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader("Content-type", "application/json");
-            if (!ObjectUtil.isNull(authValue)) {
-                httpGet.setHeader("Authorization", "Bearer " + authValue);
-            }
-            result = httpClient.execute(httpGet, responseHandler);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        return result;
     }
 
     /**
@@ -316,7 +259,6 @@ public class DashboardController extends BaseController {
             } else if (Paypal.getByValue(orders.getPayType())) {
                 paypal++;
             } else if (QQPay.getByValue(orders.getPayType())) {
-                System.out.println("1111");
                 qqpay++;
             }
         }

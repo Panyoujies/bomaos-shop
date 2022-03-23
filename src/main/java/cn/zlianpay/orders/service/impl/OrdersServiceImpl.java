@@ -92,6 +92,8 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setPrice(products.getPrice());
         orders.setStatus(0); // 1 为支付，0未支付
         orders.setProductId(productId);
+        orders.setProductName(products.getName());
+        orders.setShipType(products.getShipType());
         orders.setPayType(payType);
         orders.setNumber(number); // 订单数量
         orders.setContact(contact);
@@ -133,7 +135,6 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
                 }
             } else { // 折扣优惠券
                 if (multiply.compareTo(coupon.getFullReduction()) > -1) { // 判断实际支付金额是否满足满减的对滴金额
-                    // 得到满减后的价格
                     BigDecimal bigDecimal = multiply.multiply(toPoint(coupon.getDiscountVal().toString()).setScale(2, BigDecimal.ROUND_HALF_DOWN)).setScale(2, BigDecimal.ROUND_HALF_DOWN);
                     orders.setMoney(bigDecimal);
                 } else {

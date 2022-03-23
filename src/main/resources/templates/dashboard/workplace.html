@@ -140,9 +140,7 @@
                         <script type="text/html" ew-tpl>
                             <tr>
                                 <td>当前版本</td>
-                                <td>v2.0.0 &emsp; <a href="https://zlian.gitbook.io/zhilian-cloud/"
-                                                     target="_blank">项目介绍</a>
-                                </td>
+                                <td>v2.0.1 免费版</td>
                             </tr>
                             <tr>
                                 <td>开发语言</td>
@@ -160,7 +158,7 @@
                         <tr>
                             <td>获取渠道</td>
                             <td>
-                                <a href="https://shop.zlianpay.cn/product/otWQqsZJ3hspKyY1"
+                                <a href="https://zdins.cn"
                                    class="layui-btn layui-btn-sm layui-btn-danger" target="_blank">获取最新</a>
                             </td>
                         </tr>
@@ -171,11 +169,9 @@
             <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
                 <div class="layui-card-header">友情链接</div>
                 <div class="layui-card-body">
-                    <:for items="${adsEntityList!}" var="item">
-                        <a class="ew-adv-item sm" href="${item.link!}" target="_blank">
-                            ${item.title!}
-                        </a>
-                    </:for>
+                    <a class="ew-adv-item sm" href="https://zdins.cn" target="_blank">
+                        值联云卡专业版
+                    </a>
                 </div>
             </div>
         </div>
@@ -183,7 +179,7 @@
 </div>
 
 <:include file="../common/js.html"/>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.1.0/dist/echarts.js"></script>
+<script type="text/javascript" src="https://lib.baomitu.com/echarts/5.1.0/echarts.min.js"></script>
 <script>
     layui.use(['layer', 'carousel', 'element', 'notice', 'form', 'table', 'tableX'], function () {
         var $ = layui.jquery;
@@ -259,10 +255,6 @@
                         backgroundColor: '#6a7985'
                     }
                 }
-            },
-            legend: {
-                left: 'right',
-                data: ['微信', '支付宝', 'Paypal', 'QQ钱包']
             },
             grid: {
                 left: '3%',

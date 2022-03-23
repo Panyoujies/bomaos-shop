@@ -41,11 +41,15 @@ import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.zjiecode.wxpusher.client.WxPusher;
 import com.zjiecode.wxpusher.client.bean.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DevicePlatform;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -123,6 +127,20 @@ public class OrderController extends BaseController {
             return JsonResult.error("请选择付款方式！");
         }
 
+        Device currentDevice = DeviceUtils.getCurrentDevice(request);
+        DevicePlatform devicePlatform = currentDevice.getDevicePlatform();
+        if (devicePlatform.name().equals("IOS") || devicePlatform.name().equals("ANDROID")) {
+            Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", payType).eq("is_mobile", 1));
+            if (ObjectUtils.isEmpty(pays)) {
+                return JsonResult.error("不要搞我啦！！");
+            }
+        } else {
+            Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", payType).eq("is_pc", 1));
+            if (ObjectUtils.isEmpty(pays)) {
+                return JsonResult.error("不要搞我啦！！");
+            }
+        }
+
         Products products = productsService.getById(goodsId);
 
         /**
@@ -164,14 +182,14 @@ public class OrderController extends BaseController {
         if (products.getShipType() == 0) { // 自动发货模式
             int count = 0;
             if (products.getSellType() == 1) {
-                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0));
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 1));
                 if (ObjectUtils.isEmpty(cards)) {
                     count = 0;
                 } else {
                     count = cards.getNumber();
                 }
             } else {
-                count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId).eq("status", 0));
+                count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", goodsId).eq("status", 0).eq("sell_type", 0));
             }
             if (count == 0) {
                 return JsonResult.error("本商品已售空，请联系店长补货！");
@@ -311,12 +329,9 @@ public class OrderController extends BaseController {
         UserAgentGetter agentGetter = new UserAgentGetter(request);
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", orders.getPayType()));
 
-
-        System.out.println(price);
         if ("0.00".equals(price)) { // 0元商品 直接完成支付
             String currentTime = Long.toString(System.currentTimeMillis());
             boolean big = returnBig(price, price, orders.getMember(), currentTime, productDescription);
-            System.out.println(big);
             if (big) {
                 response.sendRedirect("/search/order/" + orders.getMember());
                 return null;
@@ -334,7 +349,8 @@ public class OrderController extends BaseController {
         model.addAttribute("website", website);
         ShopSettings shopSettings = shopSettingsService.getById(1);
         model.addAttribute("isBackground", shopSettings.getIsBackground());
-        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        model.addAttribute("shop", shopSettings);
+        Theme theme = themeService.getOne(Wrappers.<Theme> lambdaQuery().eq(Theme::getEnable, 1));
 
         /**
          * 创建支付接口
@@ -366,15 +382,13 @@ public class OrderController extends BaseController {
                 return "theme/" + theme.getDriver() + "/yunpay.html";
             case XUNHUPAY_WXPAY: // 虎皮椒微信
             case XUNHUPAY_ALIPAY: // 虎皮椒支付宝
-                if (orders.getPayType().equals("xunhupay_wxpay")) {
-                    model.addAttribute("type", 1);
-                } else if (orders.getPayType().equals("xunhupay_alipay")) {
-                    model.addAttribute("type", 2);
-                }
                 Map pay = PayUtils.pay(getWebName(), pays, goodsName, price, ordersMember, productDescription);
-                model.addAttribute("result", pay.get("url_qrcode"));
-                model.addAttribute("wap", pay.get("url1"));
-                return "theme/" + theme.getDriver() + "/xunhupay.html";
+                if (pay != null) {
+                    response.sendRedirect(pay.get("url1").toString());
+                } else {
+                    return "theme/" + theme.getDriver() + "/pay-error.html";
+                }
+                break;
             case JIEPAY_WXPAY: // 捷支付微信
             case JIEPAY_ALIPAY: // 捷支付支付宝
                 String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
@@ -402,7 +416,6 @@ public class OrderController extends BaseController {
                 model.addAttribute("type", 2); // 支付宝当面付
                 model.addAttribute("result", JSON.toJSONString(payAlipay));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
-
             case WXPAU_H5: // 微信h5支付
                 String payMweb = SendWxPay.payMweb(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());
                 response.sendRedirect(payMweb);
@@ -441,13 +454,23 @@ public class OrderController extends BaseController {
          * 通过订单号查询
          */
         Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
-        if (member == null) return false; // 本地没有这个订单
+        if (member == null) {
+            return false; // 本地没有这个订单
+        }
+
+        if (member.getStatus() > 0) {
+            return true;
+        }
 
         boolean empty = StringUtils.isEmpty(member.getCardsInfo());
-        if (!empty) return true;
+        if (!empty) {
+            return true;
+        }
 
         Products products = productsService.getById(param);
-        if (products == null) return false; // 商品没了
+        if (products == null) {
+            return false; // 商品没了
+        }
 
         Website website = websiteService.getById(1);
         ShopSettings shopSettings = shopSettingsService.getById(1);
@@ -460,8 +483,6 @@ public class OrderController extends BaseController {
         orders.setMoney(new BigDecimal(money));
 
         if (products.getShipType() == 0) { // 自动发货的商品
-
-            StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
 
             /**
              * 卡密信息列表
@@ -481,7 +502,7 @@ public class OrderController extends BaseController {
                 StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
                 List<Cards> updateCardsList = new ArrayList<>();
                 for (Cards cards : cardsList) {
-                    orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+                    orderInfo.append(cards.getCardInfo()).append("\n"); // 通过StringBuilder 来拼接卡密信息
 
                     /**
                      * 设置每条被购买的卡密的售出状态
@@ -494,18 +515,12 @@ public class OrderController extends BaseController {
                     cards1.setUpdatedAt(new Date());
 
                     updateCardsList.add(cards1);
-                    if (cards.getCardInfo().contains(" ")) {
-                        String[] split = cards.getCardInfo().split(" ");
-                        stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                    } else {
-                        stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
-                    }
                 }
 
                 // 去除多余尾部的逗号
                 String result = orderInfo.deleteCharAt(orderInfo.length() - 1).toString();
 
-                orders.setId(member.getId());
+                orders.setStatus(1); // 设置已售出
                 orders.setCardsInfo(result);
 
                 // 更新售出的订单
@@ -515,7 +530,6 @@ public class OrderController extends BaseController {
                 } else {
                     return false;
                 }
-
             } else if (products.getSellType() == 1) { // 重复销售的卡密
                 StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
 
@@ -539,20 +553,13 @@ public class OrderController extends BaseController {
                     cards1.setNumber(cards.getNumber() - member.getNumber());
                 }
 
-                if (cards.getCardInfo().contains(" ")) {
-                    String[] split = cards.getCardInfo().split(" ");
-                    stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                } else {
-                    stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
-                }
-
                 /**
                  * 看用户购买了多少个卡密
                  * 正常重复的卡密不会购买1个以上
                  * 这里做个以防万一呀（有钱谁不赚）
                  */
                 for (int i = 0; i < member.getNumber(); i++) {
-                    orderInfo.append(cards.getCardInfo()).append(",");
+                    orderInfo.append(cards.getCardInfo()).append("\n");
                 }
 
                 // 去除多余尾部的逗号
@@ -595,7 +602,8 @@ public class OrderController extends BaseController {
                         map.put("title", website.getWebsiteName());
                         map.put("member", member.getMember());
                         map.put("date", DateUtil.getDate());
-                        map.put("info", stringBuilder.toString());
+                        map.put("password", member.getPassword());
+                        map.put("url", website.getWebsiteUrl() + "/search/order/" + member.getMember());
                         try {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
                             // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});

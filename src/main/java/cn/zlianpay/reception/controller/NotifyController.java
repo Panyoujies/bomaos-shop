@@ -5,12 +5,14 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.pays.payjs.SignUtil;
 import cn.zlianpay.common.core.pays.paypal.PaypalSend;
+import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
 import cn.zlianpay.common.core.pays.zlianpay.ZlianPay;
 import cn.zlianpay.common.core.utils.DateUtil;
 import cn.zlianpay.common.core.utils.FormCheckUtil;
 import cn.zlianpay.common.core.web.JsonResult;
-import cn.zlianpay.orders.mapper.OrdersMapper;
 import cn.zlianpay.reception.dto.NotifyDTO;
+import cn.zlianpay.reception.entity.XunhuNotIfy;
+import cn.zlianpay.reception.util.SynchronizedByKeyService;
 import cn.zlianpay.settings.entity.ShopSettings;
 import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.website.entity.Website;
@@ -53,6 +55,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @Transactional
@@ -80,7 +83,7 @@ public class NotifyController {
     private ShopSettingsService shopSettingsService;
 
     @Autowired
-    private OrdersMapper ordersMapper;
+    private SynchronizedByKeyService synchronizedByKeyService;
 
     /**
      * 返回成功xml
@@ -89,17 +92,11 @@ public class NotifyController {
 
     private String WxpayH5resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 
-    /**
-     * 返回失败xml
-     */
     private String resFailXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[报文为空]]></return_msg></xml>";
 
     @RequestMapping("/mqpay/notifyUrl")
     @ResponseBody
     public String notifyUrl(HttpServletRequest request) {
-        /**
-         *验证通知 处理自己的业务
-         */
         Map<String, String> params = RequestParamsUtil.getParameterMap(request);
         String param = params.get("param");
         String price = params.get("price");
@@ -107,15 +104,30 @@ public class NotifyController {
         String sign = params.get("sign");
         String payId = params.get("payId");
         String type = params.get("type");
-
         String key = null;
-
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", payId));
         if (Integer.parseInt(type) == 1) { // wxpay
             Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "mqpay_wxpay"));
+
+            /**
+             * 防止破解
+             */
+            if (!orders.getPayType().equals(wxPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
             Map mapTypes = JSON.parseObject(wxPays.getConfig());
             key = mapTypes.get("key").toString();
         } else if (Integer.parseInt(type) == 2) { // alipay
             Pays aliPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "mqpay_alipay"));
+
+            /**
+             * 防止破解
+             */
+            if (!orders.getPayType().equals(aliPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
             Map mapTypes = JSON.parseObject(aliPays.getConfig());
             key = mapTypes.get("key").toString();
         }
@@ -127,8 +139,14 @@ public class NotifyController {
             String seconds = new SimpleDateFormat("HHmmss").format(new Date());
             String number = StringUtil.getRandomNumber(6);
             String payNo = date + seconds + number;
-            String big = returnBig(money, price, payId, payNo, param, "success", "fiald");
-            return big; // 通知成功
+
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(payId, () -> {
+                String returnBig1 = returnBig(money, price, payId, payNo, param, "success", "fiald");
+                notifyText.set(returnBig1);
+            });
+            return notifyText.get();
+
         } else {
             return "fiald";
         }
@@ -172,6 +190,7 @@ public class NotifyController {
 
         String pid = parameterMap.get("pid");
         String type = parameterMap.get("type");
+        String out_trade_no = parameterMap.get("out_trade_no");
 
         String driver = "";
         if (type.equals("wxpay")) {
@@ -183,12 +202,20 @@ public class NotifyController {
         }
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", driver));
+
+        /**
+         * 防止破解
+         */
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
+        if (!orders.getPayType().equals(pays.getDriver())) {
+            return "不要搞我啦！！";
+        }
+
         Map mapTypes = JSON.parseObject(pays.getConfig());
 
         // 你的key 在后台获取
         String secret_key = mapTypes.get("key").toString();
         String trade_no = parameterMap.get("trade_no");
-        String out_trade_no = parameterMap.get("out_trade_no");
         String name = parameterMap.get("name");
         String money = parameterMap.get("money");
         String trade_status = parameterMap.get("trade_status");
@@ -211,8 +238,12 @@ public class NotifyController {
         String sign1 = ZlianPay.createSign(params, secret_key);
 
         if (sign1.equals(sign)) {
-            String big = returnBig(money, money, out_trade_no, trade_no, name, "success", "final");
-            return big;
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(out_trade_no, () -> {
+                String returnBig1 = returnBig(money, money, out_trade_no, trade_no, name, "success", "final");
+                notifyText.set(returnBig1);
+            });
+            return notifyText.get();
         } else {
             return "签名错误！！";
         }
@@ -286,12 +317,10 @@ public class NotifyController {
         String mchId = params.get("mchId");
         String orderNo = params.get("orderNo");
         String money = params.get("money");
-        String openId = params.get("openId");
         String outTradeNo = params.get("outTradeNo");
         String sign = params.get("sign");
         String payChannel = params.get("payChannel");
         String attach = params.get("attach");
-        String time = params.get("time");
 
         Map<String, String> map = new HashMap<>();
         map.put("code", code);
@@ -302,16 +331,32 @@ public class NotifyController {
         map.put("mchId", mchId);
 
         String key = null;
-
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", outTradeNo));
         switch (payChannel) {
             //此处因为没启用独立密钥 支付密钥支付宝与微信支付是一样的 （密钥获取：登录 yungouos.com-》我的账户-》商户管理-》商户密钥）
             case "wxpay":
                 Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "yungouos_wxpay"));
+
+                /**
+                 * 防止恶意回调
+                 */
+                if (!orders.getPayType().equals(wxPays.getDriver())) {
+                    return "不要搞我啦！！";
+                }
+
                 Map wxMap = JSON.parseObject(wxPays.getConfig());
                 key = wxMap.get("key").toString();
                 break;
             case "alipay":
                 Pays alipays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "yungouos_alipay"));
+
+                /**
+                 * 防止恶意回调
+                 */
+                if (!orders.getPayType().equals(alipays.getDriver())) {
+                    return "不要搞我啦！！";
+                }
+
                 Map aliMap = JSON.parseObject(alipays.getConfig());
                 key = aliMap.get("key").toString();
                 break;
@@ -321,9 +366,12 @@ public class NotifyController {
 
         String mySign = createSign(map, key);
         if (mySign.equals(sign) && Integer.parseInt(code) == 1) {
-            // 处理通知成功后的业务逻辑
-            String big = returnBig(money, money, outTradeNo, payNo, attach, "SUCCESS", "FIALD");
-            return big;
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(outTradeNo, () -> {
+                String returnBig1 = returnBig(money, money, outTradeNo, payNo, attach, "SUCCESS", "FIALD");
+                notifyText.set(returnBig1);
+            });
+            return notifyText.get();
         } else {
             //签名错误
             return "FIALD";
@@ -332,18 +380,49 @@ public class NotifyController {
 
     /**
      * 虎皮椒支付通知
-     *
-     * @param request
      * @return
      */
     @RequestMapping("/xunhupay/notifyUrl")
     @ResponseBody
-    public String xunhuNotifyUrl(HttpServletRequest request) {
-        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
-        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
-        if ("OD".equals(params.get("status"))) {
-            String returnBig = returnBig(params.get("total_fee"), params.get("total_fee"), params.get("trade_order_id"), params.get("transaction_id"), params.get("plugins"), "success", "fiald");
-            return returnBig;
+    public String xunhuNotifyUrl(XunhuNotIfy xunhuNotIfy) {
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", xunhuNotIfy.getTrade_order_id()));
+        String key = null;
+        if (orders.getPayType().equals("xunhupay_wxpay")) {
+            Pays xunhuwxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "xunhupay_wxpay"));
+
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(xunhuwxPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
+            Map xunhuwxMap = JSON.parseObject(xunhuwxPays.getConfig());
+            key = xunhuwxMap.get("appsecret").toString();
+        } else if (orders.getPayType().equals("xunhupay_alipay")) {
+            Pays xunhualiPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "xunhupay_alipay"));
+
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(xunhualiPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
+            Map xunhualiMap = JSON.parseObject(xunhualiPays.getConfig());
+            key = xunhualiMap.get("appsecret").toString();
+        }
+
+        Map map = JSON.parseObject(JSON.toJSONString(xunhuNotIfy), Map.class);
+
+        String sign = PayUtils.createSign(map, key);
+        if (sign.equals(xunhuNotIfy.getHash()) && "OD".equals(xunhuNotIfy.getStatus())) {
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(xunhuNotIfy.getTrade_order_id(), () -> {
+                String returnBig = returnBig(xunhuNotIfy.getTotal_fee().toString(), xunhuNotIfy.getTotal_fee().toString(), xunhuNotIfy.getTrade_order_id(), xunhuNotIfy.getTransaction_id(), xunhuNotIfy.getPlugins(), "success", "fiald");
+                notifyText.set(returnBig);
+            });
+            return notifyText.get();
         } else {
             return "fiald";
         }
@@ -385,14 +464,30 @@ public class NotifyController {
 
         String appid = "";
         String apptoken = "";
-
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", order_id));
         if (code.equals("1")) {
-            Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "jiepay_alipay"));
-            Map wxMap = JSON.parseObject(wxPays.getConfig());
+            Pays aliPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "jiepay_alipay"));
+
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(aliPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
+            Map wxMap = JSON.parseObject(aliPays.getConfig());
             appid = wxMap.get("appid").toString();
             apptoken = wxMap.get("apptoken").toString();
         } else if (code.equals("2")) {
             Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "jiepay_wxpay"));
+
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(wxPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
             Map wxMap = JSON.parseObject(wxPays.getConfig());
             appid = wxMap.get("appid").toString();
             apptoken = wxMap.get("apptoken").toString();
@@ -400,9 +495,12 @@ public class NotifyController {
 
         String newSign = SecureUtil.md5(appid + apptoken + code + order_id + order_rmb + diy);
         if (sign.equals(newSign)) {
-            this.order_id = order_id;
-            String returnBig = returnBig(order_rmb, order_rmb, order_id, System.currentTimeMillis() + "", diy, "success", "fiald");
-            return returnBig;
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(order_id, () -> {
+                String returnBig = returnBig(order_rmb, order_rmb, order_id, System.currentTimeMillis() + "", diy, "success", "fiald");
+                notifyText.set(returnBig);
+            });
+            return notifyText.get();
         } else {
             return "error";
         }
@@ -452,23 +550,42 @@ public class NotifyController {
         if (notifyDTO.getType() != null) {
             notifyData.put("type", notifyDTO.getType());
         }
-
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", notifyDTO.getOut_trade_no()));
         String key = null;
         if (notifyDTO.getType() != null) { // 支付宝
-            Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "payjs_alipay"));
-            Map wxMap = JSON.parseObject(wxPays.getConfig());
+            Pays aliPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "payjs_alipay"));
+
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(aliPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
+            Map wxMap = JSON.parseObject(aliPays.getConfig());
             key = wxMap.get("key").toString();
         } else { // 微信
             Pays wxPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "payjs_wxpay"));
+
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(wxPays.getDriver())) {
+                return "不要搞我啦！！";
+            }
+
             Map wxMap = JSON.parseObject(wxPays.getConfig());
             key = wxMap.get("key").toString();
         }
 
         String sign = SignUtil.sign(notifyData, key);
         if (sign.equals(notifyDTO.getSign())) {
-            // 验签通过，这里修改订单状态
-            String returnBig = returnBig(notifyDTO.getTotal_fee(), notifyDTO.getTotal_fee(), notifyDTO.getOut_trade_no(), notifyDTO.getTransaction_id(), notifyDTO.getAttach(), "success", "failure");
-            return returnBig;
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(notifyDTO.getOut_trade_no(), () -> {
+                String returnBig = returnBig(notifyDTO.getTotal_fee(), notifyDTO.getTotal_fee(), notifyDTO.getOut_trade_no(), notifyDTO.getTransaction_id(), notifyDTO.getAttach(), "success", "failure");
+                notifyText.set(returnBig);
+            });
+            return notifyText.get();
         } else {
             return "failure";
         }
@@ -507,8 +624,18 @@ public class NotifyController {
             Map<String, String> resultMap = WXPayUtil.xmlToMap(result);
             boolean isSuccess = false;
             String result_code = resultMap.get("result_code");
+            String out_trade_no = resultMap.get("out_trade_no");// 商户系统内部订单号
             if ("SUCCESS".equals(result_code)) {
                 Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "wxpay"));
+
+                /**
+                 * 防止恶意回调
+                 */
+                Orders orders1 = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
+                if (!orders1.getPayType().equals(pays.getDriver())) {
+                    return "不要搞我啦！！";
+                }
+
                 Map mapTypes = JSON.parseObject(pays.getConfig());
                 String key = mapTypes.get("key").toString(); // 密钥
 
@@ -517,7 +644,6 @@ public class NotifyController {
                  */
                 if (WXPayUtil.isSignatureValid(resultMap, key)) {
                     String total_fee = resultMap.get("total_fee");// 订单总金额，单位为分
-                    String out_trade_no = resultMap.get("out_trade_no");// 商户系统内部订单号
                     String transaction_id = resultMap.get("transaction_id");// 微信支付订单号
                     String attach = resultMap.get("attach");// 商家数据包，原样返回
                     String appid = resultMap.get("appid");// 微信分配的小程序ID
@@ -527,11 +653,19 @@ public class NotifyController {
                     String money = new DecimalFormat("0.##").format(multiply);
                     Orders member = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
                     if (member.getPayType().equals("wxpay")) {
-                        String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, WxpayresXml, resFailXml);
-                        resXml = returnBig;
+                        AtomicReference<String> notifyText = new AtomicReference<>();
+                        synchronizedByKeyService.exec(out_trade_no, () -> {
+                            String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, WxpayresXml, resFailXml);
+                            notifyText.set(returnBig);
+                        });
+                        resXml = notifyText.get();
                     } else {
-                        String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, WxpayH5resXml, resFailXml);
-                        resXml = returnBig;
+                        AtomicReference<String> notifyText = new AtomicReference<>();
+                        synchronizedByKeyService.exec(out_trade_no, () -> {
+                            String returnBig = returnBig(money, money, out_trade_no, transaction_id, attach, WxpayH5resXml, resFailXml);
+                            notifyText.set(returnBig);
+                        });
+                        resXml = notifyText.get();
                     }
                 } else {
                     System.out.println("签名判断错误！！");
@@ -563,6 +697,7 @@ public class NotifyController {
     @ResponseBody
     public String alipayNotifyUrl(HttpServletRequest request) {
 
+        System.out.println("1111111111111");
         String success = "success";
         String failure = "failure";
 
@@ -591,17 +726,28 @@ public class NotifyController {
         Integer IS_ALIPAY_TYPE = 1;
         if ("alipay".equals(orders.getPayType())) {
             Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay"));
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(pays.getDriver())) {
+                return "不要搞我啦！！";
+            }
             Map mapTypes = JSON.parseObject(pays.getConfig());
             alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
             IS_ALIPAY_TYPE = 1;
         } else if ("alipay_pc".equals(orders.getPayType())) {
             Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay_pc"));
+            /**
+             * 防止恶意回调
+             */
+            if (!orders.getPayType().equals(pays.getDriver())) {
+                return "不要搞我啦！！";
+            }
             Map mapTypes = JSON.parseObject(pays.getConfig());
             alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
             IS_ALIPAY_TYPE = 2;
         }
 
-        String returnBig = null;
         try {
             boolean alipayRSAChecked = false;
             if (IS_ALIPAY_TYPE == 1) {
@@ -615,7 +761,12 @@ public class NotifyController {
                 String trade_no = params.get("trade_no");// 流水
                 String receipt_amount = params.get("receipt_amount");// 实际支付金额
                 String body = params.get("body");// 状态
-                returnBig = returnBig(receipt_amount, total_amount, out_trade_no, trade_no, body, success, failure);
+                AtomicReference<String> notifyText = new AtomicReference<>();
+                synchronizedByKeyService.exec(out_trade_no, () -> {
+                    String returnBig1 = returnBig(receipt_amount, total_amount, out_trade_no, trade_no, body, success, failure);
+                    notifyText.set(returnBig1);
+                });
+                return notifyText.get();
             } else {
                 System.out.println("签名错误！！");
                 return failure;
@@ -624,7 +775,6 @@ public class NotifyController {
             e.printStackTrace();
             return failure;
         }
-        return returnBig;
     }
 
     /**
@@ -669,22 +819,10 @@ public class NotifyController {
                 alipay_public_key,
                 charset,
                 sign_type); //调用SDK验证签名
-
         // 验签成功
         if (signVerified) {
-
-            // 同步通知返回的参数（部分说明）
-            // out_trade_no :	商户订单号
-            // trade_no : 支付宝交易号
-            // total_amount ： 交易金额
-            // auth_app_id/app_id : 商户APPID
-            // seller_id ：收款支付宝账号对应的支付宝唯一用户号(商户UID )
-            System.out.println("****************** 支付宝同步通知成功   ******************");
-            System.out.println("同步通知返回参数：" + params.toString());
-            System.out.println("****************** 支付宝同步通知成功   ******************");
             String pay_no = params.get("trade_no"); // 流水号
             String member = params.get("out_trade_no");// 商户订单号
-
             if (pay_no != null || pay_no != "") {
                 String url = "/search/order/" + member;
                 response.sendRedirect(url);
@@ -733,6 +871,12 @@ public class NotifyController {
                     total = transaction.getAmount().getTotal(); // 实际付款金额
                 }
                 Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", member));
+                /**
+                 * 防止恶意回调
+                 */
+                if (!orders.getPayType().equals(pays.getDriver())) {
+                    return "不要搞我啦！！";
+                }
                 String returnBig = returnBig(total, orders.getPrice().toString(), member, pay_no, orders.getProductId().toString(), "success", "failure");
                 if (returnBig.equals("success")) {
                     response.sendRedirect("/search/order/" + member);
@@ -759,6 +903,8 @@ public class NotifyController {
      * @return this
      */
     private String returnBig(String money, String price, String payId, String pay_no, String param, String success, String fiald) {
+
+        System.out.println("payId = " + payId);
 
         /**
          * 通过订单号查询
@@ -794,8 +940,6 @@ public class NotifyController {
 
         if (products.getShipType() == 0) { // 自动发货的商品
 
-            StringBuilder stringBuilder = new StringBuilder(); // 通知信息需要的卡密信息
-
             /**
              * 卡密信息列表
              * 通过商品购买数量来获取对应商品的卡密数量
@@ -814,7 +958,7 @@ public class NotifyController {
                 StringBuilder orderInfo = new StringBuilder(); // 订单关联的卡密信息
                 List<Cards> updateCardsList = new ArrayList<>();
                 for (Cards cards : cardsList) {
-                    orderInfo.append(cards.getCardInfo()).append(","); // 通过StringBuilder 来拼接卡密信息
+                    orderInfo.append(cards.getCardInfo()).append("\n"); // 通过StringBuilder 来拼接卡密信息
 
                     /**
                      * 设置每条被购买的卡密的售出状态
@@ -827,12 +971,6 @@ public class NotifyController {
                     cards1.setUpdatedAt(new Date());
 
                     updateCardsList.add(cards1);
-                    if (cards.getCardInfo().contains(" ")) {
-                        String[] split = cards.getCardInfo().split(" ");
-                        stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                    } else {
-                        stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
-                    }
                 }
 
                 // 去除多余尾部的逗号
@@ -871,20 +1009,13 @@ public class NotifyController {
                     cards1.setNumber(cards.getNumber() - member.getNumber());
                 }
 
-                if (cards.getCardInfo().contains(" ")) {
-                    String[] split = cards.getCardInfo().split(" ");
-                    stringBuilder.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                } else {
-                    stringBuilder.append("卡密：").append(cards.getCardInfo()).append("\n");
-                }
-
                 /**
                  * 看用户购买了多少个卡密
                  * 正常重复的卡密不会购买1个以上
                  * 这里做个以防万一呀（有钱谁不赚）
                  */
                 for (int i = 0; i < member.getNumber(); i++) {
-                    orderInfo.append(cards.getCardInfo()).append(",");
+                    orderInfo.append(cards.getCardInfo()).append("\n");
                 }
 
                 // 去除多余尾部的逗号
@@ -927,7 +1058,8 @@ public class NotifyController {
                         map.put("title", website.getWebsiteName());
                         map.put("member", member.getMember());
                         map.put("date", DateUtil.getDate());
-                        map.put("info", stringBuilder.toString());
+                        map.put("password", member.getPassword());
+                        map.put("url", website.getWebsiteUrl() + "/search/order/" + member.getMember());
                         try {
                             emailService.sendHtmlEmail(website.getWebsiteName() + "发货提醒", "email/sendShip.html", map, new String[]{member.getEmail()});
                             // emailService.sendTextEmail("卡密购买成功", "您的订单号为：" + member.getMember() + "  您的卡密：" + cards.getCardInfo(), new String[]{member.getEmail()});

@@ -48,14 +48,19 @@ public class Orders implements Serializable {
     private String contact;
 
     /**
-     * 买家ip
-     */
-    private String ip;
-
-    /**
      * 商品id
      */
     private Integer productId;
+
+    /**
+     * 商品名称
+     */
+    private String productName;
+
+    /**
+     * 发货模式
+     */
+    private Integer shipType;
 
     /**
      * 订单数量
@@ -76,6 +81,11 @@ public class Orders implements Serializable {
      * 购买设备
      */
     private String device;
+
+    /**
+     * 买家ip
+     */
+    private String ip;
 
     /**
      * 流水号

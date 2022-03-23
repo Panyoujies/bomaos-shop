@@ -24,4 +24,5 @@ public interface ProductsMapper extends BaseMapper<Products> {
      */
     List<Products> listAll(@Param("page") Map<String, Object> page);
 
+    List<Products> getRandomProductList(int limit);
 }

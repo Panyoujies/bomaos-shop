@@ -11,7 +11,7 @@
  Target Server Version : 80027
  File Encoding         : utf-8
 
- Date: 11/10/2021 22:57:52 PM
+ Date: 03/22/2022 20:34:30 PM
 */
 
 SET NAMES utf8;
@@ -96,7 +96,14 @@ CREATE TABLE `sys_carousel` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `enabled` int DEFAULT NULL COMMENT '是否启用',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='轮播图管理';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='轮播图管理';
+
+-- ----------------------------
+--  Records of `sys_carousel`
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_carousel` VALUES ('1', '值联云卡 Lite 版', 'https://free.zlianpay.cn', '/file/20220324/6072308b8b4924ff779ab83c608a5f96.jpeg', '点击进入值联官网', '2022-03-23 17:26:57', '2022-03-23 17:26:57', '1');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_classifys`
@@ -110,7 +117,14 @@ CREATE TABLE `sys_classifys` (
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分类';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='分类';
+
+-- ----------------------------
+--  Records of `sys_classifys`
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_classifys` VALUES ('1', '官方分类', '1', '1000', '2022-03-23 02:20:47', '2022-03-23 02:20:47'), ('2', '测试分类', '1', '1000', '2022-03-23 20:18:03', '2022-03-23 20:18:03');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_coupon`
@@ -182,6 +196,21 @@ CREATE TABLE `sys_dictionary_data` (
 BEGIN;
 INSERT INTO `sys_dictionary_data` VALUES ('1', '1', 'male', '男', '1', '', '0', '2020-03-15 13:07:28', '2020-03-15 13:07:28'), ('2', '1', 'female', '女', '2', '', '0', '2020-03-15 13:07:41', '2020-03-15 15:58:04'), ('3', '2', 'company', '公司', '1', '', '0', '2020-03-16 00:34:32', '2020-03-16 00:34:32'), ('4', '2', 'subsidiary', '子公司', '2', '', '0', '2020-03-16 00:35:02', '2020-03-16 00:35:02'), ('5', '2', 'department', '部门', '3', '', '0', '2020-03-16 00:35:18', '2020-03-16 00:35:18'), ('6', '2', 'group', '小组', '4', '', '0', '2020-03-16 00:35:36', '2020-03-16 00:35:36');
 COMMIT;
+
+-- ----------------------------
+--  Table structure for `sys_links`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_links`;
+CREATE TABLE `sys_links` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `link` longtext COMMENT '链接地址',
+  `enabled` int DEFAULT NULL COMMENT '是否开启',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `remote_enabled` int DEFAULT NULL COMMENT '远程端',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='友情链接表';
 
 -- ----------------------------
 --  Table structure for `sys_login_record`
@@ -263,13 +292,15 @@ CREATE TABLE `sys_orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `member` varchar(255) DEFAULT NULL COMMENT '订单号',
   `status` int DEFAULT NULL COMMENT '状态',
+  `number` int DEFAULT NULL COMMENT '订单数量',
   `pay_time` datetime DEFAULT NULL COMMENT '支付时间',
   `contact` varchar(255) DEFAULT NULL COMMENT '买家联系方式',
-  `ip` varchar(255) DEFAULT NULL COMMENT '买家ip',
   `product_id` int DEFAULT NULL COMMENT '商品id',
-  `number` int DEFAULT NULL COMMENT '订单数量',
+  `product_name` varchar(255) DEFAULT NULL COMMENT '商品名称',
+  `ship_type` int DEFAULT NULL COMMENT '发货模式',
   `pay_type` varchar(255) DEFAULT NULL COMMENT '支付类型',
   `guest_id` int DEFAULT NULL COMMENT '支付用户的id（如果有）',
+  `ip` varchar(255) DEFAULT NULL COMMENT '买家ip',
   `device` varchar(255) DEFAULT NULL COMMENT '购买设备',
   `pay_no` varchar(255) DEFAULT NULL COMMENT '流水号',
   `money` decimal(18,2) DEFAULT NULL COMMENT '付款金额',
@@ -337,7 +368,7 @@ CREATE TABLE `sys_pays` (
 --  Records of `sys_pays`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_pays` VALUES ('1', '支付宝', 'mqpay_alipay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 支付宝（费率0）（自己搭建）', '2021-03-29 16:16:05', '2021-03-29 16:16:07', '0', '0'), ('2', '微信', 'mqpay_wxpay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 微信 （费率0）（自己搭建）', '2021-03-29 16:17:52', '2021-03-29 16:17:55', '0', '0'), ('5', '支付宝', 'zlianpay_alipay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '值联码支付 - 支付宝 码支付-微信（易支付接口）（费率0） 申请地址 https://code.zlianpay.cn', '2021-05-24 12:00:01', '2021-05-24 12:00:04', '0', '0'), ('6', '微信', 'zlianpay_wxpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '值联码支付 - 微信（易支付接口）（费率0） 申请地址 https://code.zlianpay.cn', '2021-05-24 12:00:55', '2021-05-24 12:01:00', '0', '0'), ('7', '微信', 'yungouos_wxpay', '{\"mchId\":\"1604226914\",\"notify_url\":\"http://2h8446682m.51vip.biz/\",\"key\":\"8859819FB8F043609CDD3CAB37DBEE6F\"}', 'YunGouOS - 微信（个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:53:12', '2021-06-06 04:53:20', '1', '1'), ('8', '支付宝', 'yungouos_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'YunGouOS - 支付宝 （个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:54:03', '2021-06-06 04:54:06', '0', '0'), ('9', '微信', 'xunhupay_wxpay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\"}', '虎皮椒V3 - 微信（费率-H5版2%/普通版1%） 申请地址：https://www.xunhupay.com', '2021-06-06 22:24:47', '2021-06-06 22:24:50', '0', '0'), ('10', '支付宝', 'xunhupay_alipay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\"}', '虎皮椒V3 - 支付宝 申请地址：https://www.xunhupay.com', '2021-06-06 22:25:19', '2021-06-06 22:25:22', '0', '0'), ('11', '微信', 'jiepay_wxpay', '{\"appid\":\"xxx\",\"apptoken\":\"xxx\"}', '捷支付 - 微信（费率0）申请地址：http://jpay.hmy3.com', '2021-06-07 00:49:23', '2021-06-07 00:49:26', '0', '0'), ('12', '支付宝', 'jiepay_alipay', '{\"appid\":\"xxx\",\"apptoken\":\"xxx\"}', '捷支付 - 支付宝（费率0）申请地址：http://jpay.hmy3.com', '2021-06-07 00:50:05', '2021-06-07 00:50:08', '0', '0'), ('13', '微信', 'payjs_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 微信扫码 申请地址：https://payjs.cn', '2021-06-27 14:17:54', '2021-06-27 14:17:58', '0', '0'), ('14', '支付宝', 'payjs_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 支付宝扫码 申请地址：https://payjs.cn', '2021-06-27 14:18:38', '2021-06-27 14:18:43', '0', '0'), ('17', '微信', 'wxpay', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - 扫码支付', '2021-07-02 02:47:37', '2021-07-02 02:47:40', '0', '0'), ('18', '支付宝', 'alipay', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '官方支付宝 - 当面付', '2021-07-03 18:53:08', '2021-07-02 18:53:11', '0', '0'), ('19', '微信H5', 'wxpay_h5', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - H5支付 （开启后只在手机端显示）', '2021-07-02 23:20:54', '2021-08-17 23:20:56', '0', '0'), ('20', 'Paypal', 'paypal', '{\"clientId\":\"xxx\",\"return_url\":\"xxx\",\"clientSecret\":\"xxx\"}', 'Paypal 境外支付（默认美元交易）', '2021-08-24 12:04:25', '2021-08-24 12:04:28', '0', '0'), ('21', 'QQ钱包', 'zlianpay_qqpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - QQ钱包', '2021-10-30 16:12:49', '2021-10-30 16:12:49', '0', '0'), ('22', '支付宝PC', 'alipay_pc', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '支付宝官方pc端支付', '2021-11-03 03:04:02', '2021-11-03 03:04:02', '0', '0');
+INSERT INTO `sys_pays` VALUES ('1', '支付宝', 'mqpay_alipay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 支付宝（费率0）（自己搭建）', '2021-03-29 16:16:05', '2021-03-29 16:16:07', '0', '0'), ('2', '微信', 'mqpay_wxpay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 微信 （费率0）（自己搭建）', '2021-03-29 16:17:52', '2021-03-29 16:17:55', '0', '0'), ('5', '支付宝', 'zlianpay_alipay', '{\"pid\":\"1\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '值联码支付 - 支付宝 码支付-微信（易支付接口）（费率0） 申请地址 https://code.zlianpay.cn', '2021-05-24 12:00:01', '2021-05-24 12:00:04', '0', '0'), ('6', '微信', 'zlianpay_wxpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '值联码支付 - 微信（易支付接口）（费率0） 申请地址 https://code.zlianpay.cn', '2021-05-24 12:00:55', '2021-05-24 12:01:00', '0', '0'), ('7', '微信', 'yungouos_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxxx\"}', 'YunGouOS - 微信（个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:53:12', '2021-06-06 04:53:20', '0', '0'), ('8', '支付宝', 'yungouos_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'YunGouOS - 支付宝 （个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:54:03', '2021-06-06 04:54:06', '0', '0'), ('9', '微信', 'xunhupay_wxpay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\"}', '虎皮椒V3 - 微信（费率-H5版2%/普通版1%） 申请地址：https://www.xunhupay.com', '2021-06-06 22:24:47', '2021-06-06 22:24:50', '1', '1'), ('10', '支付宝', 'xunhupay_alipay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\"}', '虎皮椒V3 - 支付宝 申请地址：https://www.xunhupay.com', '2021-06-06 22:25:19', '2021-06-06 22:25:22', '0', '0'), ('11', '微信', 'jiepay_wxpay', '{\"appid\":\"xxx\",\"apptoken\":\"xxx\"}', '捷支付 - 微信（费率0）申请地址：http://jpay.hmy3.com', '2021-06-07 00:49:23', '2021-06-07 00:49:26', '0', '0'), ('12', '支付宝', 'jiepay_alipay', '{\"appid\":\"xxx\",\"apptoken\":\"xxx\"}', '捷支付 - 支付宝（费率0）申请地址：http://jpay.hmy3.com', '2021-06-07 00:50:05', '2021-06-07 00:50:08', '0', '0'), ('13', '微信', 'payjs_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 微信扫码 申请地址：https://payjs.cn', '2021-06-27 14:17:54', '2021-06-27 14:17:58', '0', '0'), ('14', '支付宝', 'payjs_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 支付宝扫码 申请地址：https://payjs.cn', '2021-06-27 14:18:38', '2021-06-27 14:18:43', '0', '0'), ('17', '微信', 'wxpay', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - 扫码支付', '2021-07-02 02:47:37', '2021-07-02 02:47:40', '0', '0'), ('18', '支付宝', 'alipay', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '官方支付宝 - 当面付', '2021-07-03 18:53:08', '2021-07-02 18:53:11', '1', '1'), ('19', '微信H5', 'wxpay_h5', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - H5支付 （开启后只在手机端显示）', '2021-07-02 23:20:54', '2021-08-17 23:20:56', '0', '0'), ('20', 'Paypal', 'paypal', '{\"clientId\":\"xxx\",\"return_url\":\"xxx\",\"clientSecret\":\"xxx\"}', 'Paypal 境外支付（默认美元交易）', '2021-08-24 12:04:25', '2021-08-24 12:04:28', '1', '1'), ('21', 'QQ钱包', 'zlianpay_qqpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - QQ钱包', '2021-10-30 16:12:49', '2021-10-30 16:12:49', '1', '1'), ('22', '支付宝PC', 'alipay_pc', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '支付宝官方pc端支付', '2021-11-03 03:04:02', '2021-11-03 03:04:02', '0', '0');
 COMMIT;
 
 -- ----------------------------
@@ -369,7 +400,14 @@ CREATE TABLE `sys_products` (
   `is_customize` int DEFAULT NULL COMMENT '是否开启自定义输入框',
   `sell_type` int DEFAULT NULL COMMENT '售卡类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='商品';
+
+-- ----------------------------
+--  Records of `sys_products`
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_products` VALUES ('1', '测试商品', '0.01', '1000', 'PFF1onBe84qQQy42', '1', '<p>测试商品</p>', '2022-03-23 18:31:28', '2022-03-23 18:31:28', '2022-03-23 18:31:28', '1', '', '', '0', '', '0', '0', null, null, '1', 'qq_account=QQ账号=true\nqq_password=QQ密码=true', '0', '0'), ('4', '代安装值联云卡', '20.00', '1000', 'TkaB7w6y8Riw710V', '1', '<p>1</p>', '2022-03-23 06:08:40', '2022-03-23 06:08:40', '2022-03-23 06:08:40', '1', '', '', '0', '', '0', '1', '1000', '0', '1', null, '0', '0'), ('6', '测试商品', '30.00', '1000', 'lH7aa9Yt5lkco8Pl', '1', '<p>批发商品测试</p>', '2022-03-23 18:32:13', '2022-03-23 18:32:13', '2022-03-23 18:32:13', '1', '', '', '1', '20=10\n100=5', '0', '0', null, null, '1', null, '0', '0');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_role`
@@ -431,6 +469,13 @@ CREATE TABLE `sys_shop_settings` (
   `app_token` varchar(255) DEFAULT NULL COMMENT 'pusher token',
   `wxpush_uid` varchar(255) DEFAULT NULL COMMENT '微信通知uid',
   `is_email` int DEFAULT '0' COMMENT '邮件通知开关',
+  `is_list_layout` int DEFAULT NULL COMMENT '是否开启列表布局',
+  `quotations` varchar(255) DEFAULT NULL COMMENT '首页语录',
+  `qq_customer_service` varchar(255) DEFAULT NULL COMMENT 'QQ客服',
+  `qq_group_qrcode` varchar(255) DEFAULT NULL COMMENT 'QQ群二维码',
+  `tg_customer_service` varchar(255) DEFAULT NULL COMMENT 'TG客服',
+  `is_client` int DEFAULT NULL COMMENT '是否开启客服',
+  `crisp_key` varchar(255) DEFAULT NULL COMMENT 'crisp密钥',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='商店设置';
 
@@ -438,7 +483,7 @@ CREATE TABLE `sys_shop_settings` (
 --  Records of `sys_shop_settings`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_shop_settings` VALUES ('1', '1', '<div class=\"index-module_textWrap_3ygOc\">\n<p><span class=\"bjh-p\">&nbsp; &nbsp; 想把世界最好的给你，却发现世上最好的是你；我不要不老的青春，只要一个盗不走的爱人。</span></p>\n<p>&nbsp;</p>\n</div>\n<div class=\"index-module_textWrap_3ygOc\">\n<p><span class=\"bjh-p\">&nbsp; &nbsp; 有时幸福就像手心里的沙，握得越紧，失去得越快；有时幸福就像隔岸的花朵，隐约可见，却无法触摸。两个人的世界里，总要一个闹着、一个笑着、一个吵着、一个哄着。</span></p>\n</div>', 'https://s1.hdslb.com/bfs/static/blive/blfe-dynamic-web/static/img/background.bc725153.png', '打开祝福的心扉，让梦想在晨光中翱翔。', '0', 'xxx', 'UID_YOKIVya0Pv1lHoPpzFvofUQqQqEx', '0');
+INSERT INTO `sys_shop_settings` VALUES ('1', '1', '<div class=\"index-module_textWrap_3ygOc\">\n<p><span class=\"bjh-p\">&nbsp; &nbsp; 想把世界最好的给你，却发现世上最好的是你；我不要不老的青春，只要一个盗不走的爱人。</span></p>\n<p>&nbsp;</p>\n</div>\n<div class=\"index-module_textWrap_3ygOc\">\n<p><span class=\"bjh-p\">&nbsp; &nbsp; 有时幸福就像手心里的沙，握得越紧，失去得越快；有时幸福就像隔岸的花朵，隐约可见，却无法触摸。两个人的世界里，总要一个闹着、一个笑着、一个吵着、一个哄着。</span></p>\n</div>', 'https://s1.hdslb.com/bfs/static/blive/blfe-dynamic-web/static/img/background.bc725153.png', '<p>打开祝福的心扉，让梦想在晨光中翱翔。</p>', '1', 'xxx', 'UID_YOKIVya0Pv1lHoPpzFvofUQqQqEx', '0', '1', '打开祝福的心扉，让梦想在晨光中翱翔。', '1724962375', '/file/20220323/334b7cb021157f5f982e0ba02ec42005.jpg', 'https://t.me/zliankeji', '1', '3ff64218-c586-4c42-91fe-c13c8aa07405');
 COMMIT;
 
 -- ----------------------------
@@ -454,13 +499,13 @@ CREATE TABLE `sys_theme` (
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='主题配置';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='主题配置';
 
 -- ----------------------------
 --  Records of `sys_theme`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_theme` VALUES ('1', '白昼模式', '白色的主题', 'default', '1', '2021-06-28 00:58:32', '2021-06-28 00:58:34'), ('2', '暗黑模式', '黑夜的主题', 'night', '0', '2021-06-28 00:59:05', '2021-06-28 00:59:08');
+INSERT INTO `sys_theme` VALUES ('1', '白昼模式', '白色的主题', 'default', '1', '2021-06-28 00:58:32', '2021-06-28 00:58:34');
 COMMIT;
 
 -- ----------------------------
@@ -545,7 +590,7 @@ CREATE TABLE `sys_website` (
 --  Records of `sys_website`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_website` VALUES ('1', '值联云卡', 'https://shop.zlianpay.cn', '', '1724962375', '全新数卡系统', '发卡,发卡,发卡卡', '值联云卡 - 全新UI数卡系统', '');
+INSERT INTO `sys_website` VALUES ('1', '值联云卡', 'http://free.zlianpay.cn', '', '1724962375', 'Copyright © 2012-2022 值联科技', '商城系统,商城源码,tg营销助手,发卡网', '值联系统 - 全新UI商城系统', '');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

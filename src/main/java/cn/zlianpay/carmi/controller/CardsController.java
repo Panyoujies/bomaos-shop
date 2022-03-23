@@ -45,6 +45,8 @@ public class CardsController extends BaseController {
     public String view(Model model) {
         List<Classifys> classifysList = classifysService.listAll(null);
         model.addAttribute("classifysList", classifysList);
+        List<Products> productsList = productsService.listAll(null);
+        model.addAttribute("productsList", productsList);
         return "carmi/cards.html";
     }
 
@@ -108,12 +110,10 @@ public class CardsController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(CardsDts cardsDts) {
-
         Products products = productsService.getById(cardsDts.getProductId());
         if (products.getSellType() != cardsDts.getSellType()) { // 重复销售
             return JsonResult.error("本商品为重复售卡类型、请使用重复售卡来导入卡密！！");
         }
-
         return cardsService.addCards(cardsDts);
     }
 
@@ -188,15 +188,15 @@ public class CardsController extends BaseController {
     }
 
     /**
-     * 导出指定的数据
+     * 卡密导出
+     * @param request
+     * @throws Exception
      */
     @RequiresPermissions("carmi:cards:list")
     @OperLog(value = "卡密管理", desc = "导出指定的数据")
-    @ResponseBody
-    @RequestMapping("/export")
-    public JsonResult export(Integer productId, Integer status) {
-        String export = cardsService.export(productId, status);
-        return JsonResult.ok().setData(export);
+    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    public void exportCardSecret(HttpServletRequest request) throws Exception {
+        cardsService.export(request);
     }
 
 }

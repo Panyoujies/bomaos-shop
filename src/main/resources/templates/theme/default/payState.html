@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName} - 等待完成支付" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/theme/default/css/receipt.css"/>
+    <:include file="./common/title.html" websiteName="等待完成支付 - ${website.websiteName}" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}" shop="${shop}"/>
+    <link rel="stylesheet" href="${ctxPath}/default/css/receipt.css"/>
 </head>
 <body class="page-no-scroll">
 <div class="page-loading">
@@ -25,7 +25,7 @@
 </div>
 
 <!-- footer -->
-<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}" shop="${shop}"/>
 
 <!-- js部分 -->
 <:include file="./common/js.html"/>

@@ -42,15 +42,12 @@ public class CallBackController extends BaseController {
         if (BaseCallBackReq.ACTION_APP_SUBSCRIBE.equalsIgnoreCase(callBackReq.getAction())) {
             AppSubscribeBean appSubscribeBean = JSONObject.parseObject(JSONObject.toJSONString(callBackReq.getData()), AppSubscribeBean.class);
             if (!StringUtils.isEmpty(appSubscribeBean.getExtra())) {
-
                 ShopSettings shopSettings = shopSettingsService.getById(1);
                 Website website = websiteService.getById(1);
                 if (StringUtils.isEmpty(shopSettings.getWxpushUid())) {
-
                     ShopSettings shopSettings1 = new ShopSettings();
                     shopSettings1.setId(1);
                     shopSettings1.setWxpushUid(appSubscribeBean.getUid());
-
                     if (shopSettingsService.updateById(shopSettings1)) {
                         //扫码以后，发送一条消息给用户
                         Message message = new Message();
@@ -60,7 +57,6 @@ public class CallBackController extends BaseController {
                         message.setAppToken(shopSettings.getAppToken());
                         WxPusher.send(message);
                     }
-
                 } else {
                     //扫码以后，发送一条消息给用户
                     Message message = new Message();
@@ -70,7 +66,6 @@ public class CallBackController extends BaseController {
                     message.setAppToken(shopSettings.getAppToken());
                     WxPusher.send(message);
                 }
-
             } else {
                 //无参数二维码（默认二维码）
             }

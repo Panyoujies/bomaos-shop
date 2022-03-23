@@ -24,4 +24,6 @@ public interface ProductsService extends IService<Products> {
      */
     List<Products> listAll(Map<String, Object> page);
 
+
+    List<Products> getRandomProductList(int limit);
 }

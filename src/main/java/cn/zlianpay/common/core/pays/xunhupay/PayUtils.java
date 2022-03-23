@@ -3,13 +3,19 @@ package cn.zlianpay.common.core.pays.xunhupay;
 import cn.hutool.crypto.SecureUtil;
 import cn.zlianpay.common.core.web.BaseController;
 import cn.zlianpay.settings.entity.Pays;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
 
-public class PayUtils extends BaseController {
+/**
+ * 虎皮椒支付
+ * author Panyoujie
+ * Url https://zdins.cn
+ */
+public class PayUtils {
 
 	/**
 	 * 虎皮椒支付
@@ -36,6 +42,8 @@ public class PayUtils extends BaseController {
 
 		Map<String, Object> sortParams = new HashMap<>();
 		sortParams.put("version", "1.1");
+		sortParams.put("lang", "zh-cn");
+		sortParams.put("plugins", plugins);
 		sortParams.put("appid", appid);
 		sortParams.put("trade_order_id", orderMember);
 		if (StringUtils.equals(pays.getDriver(),"xunhupay_wxpay")) {
@@ -50,31 +58,22 @@ public class PayUtils extends BaseController {
 		sortParams.put("title", product_type);
 		sortParams.put("time", getSecondTimestamp(new Date()));
 		sortParams.put("notify_url", notify_url + "/xunhupay/notifyUrl");
-
 		sortParams.put("return_url", notify_url + "/xunhupay/returnUrl?trade_order_id=" + orderMember);
-        sortParams.put("callback_url", "http://2h8446682m.51vip.biz");
-		sortParams.put("plugins", plugins);
+        sortParams.put("callback_url", notify_url);
 		sortParams.put("nonce_str", getRandomNumber(9));
 		sortParams.put("hash", createSign(sortParams,appsecret));
-
-		String response = HttpUtils.httppostjson(url, JSON.toJSONString(sortParams));
-        JSONObject jsonObject = JSONObject.parseObject(response);
-        Map map1 = null;
+		Map map1 = null;
 		try {
-            Integer errcode = (Integer) jsonObject.get("errcode");
-            String errmsg = (String) jsonObject.get("errmsg");
-            if (errcode == 0 || StringUtils.equals(errmsg, "success!")) {
-                String url_qrcode = (String) jsonObject.get("url_qrcode");
-                String url1 = (String) jsonObject.get("url");
+			XunhuEntity xunhuEntity = RequestUtil.getHttpsPost(url, sortParams);
+			if (xunhuEntity.getErrcode() == 0 && xunhuEntity.getErrmsg().equals("success!")) {
 				HashMap<String, String> map = new HashMap<>();
-				map.put("url_qrcode", url_qrcode);
-				map.put("url1", url1);
+				map.put("url_qrcode", xunhuEntity.getUrl_qrcode());
+				map.put("url1", xunhuEntity.getUrl());
 				map1 = map;
-            }
-        } catch (Exception e) {
-			e.printStackTrace();
+			}
+		} catch (HttpClientErrorException e) {
+			System.out.println("e.getMessage() = " + e.getMessage());
 		}
-
         return map1;
 	}
 
@@ -85,12 +84,15 @@ public class PayUtils extends BaseController {
 	 * @return
 	 */
 	public static String createSign(Map<String, Object> params, String privateKey) {
-
+		params.remove("hash");
 		// 使用HashMap，并使用Arrays.sort排序
 		String[] sortedKeys = params.keySet().toArray(new String[]{});
 		Arrays.sort(sortedKeys);// 排序请求参数
 		StringBuilder builder = new StringBuilder();
 		for (String key : sortedKeys) {
+			if (ObjectUtils.isEmpty(params.get(key))) {
+				continue;
+			}
 			builder.append(key).append("=").append(params.get(key)).append("&");
 		}
 		String result = builder.deleteCharAt(builder.length() - 1).toString();
@@ -131,12 +133,10 @@ public class PayUtils extends BaseController {
 		String str = "0123456789";
 		Random random = new Random();
 		StringBuffer sb = new StringBuffer();
-
 		for(int i = 0; i < length; ++i) {
 			int number = random.nextInt(str.length());
 			sb.append(str.charAt(number));
 		}
-
 		return sb.toString();
 	}
 }

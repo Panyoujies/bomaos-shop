@@ -7,8 +7,8 @@ import lombok.ToString;
 @ToString
 public class SearchDTO {
 
-    private String id;
-    private String andIncrement;
+    private Integer id;
+    private Integer andIncrement;
     private String member;
     private String createTime;
     private String payType;

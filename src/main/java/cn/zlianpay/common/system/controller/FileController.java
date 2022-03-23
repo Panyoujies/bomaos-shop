@@ -1,5 +1,6 @@
 package cn.zlianpay.common.system.controller;
 
+import cn.zlianpay.common.core.utils.PicUtils;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.common.core.utils.FileUploadUtil;
@@ -131,8 +132,12 @@ public class FileController {
      * 预览文件
      */
     @GetMapping("/{dir}/{name:.+}")
-    public void file(@PathVariable("dir") String dir, @PathVariable("name") String name, HttpServletResponse response) {
-        FileUploadUtil.preview(dir + "/" + name, response);
+    public void file(@PathVariable("dir") String dir, @PathVariable("name") String name, Integer width,Integer height, HttpServletResponse response) {
+        if(width != null && width > 0 && height != null && height > 0){
+            PicUtils.changeSize(dir + "/" + name,width,height,response);
+        }else{
+            FileUploadUtil.preview(dir + "/" + name, response);
+        }
     }
 
     /**

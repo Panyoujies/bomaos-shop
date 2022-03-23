@@ -41,6 +41,11 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
     }
 
     @Override
+    public List<Products> getRandomProductList(int limit) {
+        return baseMapper.getRandomProductList(limit);
+    }
+
+    @Override
     public boolean removeByIds(Collection<? extends Serializable> idList) {
         for (Serializable serializable : idList) {
             Integer count = cardsMapper.selectCount(new QueryWrapper<Cards>().eq("product_id", serializable));

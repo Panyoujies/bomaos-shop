@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName} - 订单付款" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/theme/default/css/pay.css"/>
+    <:include file="./common/title.html" websiteName="订单付款 - ${website.websiteName}" keywords="${website.keywords}" description="${website.description}" favicon="${website.favicon}" shop="${shop}"/>
+    <link rel="stylesheet" href="${ctxPath}/default/css/pay.css"/>
     <script src="https://lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body class="page-no-scroll">
@@ -11,12 +11,9 @@
         <span></span><span></span><span></span><span></span>
     </div>
 </div>
-
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}" websiteLogo="${website.websiteLogo}"/>
-
 <div class="layui-container body-card">
-
     <div class="top-text">
         <div class="top-text-tips">订单提交成功，请尽快完成付款！</div>
         <div class="top-text-main">商品说明：${goodsName!}</div>
@@ -24,7 +21,6 @@
             应付金额<span class="goods-money">${price!}</span>元
         </div>
     </div>
-
     <div class="pay-card">
         <div class="pay-header">
             <div class="ew-container" style="text-align: center; padding: 20px;">
@@ -64,20 +60,18 @@
                 </div>
             </div>
         </div>
-
         <div class="pay-card-footer">
             <a href="/saearch/order/${ordersMember!}" class="pay-card-right-btn ew-disable">等待支付（60s）</a>
         </div>
     </div>
-
 </div>
 <!-- footer -->
-<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}" shop="${shop}"/>
 <!-- js部分 -->
 <:include file="./common/js.html"/>
 <script>
     layui.config({
-        base: '${ctxPath}/theme/default/module/'
+        base: '${ctxPath}/default/module/'
     }).use(['layer', 'QRCode', 'notice'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;

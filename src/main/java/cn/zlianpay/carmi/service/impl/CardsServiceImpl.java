@@ -1,13 +1,15 @@
 package cn.zlianpay.carmi.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.zlianpay.carmi.dto.CardsDto;
 import cn.zlianpay.carmi.entity.Cards;
+import cn.zlianpay.carmi.excel.Excel;
+import cn.zlianpay.carmi.excel.ExcelSxssFUtil;
+import cn.zlianpay.carmi.excel.ExcelType;
 import cn.zlianpay.carmi.mapper.CardsMapper;
 import cn.zlianpay.carmi.service.CardsService;
-import cn.zlianpay.carmi.utils.ExcelPOJO;
-import cn.zlianpay.carmi.utils.ExcelWrite;
 import cn.zlianpay.carmi.vo.CardsDts;
-import cn.zlianpay.common.core.Constants;
-import cn.zlianpay.common.core.utils.DateUtil;
+import cn.zlianpay.common.core.utils.CoreUtil;
 import cn.zlianpay.common.core.web.JsonResult;
 import cn.zlianpay.common.core.web.PageParam;
 import cn.zlianpay.common.core.web.PageResult;
@@ -15,12 +17,17 @@ import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.mapper.ProductsMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 卡密服务实现类
@@ -52,17 +59,20 @@ public class CardsServiceImpl extends ServiceImpl<CardsMapper, Cards> implements
             List<String> newlist = new ArrayList();
             for (int i = 0; i < cardsInfo.length; ++i) {
                 if (cardsDts.getRepeat() == 0) {
-                    newlist.add(cardsInfo[i]);
+                    newlist.add(CoreUtil.getStringNoBlank(cardsInfo[i]));
                 } else if (cardsDts.getRepeat() == 1 && !newlist.contains(cardsInfo[i])) {
-                    newlist.add(cardsInfo[i]);
+                    newlist.add(CoreUtil.getStringNoBlank(cardsInfo[i]));
                 }
             }
+
+            while (newlist.remove(null));
+            while (newlist.remove(""));
 
             List<Cards> cardsArrayList = new ArrayList<>();
             for (String cardInfo : newlist) {
                 Cards cards = new Cards();
                 cards.setProductId(cardsDts.getProductId());
-                cards.setCardInfo(cardInfo);
+                cards.setCardInfo(CoreUtil.getStringNoBlank(cardInfo));
                 cards.setStatus(0); // 设置未出售
                 cards.setSellType(0);
                 cards.setNumber(1);
@@ -79,14 +89,14 @@ public class CardsServiceImpl extends ServiceImpl<CardsMapper, Cards> implements
             return JsonResult.error("添加卡密失败");
         } else { // 重复销售
 
-            Cards cards1 = this.getOne(new QueryWrapper<Cards>().eq("product_id", cardsDts.getProductId()).eq("status", 0));
+            Cards cards1 = this.getOne(new QueryWrapper<Cards>().eq("product_id", cardsDts.getProductId()).eq("status", 0).eq("sell_type", 1));
             if (!ObjectUtils.isEmpty(cards1)) {
                 return JsonResult.error("当前商品为重复销售类型、已存在一个重复销售的卡密、请勿重复添加，如需修改当前卡密数量请前往卡密管理进行操作。");
             }
 
             Cards cards = new Cards();
             cards.setProductId(cardsDts.getProductId());
-            cards.setCardInfo(cardsDts.getCardInfo());
+            cards.setCardInfo(CoreUtil.getStringNoBlank(cardsDts.getCardInfo()));
             cards.setStatus(0); // 设置未出售
             cards.setSellType(1);
             cards.setNumber(cardsDts.getSellNumber());
@@ -107,29 +117,39 @@ public class CardsServiceImpl extends ServiceImpl<CardsMapper, Cards> implements
     }
 
     @Override
-    public String export(Integer productId, Integer status) {
-
-        /**
-         * 查询需要导出的卡密列表
-         */
-        List<Cards> cardsList = baseMapper.selectList(new QueryWrapper<Cards>().eq("product_id", productId).eq("status", status));
-
-        List<ExcelPOJO> list = new ArrayList<>();
-        for (Cards cards : cardsList) {
+    public void export(HttpServletRequest request) {
+        PageParam<Cards> pageParam = new PageParam<>(request);
+        List<Cards> cardsList = this.list(pageParam.getOrderWrapper());
+        List<CardsDto> cardsDtoList = cardsList.stream().map((cards -> {
+            CardsDto cardsDto = new CardsDto();
+            BeanUtils.copyProperties(cards, cardsDto);
+            // TODO 导出时间这里需要抓换String，否则导出数据异常，可优化
+            cardsDto.setCreatedAt(DateUtil.formatDateTime(cards.getCreatedAt()));
+            if (cards.getStatus() == 1) {
+                cardsDto.setStatus("已出售");
+            } else {
+                cardsDto.setStatus("未出售");
+            }
             Products products = productsMapper.selectById(cards.getProductId());
+            if (!ObjectUtils.isEmpty(products)) {
+                cardsDto.setProductName(products.getName());
+            } else {
+                cardsDto.setProductName("商品已删除");
+            }
+            return cardsDto;
+        })).collect(Collectors.toList());
 
-            ExcelPOJO excelPOJO = new ExcelPOJO();
-            excelPOJO.setName(products.getName()); // 商品名称
-            excelPOJO.setCode(cards.getCardInfo()); // 卡密信息
-            excelPOJO.setTime(DateUtil.getDate());
 
-            list.add(excelPOJO);
+        for (CardsDto cardsDto : cardsDtoList) {
+
+            System.out.println(cardsDto);
         }
-
-        String[] arr = {"商品名称", "卡密信息", "导出时间"};
-        String toExcelByPOJO = ExcelWrite.writeToExcelByPOJO(Constants.UPLOAD_DIR + "file/excel/", arr, list);
-
-        return toExcelByPOJO;
+        Excel excel = CardsDto.class.getAnnotation(Excel.class);
+        List<Field> fields = ExcelSxssFUtil.getExcelList(CardsDto.class, ExcelType.EXPORT);
+        String sheetTitle = excel.value();
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        ExcelSxssFUtil.exportExcel(fields, workbook, cardsDtoList,sheetTitle);
+        ExcelSxssFUtil.download(workbook, sheetTitle);
     }
 
 }

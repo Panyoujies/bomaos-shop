@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.vo.CardsDts;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +31,5 @@ public interface CardsService extends IService<Cards> {
 
     List<Cards> getCard(Integer status, Integer productId, Integer number);
 
-    String export(Integer productId, Integer status);
+    void export(HttpServletRequest request);
 }

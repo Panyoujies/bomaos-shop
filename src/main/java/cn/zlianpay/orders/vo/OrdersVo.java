@@ -111,6 +111,11 @@ public class OrdersVo {
     private List<String> cardInfo;
 
     /**
+     * 卡密信息
+     */
+    private String cardsInfo;
+
+    /**
      * 标记为使用优惠券
      */
     private Integer isCoupon;

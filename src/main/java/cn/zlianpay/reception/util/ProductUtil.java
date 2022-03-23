@@ -22,7 +22,7 @@ public class ProductUtil {
         hotProductDTO.setId(productDTO.getId());
         hotProductDTO.setName(productDTO.getName());
         hotProductDTO.setPrice(productDTO.getPrice());
-        hotProductDTO.setImage(productDTO.getIndexLogo());
+        hotProductDTO.setImage(productDTO.getImageLogo());
         hotProductDTO.setLink(productDTO.getLink());
         return hotProductDTO;
     }

@@ -29,6 +29,12 @@
 				<if test="page.pageData.goodsId != null">
 					AND a.goods_id = #{page.pageData.goodsId}
                 </if>
+                <if test="page.pageData.shipType != null">
+                    AND a.ship_type = #{page.pageData.shipType}
+                </if>
+                <if test="page.pageData.productName != null">
+                    AND a.product_name LIKE CONCAT('%', #{page.pageData.productName}, '%')
+                </if>
 				<if test="page.pageData.payType != null">
                     AND a.pay_type LIKE CONCAT('%', #{page.pageData.payType}, '%')
 				</if>

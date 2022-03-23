@@ -345,7 +345,7 @@ body {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 991px) {
     .layui-layout-admin {
         left: -260px
     }
@@ -894,7 +894,7 @@ body {
     -webkit-overflow-scrolling: touch
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 991px) {
     .layui-layer-admin {
         max-width: 98%;
         max-width: -webkit-calc(100% - 30px);
@@ -1515,7 +1515,7 @@ input.layui-disabled, input.layui-disabled:hover, textarea.layui-disabled, texta
     border-radius: 3px
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 991px) {
     ::-webkit-scrollbar {
         width: 4px;
         height: 4px
@@ -1722,7 +1722,7 @@ input.layui-disabled, input.layui-disabled:hover, textarea.layui-disabled, texta
     border-bottom: 0
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 991px) {
     .layui-laydate-range {
         left: 0 !important;
         top: 0 !important;

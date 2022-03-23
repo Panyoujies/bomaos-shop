@@ -35,6 +35,18 @@
                 <if test="page.pageData.isEmail != null">
                     AND a.is_email = #{page.pageData.isEmail}
                 </if>
+                <if test="page.pageData.qqCustomerService != null">
+                    AND a.qq_customer_service = #{page.pageData.qqCustomerService}
+                </if>
+                <if test="page.pageData.qqGroupQrcode != null">
+                    AND a.qq_group_qrcode = #{page.pageData.qqGroupQrcode}
+                </if>
+                <if test="page.pageData.isClient != null">
+                    AND a.is_client = #{page.pageData.isClient}
+                </if>
+                <if test="page.pageData.crispKey != null">
+                    AND a.crisp_key = #{page.pageData.crispKey}
+                </if>
             </if>
         </where>
     </sql>

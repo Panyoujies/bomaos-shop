@@ -64,4 +64,24 @@ public class ShopSettings implements Serializable {
      */
     private Integer isEmail;
 
+    /**
+     * 客服QQ号码
+     */
+    private String qqCustomerService;
+
+    /**
+     * QQ群二维码
+     */
+    private String qqGroupQrcode;
+
+    /**
+     * 是否开启在线客服
+     */
+    private Integer isClient;
+
+    /**
+     * crisp密钥
+     */
+    private String crispKey;
+
 }

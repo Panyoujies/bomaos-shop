@@ -16,6 +16,7 @@ import cn.zlianpay.theme.service.ThemeService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,7 +61,7 @@ public class SearchOrderController extends BaseApiController {
         /**
          * 商品没有找到
          */
-        Theme theme = themeService.getOne(new QueryWrapper<Theme>().eq("enable", 1));
+        Theme theme = themeService.getOne(Wrappers.<Theme> lambdaQuery().eq(Theme::getEnable, 1));
         if (ObjectUtils.isEmpty(member)) return "theme/" + theme.getDriver() + "/error.html";
 
         Products products = productsService.getById(member.getProductId());
@@ -68,16 +69,11 @@ public class SearchOrderController extends BaseApiController {
 
         List<String> cardsList = new ArrayList<>();
         if (!StringUtils.isEmpty(member.getCardsInfo())) {
-            String[] cardsInfo = member.getCardsInfo().split(",");
+            String[] cardsInfo = member.getCardsInfo().split("\n");
             for (String cardInfo : cardsInfo) {
                 StringBuilder cardInfoText = new StringBuilder();
                 if (products.getShipType() == 0) {
-                    if (cardInfo.contains(" ")) {
-                        String[] split = cardInfo.split(" ");
-                        cardInfoText.append("卡号：").append(split[0]).append(" ").append("卡密：").append(split[1]).append("\n");
-                    } else {
-                        cardInfoText.append(cardInfo).append("\n");
-                    }
+                    cardInfoText.append(cardInfo).append("\n");
                     cardsList.add(cardInfoText.toString());
                 } else {
                     cardInfoText.append(cardInfo);
@@ -111,7 +107,7 @@ public class SearchOrderController extends BaseApiController {
 
         ShopSettings shopSettings = shopSettingsService.getById(1);
         model.addAttribute("isBackground", shopSettings.getIsBackground());
-
+        model.addAttribute("shop", shopSettings);
         return "theme/" + theme.getDriver() + "/order.html";
     }
 

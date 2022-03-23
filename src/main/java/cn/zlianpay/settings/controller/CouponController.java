@@ -62,15 +62,12 @@ public class CouponController extends BaseController {
     public PageResult<CouponVo> page(HttpServletRequest request) {
         PageParam<Coupon> pageParam = new PageParam<>(request);
         pageParam.addOrderDesc("create_time");
-
         List<Coupon> records = couponService.page(pageParam, pageParam.getWrapper()).getRecords();
         List<CouponVo> couponVoList = records.stream().map((coupon) -> {
             CouponVo couponVo = new CouponVo();
             BeanUtils.copyProperties(coupon, couponVo);
-
             Products products = productsService.getById(coupon.getProductId());
             couponVo.setProductName(products.getName());
-
             return couponVo;
         }).collect(Collectors.toList());
         return new PageResult<>(couponVoList, pageParam.getTotal());
@@ -110,7 +107,6 @@ public class CouponController extends BaseController {
         if (coupon.getDiscountType() == 1 && coupon.getDiscountVal().compareTo(new BigDecimal(10)) == 1) {
             return JsonResult.error("折扣只能1-10之间的数字");
         }
-
         if (couponService.save(coupon,getLoginUserId())) {
             return JsonResult.ok("添加成功");
         }

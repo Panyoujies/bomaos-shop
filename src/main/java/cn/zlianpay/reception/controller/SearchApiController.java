@@ -28,23 +28,12 @@ public class SearchApiController {
     @Ignore
     @RequestMapping("/getOrderToken")
     public JsonResult get(Integer id, String password) {
-
-        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(password)) {
-            return JsonResult.error("订单ID或查询密码不能为空！！");
-        }
-
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(password)) return JsonResult.error("订单ID或查询密码不能为空！！");
         Orders orders = ordersService.getById(id);
-        if (ObjectUtils.isEmpty(orders)) {
-            return JsonResult.error("商品不存在！！");
-        }
-
-        if (!password.equals(orders.getPassword())) {
-            return JsonResult.error("密码错误，请核对后再试！");
-        }
-
+        if (ObjectUtils.isEmpty(orders)) return JsonResult.error("商品不存在！！");
+        if (!password.equals(orders.getPassword())) return JsonResult.error("密码错误，请核对后再试！");
         Token token = tokenStore.createNewToken(String.valueOf(id), 60 * 60 * 24 * 30L);
         String accessToken = token.getAccessToken();
-
         return JsonResult.ok("ok").setData(accessToken);
     }
 

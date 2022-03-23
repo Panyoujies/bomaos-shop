@@ -30,21 +30,13 @@
                             <input type="radio" name="status" value="1" title="已出售" checked>
                             <input type="radio" name="status" value="0" title="未出售">
                         </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">卡密:</label>
-                        <div class="layui-input-inline">
+                        <div class="layui-input-inline" style="margin-left: 10px">
                             <input name="cardInfo" class="layui-input" placeholder="输入卡密"/>
                         </div>
                     </div>
                     <div class="layui-inline">&emsp;
                         <button class="layui-btn icon-btn" lay-filter="cardsTbSearch" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
-                        </button>
-                    </div>
-                    <div class="layui-inline">&emsp;
-                        <button class="layui-btn icon-btn" lay-filter="cardsExport" lay-submit>
-                            <i class="layui-icon layui-icon-export"></i>导出卡密
                         </button>
                     </div>
                 </div>
@@ -114,6 +106,45 @@
     </form>
 </script>
 
+<!-- 表单弹窗 -->
+<script type="text/html" id="cardsExportDialog">
+    <form id="cardsExportForm" lay-filter="cardsExportForm" class="layui-form model-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">选择商品:</label>
+            <div class="layui-input-block">
+                <select name="productId" lay-verify="required">
+                    <option value="">请选择商品</option>
+                    <:for items="${productsList}" var="item">
+                    <option value="${item.id}">${item.name}</option>
+                    </:for>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">卡券状态:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="0" title="未出售" checked>
+                <input type="radio" name="status" value="1" title="已出售">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">卡券类型:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sellType" value="0" title="一次性卡" checked>
+                <input type="radio" name="sellType" value="1" title="重复售卡">
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="cardsExportSubmit" lay-submit>导出卡密</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
 <:include file="../common/js.html"/>
 <script>
     layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown'], function () {
@@ -132,6 +163,7 @@
             page: true,
             toolbar: ['<p>',
                 '<button lay-event="del" class="layui-btn layui-btn-sm layui-btn-danger icon-btn"><i class="layui-icon">&#xe640;</i>删除</button>',
+                '<button lay-event="export" class="layui-btn layui-btn-sm layui-btn-normal icon-btn"><i class="layui-icon">&#xe67d;</i>导出卡券</button>',
                 '</p>'].join(''),
             cellMinWidth: 100,
             cols: [[
@@ -162,7 +194,7 @@
                             return '已售: ' + res.sellNumber + ' / ' + '共: ' + res.number;
                         }
                     }},
-                {field: 'createdAt', title: '创建时间', sort: true},
+                {field: 'updatedAt', title: '更新时间', sort: true},
                 {title: '操作', toolbar: '#cardsTbBar', align: 'center', minWidth: 200}
             ]]
         });
@@ -198,18 +230,6 @@
             return false;
         });
 
-        form.on('submit(cardsExport)', function (data) {
-            $.post('cards/export', data.field, function (res) {
-                if (0 === res.code) {
-                    console.log(res.data)
-                    window.open('${ctxPath}/' + res.data)
-                } else {
-                    layer.msg("导出失败")
-                }
-            });
-            return false;
-        });
-
         /* 表格工具条点击事件 */
         table.on('tool(cardsTable)', function (obj) {
             if ('edit' === obj.event) { // 修改
@@ -223,6 +243,8 @@
         table.on('toolbar(cardsTable)', function (obj) {
             if ('add' === obj.event) { // 添加
                 showEditModel();
+            } else if ('export' === obj.event) { // 导出卡券
+                showExportModel();
             } else if ('del' === obj.event) { // 删除
                 var checkRows = table.checkStatus('cardsTable');
                 if (0 === checkRows.data.length) {
@@ -234,6 +256,28 @@
                 doDel({ids: ids});
             }
         });
+
+        /* 显示卡券导出弹窗 */
+        function showExportModel(mData) {
+            admin.open({
+                type: 1,
+                title: '导出卡密',
+                content: $('#cardsExportDialog').html(),
+                success: function (layero, dIndex) {
+                    // 回显表单数据
+                    form.val('cardsExportForm', mData);
+                    // 表单提交事件
+                    form.on('submit(cardsExportSubmit)', function (data) {
+                        var loadIndex = layer.load(2);
+                        layer.close(loadIndex);
+                        tableX.exportDataBack('cards/export', data.field, 'get');
+                        layer.close(dIndex);
+                        insTb.reload({page: {curr: 1}});
+                        return false;
+                    });
+                }
+            });
+        }
 
         /* 显示表单弹窗 */
         function showEditModel(mData) {

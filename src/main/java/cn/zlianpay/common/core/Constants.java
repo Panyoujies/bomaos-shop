@@ -10,8 +10,10 @@ import java.io.FileNotFoundException;
  * Created by Panyoujie on 2019-10-29 15:55
  */
 public class Constants {
+
     /* 文件服务器配置 */
-    public static String UPLOAD_DIR = "";  // 上传的目录
+    public static final String UPLOAD_DIR = System.getProperty("user.dir") + "/upload/";  // 上传的目录
+    /*public static String UPLOAD_DIR = "";  // 上传的目录
 
     static {
         try {
@@ -19,7 +21,7 @@ public class Constants {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static final boolean UPLOAD_UUID_NAME = false;  // 文件上传是否用uuid命名
     public static final boolean UPLOAD_MD5_NAME = true;  // 文件上传是否用MD5命名

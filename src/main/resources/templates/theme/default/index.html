@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <:include file="./common/title.html" websiteName="${website.websiteName}" keywords="${website.keywords}"
-              description="${website.description}" favicon="${website.favicon}"/>
-    <link rel="stylesheet" href="${ctxPath}/theme/default/css/index.css"/>
+    <:include file="./common/title.html" websiteName="商店首页 - ${website.websiteName}" keywords="${website.keywords}"
+              description="${website.description}" favicon="${website.favicon}" shop="${shop}"/>
+    <link rel="stylesheet" href="${ctxPath}/default/css/index.css"/>
     <link rel="stylesheet" href="${ctxPath}/assets/js/swiper/swiper-bundle.min.css"/>
     <style>
         .no-content {
@@ -15,7 +15,7 @@
 
         .no-content .no-content-img {
             width: 150px;
-            margin: 0 auto 20px;
+            margin: 0 auto;
             display: block;
         }
 
@@ -28,12 +28,8 @@
         }
     </style>
 </head>
-<body class="page-no-scroll">
-<div class="page-loading">
-    <div class="ball-loader">
-        <span></span><span></span><span></span><span></span>
-    </div>
-</div>
+<body>
+
 <!-- header -->
 <:include file="./common/header.html" websiteName="${website.websiteName}"
           websiteLogo="${website.websiteLogo}"/>
@@ -48,9 +44,12 @@
                     <div class="swiper-wrapper">
                         <:for items="${carouselList}" var="item">
                             <div class="swiper-slide">
-                                <a href="${item.link}" style="height: 100%; background-image: url(<:if test="${item.imageLogo == null || item.imageLogo == ''}">../theme/default/images/carousel_logo.png</:if><:if test="${item.imageLogo != null || item.imageLogo != ''}">${item.imageLogo!}</:if>);">
+                                <a href="${item.link}" style="height: 100%; background-image: url(<:if test="${item.imageLogo == null || item.imageLogo == ''}">../default/images/carousel_logo.png</:if><:if test="${item.imageLogo != null || item.imageLogo != ''}">${item.imageLogo!}</:if>);">
                                     <div class="swiper-text">
                                         <h2>${item.title}</h2>
+                                        <:if test="${item.summary != '' || item.summary != null}">
+                                            <h3>${item.summary}</h3>
+                                        </:if>
                                     </div>
                                 </a>
                             </div>
@@ -62,28 +61,32 @@
         </div>
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
             <div class="user-widget-content">
-                <div>
+                <div class="widget-mission-header">
                     <div class="user-w-logon">
                         <p class="user-w-logon-title b2-color" style="margin-bottom: 6px">欢迎访问${website.websiteName}个人小店</p>
-                        <p>${shop.storeDetails}</p>
+                        <div>${shop.storeDetails}</div>
                     </div>
                     <div class="bd">
                         <dl style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
-                            <dt><img src="${ctxPath}/theme/default/images/ship.svg"></dt>
+                            <dt><img src="${ctxPath}/default/images/ship.svg"></dt>
                             <dd>自动发货</dd>
                         </dl>
                         <dl class="dd-box" style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
-                            <dt><img src="${ctxPath}/theme/default/images/security.svg"></dt>
+                            <dt><img src="${ctxPath}/default/images/security.svg"></dt>
                             <dd>数据安全</dd>
                         </dl>
                         <dl class="dd-box" style="position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
-                            <dt><img src="${ctxPath}/theme/default/images/demand.svg"></dt>
+                            <dt><img src="${ctxPath}/default/images/demand.svg"></dt>
                             <dd>实时查询</dd>
                         </dl>
                     </div>
                 </div>
                 <div class="widget-mission-footer">
-                    <a href="${ctxPath}/search">订单查询 <i class="layui-icon" style="transform: rotate(-0deg);">&#xe602;</i></a>
+                    <div style="position: relative; padding: 15px; border-top: 1px solid #f6f6f6;">
+                        <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
+                        <input id="screen-product" placeholder="请输入商品名称" class="layui-input screen-input" lay-verify="required" required/>
+                    </div>
+                    <!--<a href="${ctxPath}/search">订单查询 <i class="layui-icon" style="transform: rotate(-0deg);">&#xe602;</i></a>-->
                 </div>
             </div>
         </div>
@@ -94,12 +97,9 @@
 <div class="layui-container body-card" style="margin-bottom: 15px;">
     <div class="layui-card" style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
         <div class="layui-card-header">
-            <img src="${ctxPath}/theme/default/images/classifys.svg">
             选择分类
-            <div class="pull-right" style="position: relative;">
-                <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
-                <input id="screen-product" placeholder="请输入商品名称" class="layui-input screen-input" lay-verify="required"
-                       required/>
+            <div class="pull-right el-slide">
+                <svg t="1647872150358" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3894" width="200" height="200"><path d="M51.2 281.6h307.2c15.36 0 25.6 10.24 25.6 25.6v307.2c0 15.36-10.24 25.6-25.6 25.6H51.2c-15.36 0-25.6-10.24-25.6-25.6V307.2c0-15.36 10.24-25.6 25.6-25.6z m409.6 0h307.2c15.36 0 25.6 10.24 25.6 25.6v307.2c0 15.36-10.24 25.6-25.6 25.6H460.8c-15.36 0-25.6-10.24-25.6-25.6V307.2c0-15.36 10.24-25.6 25.6-25.6z m409.6 0h102.4c15.36 0 25.6 10.24 25.6 25.6v307.2c0 15.36-10.24 25.6-25.6 25.6h-102.4c-15.36 0-25.6-10.24-25.6-25.6V307.2c0-15.36 10.24-25.6 25.6-25.6z" fill="#A9CFFF" p-id="3895"></path><path d="M51.2 716.8h921.6c15.36 0 25.6 10.24 25.6 25.6s-10.24 25.6-25.6 25.6H51.2c-15.36 0-25.6-10.24-25.6-25.6s10.24-25.6 25.6-25.6z" fill="#A5C8F4" p-id="3896"></path><path d="M38.4 716.8h486.4c7.68 0 12.8 5.12 12.8 12.8v25.6c0 7.68-5.12 12.8-12.8 12.8h-486.4c-7.68 0-12.8-5.12-12.8-12.8v-25.6c0-7.68 5.12-12.8 12.8-12.8z" fill="#2589FF" p-id="3897"></path></svg>
             </div>
         </div>
         <div class="layui-card-body" style="padding: 15px 15px;">
@@ -107,12 +107,14 @@
             </div>
         </div>
     </div>
-    <div class="layui-row layui-col-space15" id="goodsList">
+    <div class="layui-row layui-col-space15" id="goodsList" style="padding: 1px 0;">
     </div>
 </div>
-<!-- footer -->
-<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}"/>
 
+<!-- footer -->
+<:include file="./common/footer.html" websiteName="${website.websiteName}" beianIcp="${website.beianIcp}" shop="${shop}"/>
+<!-- footer -->
+<:include file="./common/footer-menu-home.html"/>
 <!-- 项目模板 -->
 <script type="text/html" id="classifyItem">
     <div class="layui-col-xs6 layui-col-sm6 layui-col-md2">
@@ -120,7 +122,7 @@
              lay-filter="classifySubmit" lay-submit>
             <div class="project-list-item-body">
                 <div class="item-title"
-                     style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600; margin-bottom: 5px;">
+                     style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 17px; font-weight: 600;">
                     {{d.name}}
                 </div>
                 <div class="project-list-item-text">
@@ -133,12 +135,12 @@
 
 <!-- 项目模板 -->
 <script type="text/html" id="productItem">
-    <div class="layui-col-xs6 layui-col-sm6 layui-col-md3">
+    <div class="layui-col-xs6 layui-col-sm4 layui-col-md3 zlian-animation">
         <div class="item-in box b2-radius">
-            <div class="post-module-thumb" style="padding-top: 57%;">
+            <div class="post-module-thumb">
                 <a href="${ctxPath}/product/{{d.link}}" rel="nofollow" class="thumb-link">
                     <picture class="picture">
-                        <img src="{{# if(d.indexLogo == null || d.indexLogo == ''){ }}../theme/default/images/index_logo.png{{# } }}  {{# if(d.indexLogo != null){ }} {{d.indexLogo}} {{# } }}" class="post-thumb lazy">
+                        <img src="{{# if(d.indexLogo == null || d.indexLogo == ''){ }}../default/images/commodity.svg{{# } }}{{# if(d.indexLogo != null){ }}{{d.indexLogo}}?width=356&height=266{{# } }}" class="post-thumb lazy">
                     </picture>
                 </a>
             </div>
@@ -168,7 +170,7 @@
             {{# if(d.shipType == 1){ }}<span class="el-tag el-tag&#45;&#45;success el-tag&#45;&#45;danger">手动发货</span>{{# } }}
         </div>
         {{# if(d.cardMember == 0){ }}
-            <div class="ribbon-two ribbon-two-danger"><span>售罄</span></div>
+        <div class="ribbon-two ribbon-two-danger"><span>售罄</span></div>
         {{# } }}
     </div>
 </script>
@@ -177,30 +179,15 @@
 <:include file="./common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/js/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="${ctxPath}/assets/js/jquery.cookie.js"></script>
-<!-- Swiper JS -->
 <script type="text/javascript" src="${ctxPath}/assets/js/swiper/swiper-bundle.min.js"></script>
-
-<!-- Initialize Swiper -->
 <script>
-    var swiper = new Swiper(".mySwiper", {
-        pagination: {
-            el: ".swiper-pagination",
-        },
-        autoplay:true
-    });
-</script>
-
-<script>
-    layui.use(['layer', 'form', 'notice', 'dataGrid'], function () {
+    layui.use(['layer', 'form', 'dataGrid'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
-        var notice = layui.notice;
         var dataGrid = layui.dataGrid;
         var classifysListJson = JSON.parse('${classifysListJson!}');
         var classifyId;
-        var product1;
-        var ins;
         var shopSettingsJson = JSON.parse(JSON.stringify(${shopSettings!}));
 
         if (shopSettingsJson.isWindow == 1) {
@@ -237,20 +224,19 @@
         });
 
         var list = classifysListJson;
-
         var classifyHtml = '';
         if (list.length != 0) {
             classifyId = list[0].id;
-            ins = dataGrid.render({
+            dataGrid.render({
                 elem: '#classifyList',
                 templet: '#classifyItem',
                 data: list
             });
         } else {
             classifyHtml = '' +
-                '<div style="text-align: center; padding: 30px;">' +
-                '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; padding-left: 36px; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
-                '       <img src="/theme/default/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
+                '<div style="text-align: center; padding: 30px 0; width: 100%;">' +
+                '   <div style="letter-spacing: 1.5px; position: relative; height: 40px; line-height: 50px; display: inline-block; font-size: 18px; color: #888; background-size: 32px; background-position: 0 19px; background-repeat: no-repeat;">' +
+                '       <img src="/default/images/no.svg" style="top: 11px; width: 50px; margin-right: 10px; left: 0;">' +
                 '       <span>暂无分类</span>' +
                 '   </div>' +
                 '</div>';
@@ -263,96 +249,44 @@
             $(this).addClass('active');
         });
 
-        $('.product-type>div .project-list-item').click(function () {
-            $('.product-type>div .project-list-item').removeClass('active');
-            $(this).addClass('active');
-        });
-
-        $.post('/getProductList', {
-            classifyId: classifyId
-        }, function (res) {
-            if (0 === res.code) {
-                var list = res.data;
-                var goodsHtml = '';
-                if (list.length != 0) {
-                    dataGrid.render({
-                        elem: '#goodsList',
-                        templet: '#productItem',
-                        data: list
-                    });
-                } else {
-                    goodsHtml = '' +
-                        '<div class="no-content">\n' +
-                        '    <img src="/theme/default/images/error_ic_empty.png" class="no-content-img">\n' +
-                        '    <p class="user-no-contents">该分类下无商品</p>\n' +
-                        '</div>';
-                    $("#goodsList").html(goodsHtml);
-                }
-            } else {
-                layer.msg(res.msg, {icon: 2})
-            }
+        dataGrid.render({
+            elem: '#goodsList',
+            templet: '#productItem',
+            url: '/getProductList',
+            where: {classifyId: classifyId},
+            loadMore: {limit: 12, class: 'datagrid-page-goodsList', noText: "商品内容为空"}  // 开启加载更多 //
         });
 
         /* 表单提交 */
         form.on('submit(classifySubmit)', function () {
-            product1 = null;
             classifyId = $('.classify-type>div .project-list-item.active').data('id');
-            $.post('/getProductList', {
-                classifyId: $('.classify-type>div .project-list-item.active').data('id')
-            }, function (res) {
-                if (0 === res.code) {
-                    var list = res.data;
-                    var goodsHtml = '';
-                    if (list.length != 0) {
-                        dataGrid.render({
-                            elem: '#goodsList',
-                            templet: '#productItem',
-                            data: list
-                        });
-                    } else {
-                        goodsHtml = '' +
-                            '<div class="no-content">\n' +
-                            '    <img src="/theme/default/images/error_ic_empty.png" class="no-content-img">\n' +
-                            '    <p class="user-no-contents">该分类下无商品</p>\n' +
-                            '</div>';
-
-                        $("#goodsList").html(goodsHtml);
-                    }
-                } else {
-                    layer.msg(res.msg, {icon: 2})
-                }
+            dataGrid.render({
+                elem: '#goodsList',
+                templet: '#productItem',
+                url: '/getProductList',
+                where: {classifyId: classifyId},
+                loadMore: {limit: 12, class: 'datagrid-page-goodsList'}  // 开启加载更多
             });
         });
 
         $(document).ready(function (e) {
             $("#screen-product").keyup(function (e) {
                 var content = $(this).val(); // 获取到搜索框输入的内容
-                console.log(content)
-                $.get('/getProductSearchList', {
-                    content: content
-                }, function (res) {
-                    if (0 === res.code) {
-                        var list = res.data;
-                        var goodsHtml = '';
-                        if (list.length != 0) {
-                            dataGrid.render({
-                                elem: '#goodsList',
-                                templet: '#productItem',
-                                data: list
-                            });
-                        } else {
-                            goodsHtml = '' +
-                                '<div class="no-content">\n' +
-                                '    <img src="/theme/default/images/error_ic_empty.png" class="no-content-img">\n' +
-                                '    <p class="user-no-contents">没有搜索到商品</p>\n' +
-                                '</div>';
-                            $("#goodsList").html(goodsHtml);
-                        }
-                    } else {
-                        layer.msg(res.msg, {icon: 2})
-                    }
+                dataGrid.render({
+                    elem: '#goodsList',
+                    templet: '#productItem',
+                    url: '/getProductList',
+                    where: {classifyId: classifyId, name: content},
+                    loadMore: {limit: 12, class: 'datagrid-page-goodsList'}  // 开启加载更多
                 });
             });
+        });
+
+        var swiper = new Swiper(".mySwiper", {
+            pagination: {
+                el: ".swiper-pagination",
+            },
+            autoplay:true
         });
 
     });

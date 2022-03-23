@@ -22,7 +22,7 @@ import java.util.*;
  */
 public class FileUploadUtil {
     // 文件上传的目录
-    private static final String UPLOAD_FILE_DIR = Constants.UPLOAD_DIR + "file/";
+    public static final String UPLOAD_FILE_DIR = Constants.UPLOAD_DIR + "file/";
     // 缩略图存放的目录
     private static final String UPLOAD_SM_DIR = Constants.UPLOAD_DIR + "thumbnail/";
 
@@ -194,7 +194,6 @@ public class FileUploadUtil {
                 return;
             }
         }
-        System.out.println("4444");
         preview(smFile, response);
     }
 
