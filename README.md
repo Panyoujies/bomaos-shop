@@ -7,17 +7,14 @@
 <img alt="shiro" src="https://img.shields.io/badge/Shiro-1.3.0-yellow">
 <br><br>
 <a href="https://zlian.gitbook.io/zhilian-cloud/" target="_blank">部署文档</a>&nbsp;&nbsp;
-<a href="https://shop.zlianpay.cn" target="_blank">演示地址</a>
+<a href="https://free.zlianpay.cn" target="_blank">演示地址</a>
 </p>
 
 ## 仅供开发学习使用、不可用于违法用途。
 
-## 专业版已上线
-可前往 [https://zdins.cn](https://zdins.cn)
-
 ## 介绍
 
-新版 2.0.0 已正式推出，详情请看 [https://shop.zlianpay.cn/](https://shop.zlianpay.cn/)
+新版 2.0.0 已正式推出，详情请看 [https://free.zlianpay.cn/](https://free.zlianpay.cn/)
 一款高效安全的发卡平台。
 
 支持的支付渠道：
@@ -37,7 +34,7 @@
 ## 系统介绍
 - 开源式站长自动化售货解决方案、高效、稳定、快速！
 
-  演示地址：[https://shop.zlianpay.cn/](https://shop.zlianpay.cn/)
+  演示地址：[https://free.zlianpay.cn/](https://free.zlianpay.cn/)
 
 - 开发语言：JAVA
 - 开发框架：Spring boot
