@@ -47,6 +47,9 @@
                 <if test="page.pageData.crispKey != null">
                     AND a.crisp_key = #{page.pageData.crispKey}
                 </if>
+                <if test="page.pageData.isModel != null">
+                    AND a.is_model = #{page.pageData.isModel}
+                </if>
             </if>
         </where>
     </sql>

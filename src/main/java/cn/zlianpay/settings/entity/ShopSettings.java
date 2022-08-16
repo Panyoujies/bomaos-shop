@@ -84,4 +84,9 @@ public class ShopSettings implements Serializable {
      */
     private String crispKey;
 
+    /**
+     * 首页模版
+     */
+    private Integer isModel;
+
 }

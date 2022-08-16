@@ -80,6 +80,7 @@ public class PaysController extends BaseController {
                 case XUNHUPAY_WXPAY:
                     paysVo.setAppid(configs.get("appid").toString());
                     paysVo.setKey(configs.get("appsecret").toString());
+                    paysVo.setCreateUrl(configs.containsKey("create_url") ? configs.get("create_url").toString() : "");
                     paysVo.setNotifyUrl(configs.get("notify_url").toString());
                     break;
                 case JIEPAY_ALIPAY:
@@ -196,6 +197,7 @@ public class PaysController extends BaseController {
             case XUNHUPAY_WXPAY:
                 map.put("appid", paysVo.getAppid());
                 map.put("appsecret", paysVo.getKey());
+                map.put("create_url", paysVo.getCreateUrl());
                 map.put("notify_url", paysVo.getNotifyUrl());
                 break;
             case JIEPAY_WXPAY:

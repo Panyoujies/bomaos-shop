@@ -37,8 +37,8 @@ public class PayUtils {
 		 */
 		String appid = (String) configs.get("appid");
 		String appsecret = (String) configs.get("appsecret");
+		String create_url = (String) configs.get("create_url");
 		String notify_url = (String) configs.get("notify_url");
-		String url = "https://api.xunhupay.com/payment/do.html";
 
 		Map<String, Object> sortParams = new HashMap<>();
 		sortParams.put("version", "1.1");
@@ -64,7 +64,7 @@ public class PayUtils {
 		sortParams.put("hash", createSign(sortParams,appsecret));
 		Map map1 = null;
 		try {
-			XunhuEntity xunhuEntity = RequestUtil.getHttpsPost(url, sortParams);
+			XunhuEntity xunhuEntity = RequestUtil.getHttpsPost(create_url, sortParams);
 			if (xunhuEntity.getErrcode() == 0 && xunhuEntity.getErrmsg().equals("success!")) {
 				HashMap<String, String> map = new HashMap<>();
 				map.put("url_qrcode", xunhuEntity.getUrl_qrcode());
