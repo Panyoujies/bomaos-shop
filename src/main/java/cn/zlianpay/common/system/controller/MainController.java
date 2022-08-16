@@ -180,9 +180,4 @@ public class MainController extends BaseController implements ErrorController {
         return "error/404.html";
     }
 
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
-
 }

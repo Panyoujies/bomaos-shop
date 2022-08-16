@@ -41,13 +41,13 @@ public class ClassifysServiceImpl extends ServiceImpl<ClassifysMapper, Classifys
     }
 
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
-        for (Serializable serializable : idList) {
-            Integer count = productsMapper.selectCount(new QueryWrapper<Products>().eq("classify_id", serializable));
+    public boolean removeByIds(Collection<?> idList) {
+        for (Object serializable : idList) {
+            long count = productsMapper.selectCount(new QueryWrapper<Products>().eq("classify_id", serializable));
             if (count > 0) {
                 return false;
             } else {
-                baseMapper.deleteById(serializable);
+                baseMapper.deleteById((Serializable) serializable);
             }
         }
         return true;

@@ -30,12 +30,12 @@ public class ProductsVo {
     /**
      * 卡密数量
      */
-    private Integer cardMember;
+    private Long cardMember;
 
     /**
      * 出售卡密数量
      */
-    private Integer sellCardMember;
+    private Long sellCardMember;
 
     /**
      * 商品金额

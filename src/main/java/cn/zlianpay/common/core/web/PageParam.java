@@ -326,8 +326,8 @@ public class PageParam<T> extends Page<T> {
      */
     public QueryWrapper<T> getOrderWrapper(QueryWrapper<T> queryWrapper) {
         if (queryWrapper == null) queryWrapper = new QueryWrapper<T>();
-        queryWrapper.orderByAsc(getOrderAscs().toArray(new String[0]));
-        queryWrapper.orderByDesc(getOrderDescs().toArray(new String[0]));
+        queryWrapper.orderByAsc(getOrderAscs());
+        queryWrapper.orderByDesc(getOrderDescs());
         return queryWrapper;
     }
 

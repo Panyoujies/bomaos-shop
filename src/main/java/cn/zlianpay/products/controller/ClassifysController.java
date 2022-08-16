@@ -55,7 +55,7 @@ public class ClassifysController extends BaseController {
             ClassifysVo classifysVo = new ClassifysVo();
             BeanUtils.copyProperties(classifys, classifysVo);
             // 获取商品的数量
-            int count = productsService.count(new QueryWrapper<Products>().eq("classify_id", classifys.getId()));
+            long count = productsService.count(new QueryWrapper<Products>().eq("classify_id", classifys.getId()));
             classifysVo.setProductsMember(count);
             return classifysVo;
         }).collect(Collectors.toList());
@@ -125,7 +125,7 @@ public class ClassifysController extends BaseController {
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
 
-        int count = productsService.count(new QueryWrapper<Products>().eq("classify_id", id));
+        long count = productsService.count(new QueryWrapper<Products>().eq("classify_id", id));
         if (count >= 1) {
             return JsonResult.error("该分类有商品存在，不允许删除");
         }

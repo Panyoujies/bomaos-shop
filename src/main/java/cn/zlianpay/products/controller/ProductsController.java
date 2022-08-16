@@ -91,20 +91,20 @@ public class ProductsController extends BaseController {
             productsVo.setClassifyName(classifys.getName());
 
             // 查出商品的卡密数量
-            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 0));
+            long count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 0));
             productsVo.setCardMember(count);
 
-            int sellCount = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1).eq("sell_type", 0));
+            long sellCount = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1).eq("sell_type", 0));
             productsVo.setSellCardMember(sellCount);
 
             if (products.getSellType() == 1) {
                 Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("sell_type", 1));
                 if (!ObjectUtils.isEmpty(cards)) {
-                    productsVo.setCardMember(cards.getNumber());
-                    productsVo.setSellCardMember(cards.getSellNumber());
+                    productsVo.setCardMember(cards.getNumber().longValue());
+                    productsVo.setSellCardMember(cards.getSellNumber().longValue());
                 } else {
-                    productsVo.setCardMember(0);
-                    productsVo.setSellCardMember(0);
+                    productsVo.setCardMember(0L);
+                    productsVo.setSellCardMember(0L);
                 }
             }
 
@@ -195,7 +195,7 @@ public class ProductsController extends BaseController {
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
-        int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", id));
+        long count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", id));
         if (count >= 1) {
             return JsonResult.error("该商品下存在卡密，不允许删除");
         }

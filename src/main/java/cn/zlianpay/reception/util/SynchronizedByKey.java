@@ -10,9 +10,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * author Panyoujie
  * date   2022-03-23
  * 回调幂等处理
+ * 以及并发的支持
  */
 @Service
-public class SynchronizedByKey implements SynchronizedByKeyService{
+public class SynchronizedByKey implements SynchronizedByKeyService {
 
     Map<String, ReentrantLock> computeIfAbsent = new ConcurrentHashMap<>();
 

@@ -22,7 +22,7 @@ public class ProductListDTO {
     /**
      * 商品数量
      */
-    private Integer productNum;
+    private Long productNum;
 
     /**
      * 创建时间

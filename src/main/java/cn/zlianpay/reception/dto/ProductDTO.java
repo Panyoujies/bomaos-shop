@@ -36,17 +36,17 @@ public class ProductDTO {
     /**
      * 卡密数量
      */
-    private Integer cardMember;
+    private Long cardMember;
 
     /**
      * 出售卡密数量
      */
-    private Integer sellCardMember;
+    private Long sellCardMember;
 
     /**
      * 优惠券
      */
-    private Integer isCoupon;
+    private Long isCoupon;
 
     /**
      * 限制购买

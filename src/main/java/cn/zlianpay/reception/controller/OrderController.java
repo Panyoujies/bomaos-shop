@@ -180,7 +180,7 @@ public class OrderController extends BaseController {
         }
 
         if (products.getShipType() == 0) { // 自动发货模式
-            int count = 0;
+            long count = 0;
             if (products.getSellType() == 1) {
                 Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 1));
                 if (ObjectUtils.isEmpty(cards)) {

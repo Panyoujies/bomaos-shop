@@ -134,7 +134,7 @@ public class IndexController {
         List<ClassifysVo> classifysVoList = classifysList.stream().map((classifys) -> {
             ClassifysVo classifysVo = new ClassifysVo();
             BeanUtils.copyProperties(classifys, classifysVo);
-            int count = productsService.count(Wrappers.<Products> lambdaQuery().eq(Products::getClassifyId, classifys.getId()).eq(Products::getStatus, 1));
+            long count = productsService.count(Wrappers.<Products> lambdaQuery().eq(Products::getClassifyId, classifys.getId()).eq(Products::getStatus, 1));
             classifysVo.setProductsMember(count);
             int andIncrement = index.getAndIncrement();
             classifysVo.setAndIncrement(andIncrement); // 索引
@@ -154,7 +154,7 @@ public class IndexController {
                 productListDTO.setTitle(classifys.getName());
                 productListDTO.setCreateTime(DateUtil.getSubDateMiao(classifys.getCreatedAt()));
                 productListDTO.setUpdateTime(DateUtil.getSubDateMiao(classifys.getUpdatedAt()));
-                int productCount = productsService.count(Wrappers.<Products>lambdaQuery().eq(Products::getClassifyId, classifys.getId()).eq(Products::getStatus, 1));
+                long productCount = productsService.count(Wrappers.<Products>lambdaQuery().eq(Products::getClassifyId, classifys.getId()).eq(Products::getStatus, 1));
                 productListDTO.setProductNum(productCount);
                 List<Products> productsList = productsService.list(Wrappers.<Products>lambdaQuery()
                         .eq(Products::getClassifyId, classifys.getId())
@@ -345,7 +345,7 @@ public class IndexController {
         /**
          * 该商品是否有优惠券
          */
-        int isCoupon = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
+        long isCoupon = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
         model.addAttribute("isCoupon", isCoupon);
 
         /**
@@ -673,25 +673,25 @@ public class IndexController {
         List<ProductDTO> productDTOList = productsList.stream().map((products) -> {
             ProductDTO productDTO = new ProductDTO();
             BeanUtils.copyProperties(products, productDTO);
-            int count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 0));
+            long count = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 0));
             productDTO.setCardMember(count);
-            int count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1).eq("sell_type", 0));
+            long count2 = cardsService.count(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 1).eq("sell_type", 0));
             productDTO.setSellCardMember(count2);
             productDTO.setPrice(products.getPrice().toString());
-            int count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
+            long count1 = couponService.count(new QueryWrapper<Coupon>().eq("product_id", products.getId()));
             productDTO.setIsCoupon(count1);
             if (products.getShipType() == 1) {
-                productDTO.setCardMember(products.getInventory());
-                productDTO.setSellCardMember(products.getSales());
+                productDTO.setCardMember(products.getInventory().longValue());
+                productDTO.setSellCardMember(products.getSales().longValue());
             }
             if (products.getSellType() == 1) {
                 Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("sell_type", 1));
                 if (ObjectUtils.isEmpty(cards)) { // kon
-                    productDTO.setCardMember(0);
-                    productDTO.setSellCardMember(0);
+                    productDTO.setCardMember(0L);
+                    productDTO.setSellCardMember(0L);
                 } else {
-                    productDTO.setCardMember(cards.getNumber());
-                    productDTO.setSellCardMember(cards.getSellNumber());
+                    productDTO.setCardMember(cards.getNumber().longValue());
+                    productDTO.setSellCardMember(cards.getSellNumber().longValue());
                 }
             }
             return productDTO;

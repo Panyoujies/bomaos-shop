@@ -44,7 +44,7 @@ public class ClassifysVo {
     /**
      * 商品数量
      */
-    private Integer productsMember;
+    private Long productsMember;
 
     /**
      * 索引

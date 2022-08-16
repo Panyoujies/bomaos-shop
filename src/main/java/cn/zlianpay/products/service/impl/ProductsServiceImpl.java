@@ -46,13 +46,13 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
     }
 
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
-        for (Serializable serializable : idList) {
-            Integer count = cardsMapper.selectCount(new QueryWrapper<Cards>().eq("product_id", serializable));
+    public boolean removeByIds(Collection<?> idList) {
+        for (Object serializable : idList) {
+            long count = cardsMapper.selectCount(new QueryWrapper<Cards>().eq("product_id", serializable));
             if (count > 0) {
                 return false;
             } else {
-                baseMapper.deleteById(serializable);
+                baseMapper.deleteById((Serializable) serializable);
             }
         }
         return true;

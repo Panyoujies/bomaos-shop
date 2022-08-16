@@ -11,7 +11,7 @@ public class ProductUtil {
 
     public static List<HotProductDTO> getHotProductList(List<ProductDTO> productsList) {
         return productsList.stream()
-                .sorted(Comparator.comparingInt(productDTO -> -(productDTO.getSellCardMember())))
+                .sorted(Comparator.comparingInt(productDTO -> (int) -(productDTO.getSellCardMember())))
                 .limit(6)
                 .map(productDTO -> doToHotProductDTO(productDTO))
                 .collect(Collectors.toList());
