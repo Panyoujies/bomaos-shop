@@ -66,7 +66,7 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <div class="b2-widget-post-thumb box-in b2-radius">
                                     <div class="b2-widget-post-thumb-product-img">
-                                        <img class="lazy loaded" src="<:if test="${item.image == null || item.image == ''}">../default/images/commodity.svg</:if><:if test="${item.image != null || item.image != ''}">${item.image!}?width=200&height=200</:if>">
+                                        <img class="lazy loaded" src="<:if test="${item.image == null || item.image == ''}">../default/images/commodity.svg</:if><:if test="${item.image != null || item.image != ''}">${item.image!}</:if>">
                                     </div>
                                     <div class="b2-widget-post-title">
                                         <h2>${item.name}</h2>

@@ -18,6 +18,7 @@ import cn.zlianpay.content.service.ArticleService;
 import cn.zlianpay.content.service.CarouselService;
 import cn.zlianpay.reception.dto.HotProductDTO;
 import cn.zlianpay.reception.dto.ProductDTO;
+import cn.zlianpay.reception.dto.ProductListDTO;
 import cn.zlianpay.reception.dto.SearchDTO;
 import cn.zlianpay.reception.util.ProductUtil;
 import cn.zlianpay.reception.vo.ArticleVo;
@@ -110,6 +111,20 @@ public class IndexController {
      */
     @RequestMapping({"/", "/index"})
     public String IndexView(Model model) {
+        Website website = websiteService.getById(1);
+        model.addAttribute("website", website);
+        ShopSettings shopSettings = shopSettingsService.getById(1);
+        model.addAttribute("isBackground", shopSettings.getIsBackground());
+        model.addAttribute("shopSettings", JSON.toJSONString(shopSettings));
+        model.addAttribute("shop", shopSettings);
+        Theme theme = themeService.getOne(Wrappers.<Theme> lambdaQuery().eq(Theme::getEnable, 1));
+
+        /**
+         * 轮播图
+         */
+        List<Carousel> carouselList = carouselService.list(Wrappers.<Carousel> lambdaQuery().eq(Carousel::getEnabled, 1));
+        model.addAttribute("carouselList", carouselList);
+
         /**
          * 分类列表
          * 查询出所有上架的分类
@@ -126,33 +141,42 @@ public class IndexController {
             return classifysVo;
         }).collect(Collectors.toList());
 
-        model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
-
-        /**
-         * 轮播图
-         */
-        List<Carousel> carouselList = carouselService.list(Wrappers.<Carousel> lambdaQuery().eq(Carousel::getEnabled, 1));
-        model.addAttribute("carouselList", carouselList);
-
-        /**
-         * 查出四个热门商品
-         */
-        List<Products> randomProductList = productsService.getRandomProductList(4);
-        List<ProductDTO> productDTOList = getProductDTOList(randomProductList);
-        List<HotProductDTO> hotProductList = ProductUtil.getHotProductList(productDTOList);
-        model.addAttribute("hotProductList", hotProductList);
-
-        Website website = websiteService.getById(1);
-        model.addAttribute("website", website);
-
-        ShopSettings shopSettings = shopSettingsService.getById(1);
-        model.addAttribute("isBackground", shopSettings.getIsBackground());
-
-        model.addAttribute("shopSettings", JSON.toJSONString(shopSettings));
-        model.addAttribute("shop", shopSettings);
-
-        Theme theme = themeService.getOne(Wrappers.<Theme> lambdaQuery().eq(Theme::getEnable, 1));
-        return "theme/" + theme.getDriver() + "/index.html";
+        if (shopSettings.getIsModel() == 1) {
+            model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
+            return "theme/" + theme.getDriver() + "/index.html";
+        } else if (shopSettings.getIsModel() == 0){
+            /**
+             * 分类与分类下的商品
+             */
+            List<ProductListDTO> productListDTOList = classifysList.stream().map((classifys -> {
+                ProductListDTO productListDTO = new ProductListDTO();
+                productListDTO.setId(classifys.getId());
+                productListDTO.setTitle(classifys.getName());
+                productListDTO.setCreateTime(DateUtil.getSubDateMiao(classifys.getCreatedAt()));
+                productListDTO.setUpdateTime(DateUtil.getSubDateMiao(classifys.getUpdatedAt()));
+                int productCount = productsService.count(Wrappers.<Products>lambdaQuery().eq(Products::getClassifyId, classifys.getId()).eq(Products::getStatus, 1));
+                productListDTO.setProductNum(productCount);
+                List<Products> productsList = productsService.list(Wrappers.<Products>lambdaQuery()
+                        .eq(Products::getClassifyId, classifys.getId())
+                        .eq(Products::getStatus, 1)
+                        .orderByAsc(Products::getSort));
+                List<ProductDTO> productDTOS = getProductDTOList(productsList);
+                productListDTO.setProductDTOList(productDTOS);
+                return productListDTO;
+            })).collect(Collectors.toList());
+            model.addAttribute("productListDTOList", productListDTOList);
+            return "theme/" + theme.getDriver() + "/index-list.html";
+        } else {
+            /**
+             * 查出四个热门商品
+             */
+            List<Products> randomProductList = productsService.getRandomProductList(4);
+            List<ProductDTO> productDTOList = getProductDTOList(randomProductList);
+            List<HotProductDTO> hotProductList = ProductUtil.getHotProductList(productDTOList);
+            model.addAttribute("hotProductList", hotProductList);
+            model.addAttribute("classifysListJson", JSON.toJSONString(classifysVoList));
+            return "theme/" + theme.getDriver() + "/index-easy.html";
+        }
     }
 
     @RequestMapping("/article")

@@ -476,6 +476,7 @@ CREATE TABLE `sys_shop_settings` (
   `tg_customer_service` varchar(255) DEFAULT NULL COMMENT 'TG客服',
   `is_client` int DEFAULT NULL COMMENT '是否开启客服',
   `crisp_key` varchar(255) DEFAULT NULL COMMENT 'crisp密钥',
+  `is_model` int DEFAULT NULL COMMENT '首页模版',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='商店设置';
 

@@ -5,7 +5,7 @@ server:
 # 多环境配置
 spring:
   profiles:
-    active: prod
+    active: dev
 
   # 连接池配置
   datasource:

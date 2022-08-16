@@ -617,6 +617,10 @@ img.avatar {
     background-color: #f57070;
 }
 
+.widget-mission-card {
+    display: none;
+}
+
 .widget-mission-footer a {
     color: #666;
     padding: 15px 10px;
@@ -781,5 +785,10 @@ img.avatar {
 
     .widget-mission-footer div {
         border-top: 0px solid transparent !important;
+    }
+
+
+    .widget-mission-card {
+        display: block;
     }
 }
