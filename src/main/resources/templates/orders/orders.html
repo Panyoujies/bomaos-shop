@@ -202,14 +202,16 @@
 </script>
 
 <script id="cardsInfoDialog" type="text/html">
-    <form id="editForm" lay-filter="editForm" class="layui-form">
-        <div style="padding: 15px">
+    <div style="padding: 15px">
+        <form id="editForm" lay-filter="editForm" class="layui-form">
             <input name="id" type="hidden"/>
             <textarea placeholder="查看卡密信息" name="cardsInfo" class="layui-textarea" style="height: 237px;"></textarea>
-            <button class="layui-btn" style="margin-top: 15px" lay-filter="editSubmit" lay-submit>保存卡密</button>
-            <button class="layui-btn layui-btn-primary" style="margin-top: 15px" ew-event="closeDialog">关闭</button>
-        </div>
-    </form>
+            <div class="text-right">
+                <button class="layui-btn layui-btn-primary" style="margin-top: 15px" type="button" ew-event="closeDialog">取消</button>
+                <button class="layui-btn" style="margin-top: 15px" lay-filter="editSubmit" lay-submit>保存卡密</button>
+            </div>
+        </form>
+    </div>
 </script>
 
 <:include file="../common/js.html"/>
@@ -488,28 +490,6 @@
                         });
                         return false;
                     })
-
-                    /*var ins1 = cascader.render({
-                        elem: '#demoCascader1',
-                        filterable: true,
-                        reqData: function (values, callback, data) {
-                            // values是当前所有选中的值，data是当前选中的对象
-                            $.post('/products/products/list', null, function(res){
-                                var item = res.data;
-                                var newList = [];
-                                for(var i = 0; i < item.length; i++){
-                                    var item1 = item[i];
-                                    newList.push({
-                                        value: item1.id,
-                                        label: item1.name,
-                                        haveChildren: false
-                                    });
-                                }
-                                callback(newList);  // 数据请求完成通过callback回调
-                            },'json');
-                        }
-                    });
-                    ins1.removeLoading();*/
                 }
             });
         }
