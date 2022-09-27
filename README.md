@@ -20,16 +20,16 @@
 
 支持的支付渠道：
 * v免签
-* 易支付-支付宝/微信/QQ钱包 （新增！！）
+* 易支付-支付宝/微信/QQ钱包
 * [YunGouOS](https://dwz.cn/QQLN87nX)
 * 虎皮椒支付
-* 捷支付（新增）
 * payjs（已完成测试）可正常使用
 * 微信扫码支付
 * 支付宝当面付
 * 支付宝网站支付
 * 微信H5 (新增)
 * Paypal (国际收款) (新增)
+* epusdt 【usdt trc-20】[https://github.com/assimon/epusdt](https://github.com/assimon/epusdt)
 * 其他待添加。。
 
 ## 系统介绍
