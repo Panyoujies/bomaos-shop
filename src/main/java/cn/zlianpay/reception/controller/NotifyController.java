@@ -3,6 +3,8 @@ package cn.zlianpay.reception.controller;
 import cn.hutool.crypto.SecureUtil;
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
+import cn.zlianpay.common.core.pays.epusdt.entity.EpusdtNotify;
+import cn.zlianpay.common.core.pays.epusdt.sendPay;
 import cn.zlianpay.common.core.pays.payjs.SignUtil;
 import cn.zlianpay.common.core.pays.paypal.PaypalSend;
 import cn.zlianpay.common.core.pays.xunhupay.PayUtils;
@@ -30,6 +32,7 @@ import cn.zlianpay.products.entity.Products;
 import cn.zlianpay.products.service.ProductsService;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.google.common.collect.Maps;
 import com.paypal.api.payments.Payment;
@@ -50,6 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -843,6 +847,42 @@ public class NotifyController {
             e.printStackTrace();
         }
         return "redirect:/";
+    }
+
+    /**
+     * epusdt
+     * @param epusdtNotify
+     * @return
+     */
+    @PostMapping("/epusdt/notifyUrl")
+    @ResponseBody
+    public String epusdt(@RequestBody EpusdtNotify epusdtNotify) {
+        epusdtNotify.setAmount(epusdtNotify.getAmount().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().stripTrailingZeros());
+        Orders orders = ordersService.getOne(Wrappers.<Orders>lambdaQuery().eq(Orders::getMember, epusdtNotify.getOrder_id()));
+        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "epusdt"));
+        if (!orders.getPayType().equals(pays.getDriver())) {
+            return "error!";
+        }
+        Map mapTypes = JSON.parseObject(pays.getConfig());
+        String key = mapTypes.get("key").toString();
+        String sign = sendPay.createSign(epusdtNotify, key);
+        if (sign.equals(epusdtNotify.getSignature())) {
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(epusdtNotify.getOrder_id(), () -> {
+                String returnBig = returnBig(orders.getMoney().toString(), orders.getMoney().toString(), epusdtNotify.getOrder_id(),
+                        epusdtNotify.getTrade_id(), orders.getProductId().toString(), "ok", "fail");
+                notifyText.set(returnBig);
+            });
+            return notifyText.get();
+        }
+        return "fail";
+    }
+
+    @RequestMapping("/epusdt/returnUrl")
+    @ResponseBody
+    public void epusdtReturnUrl(String order_id, HttpServletResponse response) throws IOException {
+        String url = "/pay/state/" + order_id;
+        response.sendRedirect(url);
     }
 
     /**

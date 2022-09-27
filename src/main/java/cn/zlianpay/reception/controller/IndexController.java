@@ -463,6 +463,8 @@ public class IndexController {
                     searchDTO.setPayType("Paypal");
                 } else if (QQPay.getByValue(member.getPayType())) {
                     searchDTO.setPayType("QQ钱包");
+                } else if (USDT.getByValue(member.getPayType())) {
+                    searchDTO.setPayType("USDT");
                 }
                 switch (member.getStatus()) {
                     case 1:

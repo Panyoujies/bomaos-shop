@@ -1616,6 +1616,21 @@ body .layui-util-face .layui-layer-content {
     color: rgb(16 57 132) !important
 }
 
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-usdt.active {
+    border: 2px solid rgb(28 162 122);
+    color: rgb(28 162 122);
+    border-radius: 5px;
+}
+
+.pay-type-group .layui-row .layui-col-md6 > div.pay-type-usdt.active:before {
+    border-color: #1ca27a #1ca27a transparent transparent
+}
+
+.pay-type-group .layui-row .layui-col-md6 > .pay-type-usdt {
+    color: rgb(28 162 122) !important;
+}
+
 .coupon-group {
     padding: 25px 15px 15px 15px
 }

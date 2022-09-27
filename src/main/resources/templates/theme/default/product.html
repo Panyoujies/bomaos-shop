@@ -238,6 +238,14 @@
                                         </div>
                                     </div>
                                 </:if>
+                                <:if test="${item.driver=='epusdt'}">
+                                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                        <div class="pay-type-usdt<:if test="${item.andIncrement == 0}"> active</:if>" data-id="${item.driver}">
+                                            <img style="vertical-align: middle;" src="${ctxPath}/default/images/pays/usdt.svg">
+                                            <span style="vertical-align: middle;">${item.name}</span>
+                                        </div>
+                                    </div>
+                                </:if>
                             </:for>
                         </div>
                     </div>

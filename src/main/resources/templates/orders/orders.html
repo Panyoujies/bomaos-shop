@@ -6,6 +6,7 @@
         .layui-form.layui-form-info .layui-form-item {
             margin-bottom: 0 !important;
         }
+
         .layui-input-block.layui-word-aux {
             word-break: break-all;
             padding: 9px 0 !important;
@@ -65,9 +66,9 @@
 <script type="text/html" id="ordersTbBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="info">更多详情</a>
     {{# if(d.status == 2){ }}
-        {{# if(d.shipType == 1){ }} <!-- 手动发货模式-->
-            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="ship">手动发货</a>
-        {{# } }}
+    {{# if(d.shipType == 1){ }} <!-- 手动发货模式-->
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="ship">手动发货</a>
+    {{# } }}
     {{# } }}
     {{# if(d.status == 0){ }}
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="budan">手动补单</a>
@@ -116,13 +117,16 @@
     {{# layui.each(d,function(i,item){ }}
     <div class="layui-form-item" style="margin-bottom: 0px">
         <label class="layui-form-label" style="padding-bottom: 0px;">{{item.name}}:</label>
-        <div class="layui-input-block layui-word-aux" style="min-height: auto; padding: 9px 0 0 0 !important;">{{item.value}}</div>
+        <div class="layui-input-block layui-word-aux" style="min-height: auto; padding: 9px 0 0 0 !important;">
+            {{item.value}}
+        </div>
     </div>
     {{# }); }}
     <form id="shipEditForm" lay-filter="shipEditForm" class="layui-form model-form">
         <input name="id" type="hidden"/>
         <div class="layui-form-item" style="margin-left: 30px">
-            <textarea name="shipInfo" placeholder="填写要手动发货的卡密！" class="layui-textarea" style="height: 237px;"></textarea>
+            <textarea name="shipInfo" placeholder="填写要手动发货的卡密！" class="layui-textarea"
+                      style="height: 237px;"></textarea>
             <div class="layui-word-aux">手动发货要仔细看订单的购买数量、发货对应数量的商品给客户。否则可能产生纠纷。</div>
         </div>
         <div class="layui-form-item text-right">
@@ -177,7 +181,8 @@
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">下单时间:</label>
-                            <div class="layui-input-block layui-word-aux">{{layui.util.toDateString(d.createTime)}}</div>
+                            <div class="layui-input-block layui-word-aux">{{layui.util.toDateString(d.createTime)}}
+                            </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">付款时间:</label>
@@ -244,51 +249,79 @@
                 {type: 'numbers', unresize: true, totalRowText: '合计'},
                 {field: 'member', title: '订单号', minWidth: 140},
                 {field: 'productName', title: '商品名称', width: 130},
-                {field: 'contact', title: '联系方式', align: 'center', width: 140, templet: function (res) {
+                {
+                    field: 'contact', title: '联系方式', align: 'center', width: 140, templet: function (res) {
                         if (res.contact == '' || res.contact == null) {
                             return res.email;
                         } else {
                             return res.contact;
                         }
-                    }},
+                    }
+                },
                 {
                     field: 'payType', title: '支付类型', templet: function (res) {
                         switch (res.payType) {
-                            case 'mqpay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-v免签</span>';
-                            case 'mqpay_wxpay' : return '<span class="layui-badge layui-badge-green">微信-v免签</span>';
-                            case 'zlianpay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-值联码支付</span>';
-                            case 'zlianpay_qqpay' : return '<span class="layui-badge layui-badge-blue">QQ钱包-易支付</span>';
-                            case 'zlianpay_wxpay' : return '<span class="layui-badge layui-badge-green">微信-值联码支付</span>';
-                            case 'yungouos_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-YunGouOS</span>';
-                            case 'yungouos_wxpay' : return '<span class="layui-badge layui-badge-green">微信-YunGouOS</span>';
-                            case 'xunhupay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-虎皮椒</span>';
-                            case 'xunhupay_wxpay' : return '<span class="layui-badge layui-badge-green">微信-虎皮椒</span>';
-                            case 'jiepay_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-捷支付</span>';
-                            case 'jiepay_wxpay' : return '<span class="layui-badge layui-badge-green">微信-捷支付</span>';
-                            case 'payjs_alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-payjs扫码</span>';
-                            case 'payjs_wxpay' : return '<span class="layui-badge layui-badge-green">微信-payjs扫码</span>';
-                            case 'wxpay' : return '<span class="layui-badge layui-badge-green">微信扫码-官方通道</span>';
-                            case 'wxpay_h5' : return '<span class="layui-badge layui-badge-green">微信H5-官方通道</span>';
-                            case 'alipay' : return '<span class="layui-badge layui-badge-blue">支付宝-当面付</span>';
-                            case 'alipay_pc' : return '<span class="layui-badge layui-badge-blue">支付宝-PC端</span>';
-                            case 'paypal' : return '<span class="layui-badge layui-badge-paypal">Paypal-国际收款</span>';
+                            case 'mqpay_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-v免签</span>';
+                            case 'mqpay_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-v免签</span>';
+                            case 'zlianpay_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-值联码支付</span>';
+                            case 'zlianpay_qqpay' :
+                                return '<span class="layui-badge layui-badge-blue">QQ钱包-易支付</span>';
+                            case 'zlianpay_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-值联码支付</span>';
+                            case 'yungouos_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-YunGouOS</span>';
+                            case 'yungouos_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-YunGouOS</span>';
+                            case 'xunhupay_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-虎皮椒</span>';
+                            case 'xunhupay_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-虎皮椒</span>';
+                            case 'jiepay_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-捷支付</span>';
+                            case 'jiepay_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-捷支付</span>';
+                            case 'payjs_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-payjs扫码</span>';
+                            case 'payjs_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-payjs扫码</span>';
+                            case 'wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信扫码-官方通道</span>';
+                            case 'wxpay_h5' :
+                                return '<span class="layui-badge layui-badge-green">微信H5-官方通道</span>';
+                            case 'alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-当面付</span>';
+                            case 'alipay_pc' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-PC端</span>';
+                            case 'paypal' :
+                                return '<span class="layui-badge layui-badge-paypal">Paypal-国际收款</span>';
+                            case 'epusdt' :
+                                return '<span class="layui-badge layui-badge-green">USDT</span>';
                         }
                     }, width: 150
                 },
-                {field: 'shipType', title: '发货模式', align: 'center', templet: function (res) {
+                {
+                    field: 'shipType', title: '发货模式', align: 'center', templet: function (res) {
                         if (res.shipType == 0) { // 自动发货模式
                             return '<span class="layui-badge layui-bg-blue">自动发货</span>';
                         } else { // 手动发货模式
                             return '<span class="layui-badge layui-bg-orange">手动发货</span>';
                         }
-                    }, width: 100},
+                    }, width: 100
+                },
                 {
                     field: 'status', title: '状态', align: 'center', templet: function (res) {
                         switch (res.status) {
-                            case 3 : return '<span class="layui-badge layui-badge-green">已发货</span>';
-                            case 2 : return '<span class="layui-badge layui-badge-yellow">待发货</span>';
-                            case 1 : return '<span class="layui-badge layui-badge-green">已支付</span>';
-                            case 0 : return '<span class="layui-badge layui-badge-red">未支付</span>';
+                            case 3 :
+                                return '<span class="layui-badge layui-badge-green">已发货</span>';
+                            case 2 :
+                                return '<span class="layui-badge layui-badge-yellow">待发货</span>';
+                            case 1 :
+                                return '<span class="layui-badge layui-badge-green">已支付</span>';
+                            case 0 :
+                                return '<span class="layui-badge layui-badge-red">未支付</span>';
                         }
                     }, width: 90
                 },

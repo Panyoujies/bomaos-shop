@@ -181,7 +181,10 @@ public class OrdersController extends BaseController {
                 searchDTO.setPayType("Paypal");
             } else if (QQPay.getByValue(orders.getPayType())) {
                 searchDTO.setPayType("QQ钱包");
+            } else if (USDT.getByValue(orders.getPayType())) {
+                searchDTO.setPayType("USDT");
             }
+
             switch (orders.getStatus()) {
                 case 1:
                     searchDTO.setStatus("已支付");

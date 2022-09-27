@@ -4,6 +4,8 @@ import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.Constants;
 import cn.zlianpay.common.core.pays.alipay.AlipayUtil;
+import cn.zlianpay.common.core.pays.epusdt.entity.EpusdtEntity;
+import cn.zlianpay.common.core.pays.epusdt.sendPay;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.payjs.sendPayjs;
 import cn.zlianpay.common.core.pays.paypal.PaypalSend;
@@ -431,6 +433,26 @@ public class OrderController extends BaseController {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+                break;
+            case EPUSDT:
+                EpusdtEntity epusdtEntity = sendPay.createPayment(pays, price, ordersMember, productDescription);
+                model.addAttribute("title", "支付出错");
+                model.addAttribute("msg", epusdtEntity.getMessage());
+                switch (epusdtEntity.getStatus_code()) {
+                    case 400:
+                    case 401:
+                    case 10002:
+                    case 10003:
+                    case 10004:
+                    case 10005:
+                    case 10006:
+                    case 10007:
+                    case 10008:
+                    case 10009:
+                        return "theme/" + theme.getDriver() + "/common/payError.html";
+                    case 200:
+                        response.sendRedirect(epusdtEntity.getData().getPayment_url());
                 }
                 break;
             default:

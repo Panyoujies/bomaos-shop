@@ -22,7 +22,8 @@ public enum PaysEnmu {
     ALIPAY("alipay"),
     ALIPAY_PC("alipay_pc"),
     WXPAU_H5("wxpay_h5"),
-    PAYPAL("paypal");
+    PAYPAL("paypal"),
+    EPUSDT("epusdt");
 
     PaysEnmu(String code) {
         this.code = code;

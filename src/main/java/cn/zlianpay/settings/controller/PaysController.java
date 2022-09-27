@@ -117,6 +117,12 @@ public class PaysController extends BaseController {
                     paysVo.setMchid(configs.get("clientId").toString());
                     paysVo.setKey(configs.get("clientSecret").toString());
                     paysVo.setNotifyUrl(configs.get("return_url").toString());
+                    break;
+                case EPUSDT:
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setCreateUrl(configs.get("create_url").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
                 default:
                     break;
             }
@@ -234,6 +240,11 @@ public class PaysController extends BaseController {
                 map.put("clientId", paysVo.getMchid());
                 map.put("clientSecret", paysVo.getKey());
                 map.put("return_url", paysVo.getNotifyUrl());
+                break;
+            case EPUSDT:
+                map.put("key", paysVo.getKey());
+                map.put("create_url", paysVo.getCreateUrl());
+                map.put("notify_url", paysVo.getNotifyUrl());
                 break;
             default:
                 break;

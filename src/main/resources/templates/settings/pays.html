@@ -51,6 +51,9 @@
     {{# if(d.driver=='paypal'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="paypal">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='epusdt'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="epusdt">配置修改</a>
+    {{# } }}
 </script>
 
 <!-- mqpay -->
@@ -664,6 +667,64 @@
     </form>
 </script>
 
+<!-- epusdt -->
+<script type="text/html" id="epusdtEditDialog">
+    <form id="epusdtEditForm" lay-filter="epusdtEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input" disabled=""
+                       lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input" disabled=""
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">Epusdt收银台域名:</label>
+            <div class="layui-input-block">
+                <input name="createUrl" placeholder="输入Epusdt收银台域名" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="epusdtEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
+
 <!-- 移动端状态 -->
 <script type="text/html" id="paysMobileTbStatus">
     <input type="checkbox" lay-filter="paysMobileTbStatuCk" value="{{d.id}}" lay-skin="switch"
@@ -711,6 +772,8 @@
                         return '<span class="layui-badge layui-badge-paypal">Paypal</span>'
                     } else if (res.name == 'QQ钱包'){
                         return '<span class="layui-badge layui-badge-blue">QQ钱包</span>'
+                    } else if (res.name == 'USDT') {
+                        return '<span class="layui-badge layui-badge-green">' + res.name + '</span>'
                     }
                 }
                 },
@@ -744,6 +807,8 @@
             } else if ('alipay' === obj.event) {
                 showEditModel(obj.data);
             } else if ('paypal' === obj.event) {
+                showEditModel(obj.data);
+            } else if ('epusdt' === obj.event) {
                 showEditModel(obj.data);
             }
         });
@@ -790,6 +855,10 @@
                 var html = $('#paypalEditDialog').html();
                 var forms = 'paypalEditForm';
                 var submit = 'paypalEditSubmit';
+            } else if (mData.driver == 'epusdt') {
+                var html = $('#epusdtEditDialog').html();
+                var forms = 'epusdtEditForm';
+                var submit = 'epusdtEditSubmit';
             }
 
             admin.open({

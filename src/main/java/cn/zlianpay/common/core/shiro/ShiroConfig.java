@@ -103,6 +103,8 @@ public class ShiroConfig {
         filterChainDefinitions.put("/alipay/return_url", "anon");
         filterChainDefinitions.put("/paypal/cancel", "anon");
         filterChainDefinitions.put("/paypal/success", "anon");
+        filterChainDefinitions.put("/epusdt/notifyUrl", "anon");
+        filterChainDefinitions.put("/epusdt/returnUrl", "anon");
         filterChainDefinitions.put("/wxpusher/callback", "anon");
 
         // api
