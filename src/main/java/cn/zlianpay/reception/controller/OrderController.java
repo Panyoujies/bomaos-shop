@@ -3,7 +3,7 @@ package cn.zlianpay.reception.controller;
 import cn.zlianpay.carmi.entity.Cards;
 import cn.zlianpay.carmi.service.CardsService;
 import cn.zlianpay.common.core.Constants;
-import cn.zlianpay.common.core.pays.alipay.SendAlipay;
+import cn.zlianpay.common.core.pays.alipay.AlipayUtil;
 import cn.zlianpay.common.core.pays.jiepay.JiepaySend;
 import cn.zlianpay.common.core.pays.payjs.sendPayjs;
 import cn.zlianpay.common.core.pays.paypal.PaypalSend;
@@ -28,7 +28,6 @@ import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.theme.entity.Theme;
 import cn.zlianpay.theme.service.ThemeService;
 import com.alibaba.fastjson.JSON;
-import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.annotation.OperLog;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
@@ -303,8 +302,9 @@ public class OrderController extends BaseController {
         switch (Objects.requireNonNull(PaysEnmu.getByValue(orders.getPayType()))) {
             case ALIPAY_PC: // 支付宝pc支付
                 try {
-                    String payAlipayPc = SendAlipay.payAlipayPc(pays, price, ordersMember, goodsName, productDescription);
-                    return payAlipayPc;
+                    String pcPage = AlipayUtil.getPcPage(pays, productDescription, ordersMember, price);
+                    // String payAlipayPc = SendAlipay.payAlipayPc(pays, price, ordersMember, goodsName, productDescription);
+                    return pcPage;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -412,9 +412,10 @@ public class OrderController extends BaseController {
                 model.addAttribute("result", JSON.toJSONString(payNattve));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
             case ALIPAY: // 支付宝当面付
-                String payAlipay = SendAlipay.payAlipay(pays, price, ordersMember, goodsName, productDescription, request);
+                String faceToFace = AlipayUtil.getFaceToFace(pays, productDescription, ordersMember, price);
+                // String payAlipay = SendAlipay.payAlipay(pays, price, ordersMember, goodsName, productDescription, request);
                 model.addAttribute("type", 2); // 支付宝当面付
-                model.addAttribute("result", JSON.toJSONString(payAlipay));
+                model.addAttribute("result", JSON.toJSONString(faceToFace));
                 return "theme/" + theme.getDriver() + "/yunpay.html";
             case WXPAU_H5: // 微信h5支付
                 String payMweb = SendWxPay.payMweb(pays, price, ordersMember, goodsName, productDescription, agentGetter.getIp());

@@ -5,7 +5,7 @@
 
     <groupId>cn.zlianpay</groupId>
     <artifactId>zlianpay-faka</artifactId>
-    <version>2.0.2-Release-1.0</version>
+    <version>2.0.3</version>
     <!--<packaging>war</packaging>-->
 
     <name>zlianpay-faka</name>
@@ -233,17 +233,8 @@
         <!-- 支付宝支付 -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-sdk-java</artifactId>
-            <version>4.15.0.ALL</version>
-        </dependency>
-
-        <!--支付宝当面付SDK-->
-        <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-trade-sdk-java</artifactId>
-            <version>20161215</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/alipay-trade-sdk-20161215.jar</systemPath>
+            <artifactId>alipay-easysdk</artifactId>
+            <version>2.2.2</version>
         </dependency>
 
         <dependency>
@@ -333,17 +324,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>${project.basedir}/src/main/resources/lib</directory>
-                            <targetPath>WEB-INF/lib</targetPath>
-                            <includes>
-                                <include>**/*.jar</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
             </plugin>
         </plugins>
     </build>

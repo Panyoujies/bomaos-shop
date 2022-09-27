@@ -18,8 +18,7 @@ import cn.zlianpay.settings.service.ShopSettingsService;
 import cn.zlianpay.website.entity.Website;
 import cn.zlianpay.website.service.WebsiteService;
 import com.alibaba.fastjson.JSON;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.easysdk.factory.Factory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import cn.zlianpay.common.core.pays.mqpay.mqPay;
 import cn.zlianpay.common.core.utils.RequestParamsUtil;
@@ -32,11 +31,13 @@ import cn.zlianpay.products.service.ProductsService;
 import cn.zlianpay.settings.entity.Pays;
 import cn.zlianpay.settings.service.PaysService;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.google.common.collect.Maps;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.PayPalRESTException;
 import com.zjiecode.wxpusher.client.WxPusher;
 import com.zjiecode.wxpusher.client.bean.Message;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -695,35 +696,25 @@ public class NotifyController {
      */
     @RequestMapping("/alipay/notify")
     @ResponseBody
+    @SneakyThrows(Exception.class)
     public String alipayNotifyUrl(HttpServletRequest request) {
-
-        System.out.println("1111111111111");
-        String success = "success";
-        String failure = "failure";
-
-        Map<String, String> params = new HashMap<>();
-        Map requestParams = request.getParameterMap();
-        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
-            String name = (String) iter.next();
-            String[] values = (String[]) requestParams.get(name);
+        Map<String, String> params = Maps.newHashMap();
+        Map<String, String[]> requestParams = request.getParameterMap();
+        for (String name : requestParams.keySet()) {
+            String[] values = requestParams.get(name);
             String valueStr = "";
             for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
             }
+            //乱码解决，这段代码在出现乱码时使用
+            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             params.put(name, valueStr);
         }
-
-        /**
-         * 非常重要,签名不带，避免签名的sign 不匹配。
-         * 验证回调的正确性,是不是支付宝发的.并且呢还要避免重复通知.
-         */
-        params.remove("sign_type");
 
         String out_trade_no = params.get("out_trade_no");// 商户订单号
         Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", out_trade_no));
 
-        String alipay_public_key = null;
-        Integer IS_ALIPAY_TYPE = 1;
         if ("alipay".equals(orders.getPayType())) {
             Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay"));
             /**
@@ -732,9 +723,6 @@ public class NotifyController {
             if (!orders.getPayType().equals(pays.getDriver())) {
                 return "不要搞我啦！！";
             }
-            Map mapTypes = JSON.parseObject(pays.getConfig());
-            alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
-            IS_ALIPAY_TYPE = 1;
         } else if ("alipay_pc".equals(orders.getPayType())) {
             Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay_pc"));
             /**
@@ -743,37 +731,23 @@ public class NotifyController {
             if (!orders.getPayType().equals(pays.getDriver())) {
                 return "不要搞我啦！！";
             }
-            Map mapTypes = JSON.parseObject(pays.getConfig());
-            alipay_public_key = mapTypes.get("alipay_public_key").toString(); // 密钥
-            IS_ALIPAY_TYPE = 2;
         }
 
-        try {
-            boolean alipayRSAChecked = false;
-            if (IS_ALIPAY_TYPE == 1) {
-                alipayRSAChecked = AlipaySignature.rsaCheckV2(params, alipay_public_key, "utf-8", "RSA2");
-            } else if (IS_ALIPAY_TYPE == 2) {
-                alipayRSAChecked = AlipaySignature.rsaCheckV1(params, alipay_public_key, "utf-8", "RSA2");
-            }
-
-            if (alipayRSAChecked) {
-                String total_amount = params.get("total_amount");// 付款金额
-                String trade_no = params.get("trade_no");// 流水
-                String receipt_amount = params.get("receipt_amount");// 实际支付金额
-                String body = params.get("body");// 状态
-                AtomicReference<String> notifyText = new AtomicReference<>();
-                synchronizedByKeyService.exec(out_trade_no, () -> {
-                    String returnBig1 = returnBig(receipt_amount, total_amount, out_trade_no, trade_no, body, success, failure);
-                    notifyText.set(returnBig1);
-                });
-                return notifyText.get();
-            } else {
-                System.out.println("签名错误！！");
-                return failure;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return failure;
+        Boolean verifyNotify = Factory.Payment.Common().verifyNotify(params);
+        if (verifyNotify) {
+            String total_amount = params.get("total_amount");// 付款金额
+            String trade_no = params.get("trade_no");// 流水
+            String receipt_amount = params.get("receipt_amount");// 实际支付金额
+            String body = params.get("subject");// 状态
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(out_trade_no, () -> {
+                String returnBig1 = returnBig(receipt_amount, total_amount, out_trade_no, trade_no, body, "success", "failure");
+                notifyText.set(returnBig1);
+            });
+            return notifyText.get();
+        } else {
+            System.out.println("签名错误！！");
+            return "failure";
         }
     }
 
@@ -785,42 +759,24 @@ public class NotifyController {
      * @throws IOException
      */
     @RequestMapping("/alipay/return_url")
-    public void alipayReturnUrl(HttpServletRequest request, HttpServletResponse response) throws IOException, AlipayApiException {
-
-        // 签名方式
-        String sign_type = "RSA2";
-
-        // 字符编码格式
-        String charset = "utf-8";
-
-        /**
-         *验证通知 处理自己的业务
-         */;
-        // 获取支付宝GET过来反馈信息
-        Map<String, String> params = new HashMap<>();
+    @SneakyThrows(Exception.class)
+    public void alipayReturnUrl(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> params = Maps.newHashMap();
         Map<String, String[]> requestParams = request.getParameterMap();
-        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
-            String name = iter.next();
+        for (String name : requestParams.keySet()) {
             String[] values = requestParams.get(name);
             String valueStr = "";
             for (int i = 0; i < values.length; i++) {
                 valueStr = (i == values.length - 1) ? valueStr + values[i]
                         : valueStr + values[i] + ",";
             }
+            //乱码解决，这段代码在出现乱码时使用
+            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             params.put(name, valueStr);
         }
-
-        Pays aliPays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "alipay_pc"));
-        Map aliMap = JSON.parseObject(aliPays.getConfig());
-        String alipay_public_key = aliMap.get("alipay_public_key").toString();
-
-        // 调用SDK验证签名
-        boolean signVerified = AlipaySignature.rsaCheckV1(params,
-                alipay_public_key,
-                charset,
-                sign_type); //调用SDK验证签名
+        Boolean verifyNotify = Factory.Payment.Common().verifyNotify(params);
         // 验签成功
-        if (signVerified) {
+        if (verifyNotify) {
             String pay_no = params.get("trade_no"); // 流水号
             String member = params.get("out_trade_no");// 商户订单号
             if (pay_no != null || pay_no != "") {
@@ -830,7 +786,6 @@ public class NotifyController {
         } else {
             System.out.println("支付, 验签失败...");
         }
-
     }
 
     /**
@@ -903,9 +858,6 @@ public class NotifyController {
      * @return this
      */
     private String returnBig(String money, String price, String payId, String pay_no, String param, String success, String fiald) {
-
-        System.out.println("payId = " + payId);
-
         /**
          * 通过订单号查询
          */
