@@ -178,7 +178,7 @@
                     d[0] && d.remove(), l.after(f), a.call(this, f, u)
                 })
             }, radio: function () {
-                var e = "layui-form-selbox", i = ["&#xe643;", "&#xe63f;"], a = u.find("input[type=radio]"),
+                var e = "layui-form-radio", i = ["&#xe643;", "&#xe63f;"], a = u.find("input[type=radio]"),
                     n = function (a) {
                         var n = t(this), s = "layui-anim-scaleSpring";
                         a.on("click", function () {
@@ -186,8 +186,8 @@
                                 d = c.find("input[name=" + o.replace(/(\.|#|\[|\])/g, "\\$1") + "]");
                             n[0].disabled || (layui.each(d, function () {
                                 var a = t(this).next("." + e);
-                                this.checked = !1, a.removeClass("layui-form-selafter"), a.find(".layui-icon").removeClass(s).html(i[1])
-                            }), n[0].checked = !0, a.addClass("layui-form-selafter"), a.find(".layui-icon").addClass(s).html(i[0]), layui.event.call(n[0], l, "radio(" + u + ")", {
+                                this.checked = !1, a.removeClass(e + "ed"), a.find(".layui-icon").removeClass(s).html(i[1])
+                            }), n[0].checked = !0, a.addClass(e + "ed"), a.find(".layui-icon").addClass(s).html(i[0]), layui.event.call(n[0], l, "radio(" + u + ")", {
                                 elem: n[0],
                                 value: n[0].value,
                                 othis: a
@@ -198,10 +198,10 @@
                     var r = t(this), s = r.next("." + e), o = this.disabled;
                     if ("string" == typeof r.attr("lay-ignore")) return r.show();
                     s[0] && s.remove();
-                    var u = t(['<div class="layui-unselect ' + e, l.checked ? " " + "layui-form-selafter" : "", (o ? " layui-radio-disbaled " + c : "") + '">', '', "<span>" + function () {
+                    var u = t(['<div class="layui-unselect ' + e, l.checked ? " " + e + "ed" : "", (o ? " layui-radio-disbaled " + c : "") + '">', '<i class="layui-anim layui-icon">' + i[l.checked ? 0 : 1] + "</i>", "<div>" + function () {
                         var e = l.title || "";
                         return "string" == typeof r.next().attr("lay-radio") && (e = r.next().html(), r.next().remove()), e
-                    }() + "</span>", "</div>"].join(""));
+                    }() + "</div>", "</div>"].join(""));
                     r.after(u), n.call(this, u)
                 })
             }
