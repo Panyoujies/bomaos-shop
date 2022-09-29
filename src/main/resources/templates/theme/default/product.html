@@ -58,35 +58,34 @@
                     <div class="layui-row layui-col-space15 goods-info-group">
                         <div class="layui-col-xs12 layui-col-sm5 layui-col-md4 zlian-col-image">
                             <div class="zlian-product-image" style="background-image: linear-gradient(to right, rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url(<:if test="${products.imageLogo == null || products.imageLogo == ''}">../default/images/commodity.svg</:if><:if test="${products.imageLogo != null || products.imageLogo != ''}">${products.imageLogo!}</:if>)"></div>
-                        </div>
-                        <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
-                            <div style="padding: 0px;">
-                                <div class="weui-cells">
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__bd">商品名称</div>
-                                        <div class="weui-cell__ft">${products.name!}</div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm7 layui-col-md8 goods-info">
+                        <div style="padding: 0px;">
+                            <div class="weui-cells">
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">商品名称</div>
+                                    <div class="weui-cell__ft">${products.name!}</div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">商品分类</div>
+                                    <div class="weui-cell__ft">${classifyName!}</div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">商品单价</div>
+                                    <div class="weui-cell__ft">
+                                        <:if test="${products.price == 0.00}">
+                                            免费
+                                        </:if>
+                                        <:if test="${products.price != 0.00}">
+                                            ${products.price!}
+                                        </:if>
                                     </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__bd">商品分类</div>
-                                        <div class="weui-cell__ft">${classifyName!}</div>
-                                    </div>
-                                    <div class="weui-cell">
-                                        <div class="weui-cell__bd">商品单价</div>
-                                        <div class="weui-cell__ft">
-                                            <:if test="${products.price == 0.00}">
-                                                免费
-                                            </:if>
-                                            <:if test="${products.price != 0.00}">
-                                                ${products.price!}
-                                            </:if>
-                                        </div>
-                                    </div>
-                                    <div class="weui-cell-bottom">
-                                        <div class="weui-cell__bd">商品库存</div>
-                                        <div class="weui-cell__ft">
-                                            <:if test="${cardCount == 0}">缺货</:if>
-                                            <:if test="${cardCount != 0}">${cardCount}</:if>
-                                        </div>
+                                </div>
+                                <div class="weui-cell-bottom">
+                                    <div class="weui-cell__bd">商品库存</div>
+                                    <div class="weui-cell__ft">
+                                        <:if test="${cardCount == 0}">缺货</:if>
+                                        <:if test="${cardCount != 0}">${cardCount}</:if>
                                     </div>
                                 </div>
                             </div>
@@ -94,19 +93,29 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-card zlian-card-controller"
-                 style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
-                <div class="layui-card-header">
-                    商品详情
-                    <span class="pull-right" style="font-weight: 400; font-size: 16px;">请详细阅读如下说明</span>
-                </div>
-                <div class="layui-card-body" style="padding: 15px 15px; min-height: 200px;">
-                    <div class="list_info">
-                        ${products.pdInfo!}
-                    </div>
+            <div class="layui-card-bottom">
+                <ul class="component-banner-highlights">
+                    <li class="icon-security">系统稳定</li>
+                    <li class="icon-authentication">权威认证</li>
+                    <li class="icon-money">资金安全</li>
+                    <li class="icon-service">贴心服务</li>
+                    <a class="component-banner-highlights-extra" href="https://huhang.youzan.com" target="_blank">了解详情</a>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-card zlian-card-controller"
+             style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
+            <div class="layui-card-header">
+                商品详情
+                <span class="pull-right" style="font-weight: 400; font-size: 16px;">请详细阅读如下说明</span>
+            </div>
+            <div class="layui-card-body" style="padding: 15px 15px; min-height: 200px;">
+                <div class="list_info">
+                    ${products.pdInfo!}
                 </div>
             </div>
         </div>
+    </div>
 
         <div class="layui-col-sm12 layui-col-md4 sticky">
             <:if test="${products.isWholesale == 1}">

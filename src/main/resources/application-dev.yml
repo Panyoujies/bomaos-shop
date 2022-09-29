@@ -3,7 +3,7 @@
 # 数据源配置
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/zlianweb?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3306/zlianweb-demo?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,5 +12,5 @@ spring:
 # 日志配置
 logging:
   level:
-    cn.zlianpay: DEBUG
+    com.bomaos: DEBUG
     com.baomidou.mybatisplus: DEBUG

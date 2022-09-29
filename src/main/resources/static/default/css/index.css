@@ -779,14 +779,13 @@ img.avatar {
         font-size: 16px;
     }
 
-    .user-widget-content .widget-mission-header {
+    .user-widget-mobile {
         display: none;
     }
 
     .widget-mission-footer div {
         border-top: 0px solid transparent !important;
     }
-
 
     .widget-mission-card {
         display: block;

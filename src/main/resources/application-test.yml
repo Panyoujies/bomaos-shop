@@ -12,7 +12,7 @@ spring:
 # 日志配置
 logging:
   file:
-    name: zlianpay-faka.log
+    name: bomao-faka.log
   level:
-    cn.zlianpay: DEBUG
+    com.bomaos: DEBUG
     com.baomidou.mybatisplus: DEBUG

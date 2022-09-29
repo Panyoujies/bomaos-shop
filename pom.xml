@@ -3,19 +3,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.zlianpay</groupId>
-    <artifactId>zlianpay-faka</artifactId>
+    <groupId>com.bomaos</groupId>
+    <artifactId>bomaos-shop</artifactId>
     <version>2.0.3</version>
     <!--<packaging>war</packaging>-->
 
-    <name>zlianpay-faka</name>
-    <description>zlianpay-faka project for Spring Boot</description>
+    <name>bomaos-shop</name>
+    <description>bomaos-shop project for Spring Boot</description>
 
+    <!-- lookup parent from repository -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>2.7.3</version>
+        <relativePath/>
     </parent>
 
     <properties>
@@ -25,6 +26,7 @@
     </properties>
 
     <dependencies>
+
         <!-- spring-boot-devtools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -32,12 +34,14 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
         <!-- spring-boot-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -49,6 +53,7 @@
                 </exclusion>
             </exclusions>-->
         </dependency>
+
         <!-- aop -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,7 +71,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.9</version>
+            <version>1.2.12</version>
         </dependency>
 
         <!-- mybatis-plus -->
@@ -84,38 +89,35 @@
         </dependency>
 
         <!-- hutool -->
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-core -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
-            <version>5.5.1</version>
+            <version>5.8.6</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-poi -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-poi</artifactId>
-            <version>5.5.1</version>
+            <version>5.8.6</version>
         </dependency>
 
-        <!-- Hutool工具 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.5.7</version>
+            <version>5.8.6</version>
         </dependency>
 
         <!-- poi -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>4.0.1</version>
+            <version>5.2.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>4.0.1</version>
+            <version>5.2.2</version>
         </dependency>
 
         <!-- 从request获取设备信息 -->
@@ -129,7 +131,7 @@
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
-            <version>1.20</version>
+            <version>2.4.1</version>
         </dependency>
 
         <!-- open office(转pdf在线预览) -->

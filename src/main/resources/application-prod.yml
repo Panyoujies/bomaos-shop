@@ -12,8 +12,8 @@ spring:
 # 日志配置
 logging:
   file:
-    name: zlianpay-faka.log
+    name: bomao-faka.log
   level:
     root: WARN
-    cn.zlianpay: ERROR
+    com.bomaos: ERROR
     com.baomidou.mybatisplus: ERROR

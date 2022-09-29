@@ -25,7 +25,7 @@ spring:
       #max-pool-prepared-statement-per-connection-size: 20
       filters: stat,wall
       validation-query: SELECT 'x'
-      aop-patterns: cn.zlianpay.*.*.service.*
+      aop-patterns: com.bomaos.*.*.service.*
       stat-view-servlet:
         url-pattern: /druid/*
         reset-enable: true
@@ -68,8 +68,8 @@ spring:
 
 # Mybatis-plus配置
 mybatis-plus:
-  mapper-locations: classpath:cn/zlianpay/**/*Mapper.xml
-  typeAliasesPackage: cn.zlianpay.**.entity
+  mapper-locations: classpath:com/bomaos/**/*Mapper.xml
+  typeAliasesPackage: com.bomaos.**.entity
   global-config:
     id-type: 0
     field-strategy: 1

@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md4 user-widget-mobile">
             <div class="user-widget-content">
                 <div class="widget-mission-header">
                     <div class="user-w-logon" style="padding: 35px 20px;">
@@ -82,10 +82,6 @@
                     </div>
                 </div>
                 <div class="widget-mission-footer">
-                    <!--<div style="position: relative; padding: 15px; border-top: 1px solid #f6f6f6;">
-                        <i class="layui-icon layui-icon-search layui-icon-screen-show"></i>
-                        <input id="screen-product" placeholder="请输入商品名称" class="layui-input screen-input" lay-verify="required" required/>
-                    </div>-->
                     <a href="${ctxPath}/search">订单查询 <i class="layui-icon" style="transform: rotate(-0deg);">&#xe602;</i></a>
                 </div>
             </div>
@@ -163,10 +159,6 @@
             </div>
         </:if>
     </:for>
-
-
-    <!--<div class="layui-row layui-col-space15" id="goodsList" style="padding: 1px 0;">
-    </div>-->
 </div>
 
 <!-- footer -->
@@ -179,17 +171,11 @@
 <script type="text/javascript" src="${ctxPath}/assets/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="${ctxPath}/assets/js/swiper/swiper-bundle.min.js"></script>
 <script>
-    layui.use(['layer', 'form', 'dataGrid'], function () {
+    layui.use(['layer', 'form'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
-        var form = layui.form;
-        var dataGrid = layui.dataGrid;
-        var classifysListJson = JSON.parse('${classifysListJson!}');
-        var classifyId;
         var shopSettingsJson = JSON.parse(JSON.stringify(${shopSettings!}));
-
         if (shopSettingsJson.isWindow == 1) {
-            var isWindow = $.cookie('isWindow');
             if ($.cookie("isWindow") != 'yes') {
                 //示范一个公告层
                 layer.open({
