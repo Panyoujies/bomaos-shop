@@ -308,7 +308,7 @@ public class IndexController {
          * 商品为空
          * 直接返回商品找不到页面
          */
-        if (ObjectUtils.isEmpty(products)) {
+        if (ObjectUtils.isEmpty(products) || products.getStatus() == 0) {
             return "theme/" + theme.getDriver() + "/product404.html";
         }
 
