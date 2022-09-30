@@ -399,6 +399,10 @@ CREATE TABLE `sys_products` (
   `customize_input` longtext COMMENT '自定义输入框',
   `is_customize` int DEFAULT NULL COMMENT '是否开启自定义输入框',
   `sell_type` int DEFAULT NULL COMMENT '售卡类型',
+  `component_point` varchar(255) NOT NULL COMMENT '提示语',
+  `component_type` int DEFAULT NULL COMMENT '提示类型',
+  `component_url` varchar(255) DEFAULT NULL COMMENT '提示链接',
+  `component_enabled` int DEFAULT NULL COMMENT '是否开启提示',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='商品';
 
