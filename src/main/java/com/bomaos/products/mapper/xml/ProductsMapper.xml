@@ -74,6 +74,18 @@
                 <if test="page.pageData.sellType != null">
                     AND a.sell_type = #{page.pageData.sellType}
                 </if>
+                <if test="page.pageData.componentType != null">
+                    AND a.component_type = #{page.pageData.componentType}
+                </if>
+                <if test="page.pageData.componentEnabled != null">
+                    AND a.component_enabled = #{page.pageData.componentEnabled}
+                </if>
+                <if test="page.pageData.componentPoint != null">
+                    AND a.component_point LIKE CONCAT('%', #{page.pageData.componentPoint}, '%')
+                </if>
+                <if test="page.pageData.componentUrl != null">
+                    AND a.component_url LIKE CONCAT('%', #{page.pageData.componentUrl}, '%')
+                </if>
             </if>
         </where>
     </sql>

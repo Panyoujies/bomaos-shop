@@ -81,6 +81,36 @@
                     </div>
                 </div>
 
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">提示语句:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="componentEnabled" value="0" title="开启提示" checked>
+                        <input type="radio" name="componentEnabled" value="1" title="关闭提示">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 5px">
+                    <label class="layui-form-label">提示类型:</label>
+                    <div class="layui-input-block">
+                        <select name="componentType">
+                            <option value="1">文字提示</option>
+                            <option value="2">文件下载</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">提示语:</label>
+                    <div class="layui-input-block">
+                        <input name="componentPoint" placeholder="请输入提示语句" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">下载地址:</label>
+                    <div class="layui-input-block">
+                        <input name="componentUrl" placeholder="请输入文件下载地址" class="layui-input"/>
+                        <div class="layui-word-aux">提示类型为文件下载有效</div>
+                    </div>
+                </div>
+
                 <!-- 重复使用出现，自定义输入框 -->
                 <div class="layui-form-item" id="customize" style="display:none;">
                     <div class="layui-input-block" id="customizeInput">

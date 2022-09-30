@@ -143,4 +143,24 @@ public class ProductsVo {
      * 售卡类型
      */
     private Integer sellType;
+
+    /**
+     * 是否开启提示
+     */
+    private Integer componentEnabled;
+
+    /**
+     * 提示类型
+     */
+    private Integer componentType;
+
+    /**
+     * 提示语
+     */
+    private String componentPoint;
+
+    /**
+     * 提示链接
+     */
+    private String componentUrl;
 }

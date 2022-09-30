@@ -93,15 +93,17 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-card-bottom">
-                <ul class="component-banner-highlights">
-                    <li class="icon-security">系统稳定</li>
-                    <li class="icon-authentication">权威认证</li>
-                    <li class="icon-money">资金安全</li>
-                    <li class="icon-service">贴心服务</li>
-                    <a class="component-banner-highlights-extra" href="https://huhang.youzan.com" target="_blank">了解详情</a>
-                </ul>
-            </div>
+            <:if test="${products.componentEnabled == 0}">
+                <div class="layui-card-bottom">
+                    <ul class="component-banner-highlights">
+                        <li class="icon-security">提示</li>
+                        <li>${products.componentPoint}</li>
+                        <:if test="${products.componentType == 2}">
+                            <a class="component-banner-highlights-extra" href="${products.componentUrl}" target="_blank">点我下载</a>
+                        </:if>
+                    </ul>
+                </div>
+            </:if>
         </div>
         <div class="layui-card zlian-card-controller"
              style="border-radius: 5px; box-shadow: 0px 0px 2px rgb(98 124 153 / 10%);">
