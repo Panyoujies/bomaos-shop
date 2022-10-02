@@ -16,8 +16,8 @@
                             今日成交<span class="layui-badge layui-badge-green pull-right">今日</span>
                         </div>
                         <div class="layui-card-body">
-                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span> ${money!}
-                            </p>
+                            <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span> ${money!}</p>
+                            <p>今日成交订单<span class="pull-right">${count!} 笔</span></p>
                         </div>
                     </div>
                 </div>
@@ -30,6 +30,7 @@
                             <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>
                                 ${YesterDayMoney!}
                             </p>
+                            <p>昨日成交订单<span class="pull-right">${YesterDayCount!} 笔</span></p>
                         </div>
                     </div>
                 </div>
@@ -42,44 +43,7 @@
                             <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>
                                 ${SevenDaysMoney!}
                             </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-xs12 layui-col-sm6 layui-col-md4">
-                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                        <div class="layui-card-header">
-                            今日成交订单
-                            <span class="icon-text pull-right" lay-tips="今日成交订单、不包括未支付" lay-direction="4"
-                                  lay-offset="5px,5px">
-                        <i class="layui-icon layui-icon-tips"></i>
-                    </span>
-                        </div>
-                        <div class="layui-card-body">
-                            <p class="lay-big-font">${count!} <span
-                                    style="font-size: 24px;line-height: 1;">笔</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layui-col-xs12 layui-col-sm6 layui-col-md4">
-                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                        <div class="layui-card-header">
-                            昨日成交订单<span class="layui-badge layui-badge-blue pull-right">昨日</span>
-                        </div>
-                        <div class="layui-card-body">
-                            <p class="lay-big-font">${YesterDayCount!} <span
-                                    style="font-size: 24px;line-height: 1;">笔</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-xs12 layui-col-sm6 layui-col-md4">
-                    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-                        <div class="layui-card-header">
-                            近七天成交订单<span class="layui-badge layui-badge-red pull-right">七天</span>
-                        </div>
-                        <div class="layui-card-body">
-                            <p class="lay-big-font">${SevenDaysCount!} <span
-                                    style="font-size: 24px;line-height: 1;">笔</span></p>
+                            <p>近七天成交订单<span class="pull-right">${SevenDaysCount!} 笔</span></p>
                         </div>
                     </div>
                 </div>
@@ -121,6 +85,7 @@
                     <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥</span>
                         ${total_amount!}
                     </p>
+                    <p>总成交订单<span class="pull-right">${total_number!} 笔</span></p>
                 </div>
             </div>
             <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
@@ -191,6 +156,7 @@
         var alipayList = JSON.parse('${alipayList!}');
         var paypalList = JSON.parse('${paypalList!}');
         var qqpayList = JSON.parse('${qqpayList!}');
+        var usdtList = JSON.parse('${usdtList!}');
         var mapList = JSON.parse('${mapList!}');
 
         /* 渲染表格 */
@@ -245,7 +211,7 @@
         var option;
 
         option = {
-            color: ['#09BA07', '#4d77ff', '#003087', '#58A1FF'],
+            color: ['#09BA07', '#4d77ff', '#003087', '#58A1FF', '#27a17b'],
             title: {
                 text: '近七天交易流水'
             },
@@ -372,6 +338,30 @@
                         focus: 'series'
                     },
                     data: qqpayList
+                },
+                {
+                    name: 'USDT',
+                    type: 'line',
+                    stack: '总量',
+                    smooth: true,
+                    lineStyle: {
+                        width: 0
+                    },
+                    showSymbol: false,
+                    areaStyle: {
+                        opacity: 0.8,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgb(94,169,143)'
+                        }, {
+                            offset: 1,
+                            color: 'rgb(94,169,143)'
+                        }])
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: usdtList
                 }
             ]
         };
@@ -384,7 +374,7 @@
         var option1;
 
         option1 = {
-            color: ['#09BA07', '#0E78FF', '#003087', '#58a1ff'],
+            color: ['#09BA07', '#0E78FF', '#003087', '#58a1ff', '#27a17b'],
             title: {
                 text: '近七天收款类型统计'
             },
