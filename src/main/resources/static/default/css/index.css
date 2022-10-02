@@ -201,14 +201,14 @@
 }
 
 .el-tag {
-    background-color: #2FB18Abf;
+    background-color: #409EFFbf;
     display: inline-block;
     height: 20px;
     padding: 0 5px;
     line-height: 18px;
     font-size: 12px;
     color: #ffffff;
-    border: 1px solid #2FB18Abf;
+    border: 1px solid #409EFFbf;
     border-radius: 4px;
     box-sizing: border-box;
     white-space: nowrap;
@@ -271,7 +271,7 @@
 }
 
 .ribbon-two-danger span {
-    background: #2FB18A;
+    background: #409EFF;
 }
 
 .ribbon-two span:before {
@@ -285,13 +285,13 @@
 }
 
 .ribbon-two-danger span:before {
-    border-left: 3px solid #21896a;
-    border-top: 3px solid #21896a;
+    border-left: 3px solid #0066cf;
+    border-top: 3px solid #0066cf;
 }
 
 .ribbon-two-danger span:after {
-    border-right: 3px solid #21896a;
-    border-top: 3px solid #21896a;
+    border-right: 3px solid #0066cf;
+    border-top: 3px solid #0066cf;
 }
 
 .ribbon-two span:after {
@@ -574,7 +574,7 @@ img.avatar {
 }
 
 .b2-color {
-    color: #2FB18A;
+    color: #409EFF;
     font-size: 17px;
     font-weight: 500;
 }
@@ -632,7 +632,7 @@ img.avatar {
 }
 
 .widget-mission-footer a:hover {
-    color: #2FB18A;
+    color: #409EFF;
 }
 
 .bd {

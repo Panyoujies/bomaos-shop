@@ -548,7 +548,7 @@
     border-right: 1px solid #ebedf0;
     padding-left: 20px;
     padding-right: 10px;
-    color: #2fb189;
+    color: #409EFF;
 }
 
 .component-banner-highlights-extra {
@@ -560,7 +560,7 @@
     background-image: url(../images/detail/icon-download.svg);
     background-size: 15px;
     cursor: pointer;
-    color: #2fb189;
+    color: #409EFF;
 }
 
 .spaceProfileCard__line {
