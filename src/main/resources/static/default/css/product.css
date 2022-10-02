@@ -554,7 +554,7 @@
 .component-banner-highlights-extra {
     margin-left: auto;
     justify-self: flex-end;
-    padding-right: 16px;
+    padding-right: 20px;
     background-repeat: no-repeat;
     background-position: 100%;
     background-image: url(../images/detail/icon-download.svg);
@@ -563,6 +563,68 @@
     color: #409EFF;
 }
 
+.ribbon-two {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    text-align: right;
+}
+
+.ribbon-two span {
+    font-size: 11px;
+    transform: scale(0.8);
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    -webkit-transform: rotate(-45deg) scale(0.8);
+    transform: rotate(-45deg) scale(0.7);
+    width: 80px;
+    display: block;
+    -webkit-box-shadow: 0 0 8px 0 rgb(71 77 86 / 8%), 0 1px 0 0 rgb(71 77 86 / 3%);
+    box-shadow: 0 0 8px 0 rgb(71 77 86 / 8%), 0 1px 0 0 rgb(71 77 86 / 3%);
+    position: absolute;
+    top: 5px;
+    left: -25px;
+    font-weight: 400;
+}
+
+.ribbon-two-danger span {
+    background: #ff6767;
+}
+
+
+.ribbon-two span:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: -1;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+}
+.ribbon-two-danger span:before {
+    border-left: 3px solid #ca1313;
+    border-top: 3px solid #ca1313;
+}
+
+.ribbon-two-danger span:after {
+    border-right: 3px solid #ca1313;
+    border-top: 3px solid #ca1313;
+}
+
+.ribbon-two span:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+}
 .spaceProfileCard__line {
     position: absolute;
     left: 125px;

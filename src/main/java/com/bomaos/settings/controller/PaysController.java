@@ -357,4 +357,24 @@ public class PaysController extends BaseController {
         return JsonResult.error("开启失败");
     }
 
+    /**
+     * 修改商品状态
+     */
+    @OperLog(value = "分类列表管理", desc = "修改手续费标签状态", result = true)
+    @RequiresPermissions("products:products:update")
+    @ResponseBody
+    @RequestMapping("/handling/update")
+    public JsonResult updateIsHandling(Integer id, Integer enabled) {
+        if (enabled == null || (enabled != 0 && enabled != 1)) {
+            return JsonResult.error("状态值不正确");
+        }
+        Pays pays = new Pays();
+        pays.setId(id);
+        pays.setIsHandlingFee(enabled);
+        if (paysService.updateById(pays)) {
+            return JsonResult.ok("手续费标签开启成功");
+        }
+        return JsonResult.error("开启失败");
+    }
+
 }

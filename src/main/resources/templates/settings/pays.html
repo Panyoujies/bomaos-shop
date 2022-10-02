@@ -738,6 +738,12 @@
            lay-text="开启|关闭" {{d.isPc==1?'checked':''}}/>
 </script>
 
+<!-- 手续费 -->
+<script type="text/html" id="paysPcTbHandling">
+    <input type="checkbox" lay-filter="paysPcTbHandlingCk" value="{{d.id}}" lay-skin="switch"
+           lay-text="开启|关闭" {{d.isHandlingFee==1?'checked':''}}/>
+</script>
+
 <:include file="../common/js.html"/>
 <script>
     layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown', 'notice'], function () {
@@ -780,6 +786,7 @@
                 },
                 {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
+                {field: 'isHandlingFee', title: '手续费TAG', align: 'center', templet: '#paysPcTbHandling', width: 120},
                 {field: 'isMobile', title: '移动端', templet: '#paysMobileTbStatus', width: 90},
                 {field: 'isPc', title: '电脑端', templet: '#paysPcTbStatus', width: 90},
                 {field: 'updatedAt', title: '更新时间', width: 200},
@@ -910,6 +917,24 @@
         form.on('switch(paysPcTbStatuCk)', function (obj) {
             var loadIndex = layer.load(2);
             $.post('pays/status/updatePc', {
+                id: obj.elem.value,
+                enabled: obj.elem.checked ? 1 : 0
+            }, function (res) {
+                layer.close(loadIndex);
+                if (0 === res.code) {
+                    notice.msg(res.msg, {icon: 1});
+                } else {
+                    notice.msg(res.msg, {icon: 2});
+                    $(obj.elem).prop('checked', !obj.elem.checked);
+                    form.render('checkbox', $('#paysTable').next().attr('lay-filter'));
+                }
+            });
+        });
+
+        /* 修改手续费tag */
+        form.on('switch(paysPcTbHandlingCk)', function (obj) {
+            var loadIndex = layer.load(2);
+            $.post('pays/handling/update', {
                 id: obj.elem.value,
                 enabled: obj.elem.checked ? 1 : 0
             }, function (res) {

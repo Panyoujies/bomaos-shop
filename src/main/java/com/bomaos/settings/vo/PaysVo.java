@@ -72,6 +72,11 @@ public class PaysVo {
     private Integer isPc;
 
     /**
+     * 手续费tag
+     */
+    private Integer isHandlingFee;
+
+    /**
      * 创建时间
      */
     private Date createdAt;
