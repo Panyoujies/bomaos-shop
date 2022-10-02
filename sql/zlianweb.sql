@@ -361,6 +361,7 @@ CREATE TABLE `sys_pays` (
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   `is_mobile` int DEFAULT NULL COMMENT '移动端',
   `is_pc` int DEFAULT NULL COMMENT 'pc端',
+  `is_handling_fee` int DEFAULT NULL COMMENT '手续费tag',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COMMENT='支付配置';
 
