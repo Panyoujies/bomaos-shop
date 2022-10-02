@@ -102,7 +102,7 @@ CREATE TABLE `sys_carousel` (
 --  Records of `sys_carousel`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_carousel` VALUES ('1', '值联云卡 Lite 版', 'https://free.zlianpay.cn', '/file/20220324/6072308b8b4924ff779ab83c608a5f96.jpeg', '点击进入值联官网', '2022-03-23 17:26:57', '2022-03-23 17:26:57', '1');
+INSERT INTO `sys_carousel` VALUES ('1', '波猫商店', 'https://free.zlianpay.cn', '/file/20220324/6072308b8b4924ff779ab83c608a5f96.jpeg', '点击进入波猫官网', '2022-03-23 17:26:57', '2022-03-23 17:26:57', '1');
 COMMIT;
 
 -- ----------------------------
@@ -595,7 +595,7 @@ CREATE TABLE `sys_website` (
 --  Records of `sys_website`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_website` VALUES ('1', '值联云卡', 'http://free.zlianpay.cn', '', '1724962375', 'Copyright © 2012-2022 值联科技', '商城系统,商城源码,tg营销助手,发卡网', '值联系统 - 全新UI商城系统', '');
+INSERT INTO `sys_website` VALUES ('1', '波猫商店', 'http://free.zlianpay.cn', '', '1724962375', 'Copyright © 2012-2022 波猫商城系统', '商城系统,商城源码,tg营销助手,发卡网', '波猫商城系统 - 全新UI商城系统', '');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
