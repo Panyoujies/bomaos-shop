@@ -2634,7 +2634,7 @@ div.tagsinput span.tag {
 }
 
 .bar-item-desc {
-    background: #31b188;
+    background: #409EFF;
 }
 
 .aside-bar .bar-item-desc {
@@ -2938,7 +2938,7 @@ body .crisp-client .cc-kv6t .cc-1xry .cc-unoo {
         width: 25px;
         height: 3px;
         padding: 3.1px;
-        border-bottom: 3px solid rgb(47 177 137);
+        border-bottom: 3px solid #409EFF;
         color: transparent;
         margin: 0 auto;
     }
