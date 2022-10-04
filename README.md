@@ -7,7 +7,7 @@
 <img alt="shiro" src="https://img.shields.io/badge/Shiro-1.3.0-yellow">
 <br><br>
 <a href="https://zlian.gitbook.io/zhilian-cloud/" target="_blank">部署文档</a>&nbsp;&nbsp;
-<a href="https://free.zlianpay.cn" target="_blank">演示地址</a>
+<a href="https://free.bomaos.com" target="_blank">演示地址</a>
 </p>
 
 ## 本项目为个人学习开发
@@ -15,7 +15,7 @@
 
 ## 介绍
 
-新版 2.0.0 已正式推出，详情请看 [https://free.zlianpay.cn/](https://free.zlianpay.cn/)
+新版 2.0.3 已正式推出，详情请看 [https://free.bomaos.com/](https://free.bomaos.com/)
 一款高效安全的发卡平台。
 
 支持的支付渠道：
@@ -35,7 +35,7 @@
 ## 系统介绍
 - 开源式站长自动化售货解决方案、高效、稳定、快速！
 
-  演示地址：[https://free.zlianpay.cn/](https://free.zlianpay.cn/)
+  演示地址：[https://free.bomaos.com/](https://free.bomaos.com/)
 
 - 开发语言：JAVA
 - 开发框架：Spring boot
@@ -54,7 +54,7 @@
 * 集成了微信订单消息通知以及邮件系统
 * 支持自定义网站标题、关键字、logo、等
 * 支持移动端支付宝唤醒APP支付
-* 集成了大量支付接口【微信官方扫码、支付宝当面付、v免签、云付天下、payjs、捷支付、虎皮椒V3、YunGouOS、值联码支付、码支付、等...】
+* 集成了大量支付接口【微信官方扫码、支付宝当面付、v免签、payjs、虎皮椒V3、YunGouOS、值联码支付、码支付、USDT、等...】
 * 支持首页公告弹窗展示
 * 集成了强大的优惠券系统
 * 集成了自定义的商品购买备注字段
