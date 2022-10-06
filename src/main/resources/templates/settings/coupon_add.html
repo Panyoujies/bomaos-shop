@@ -6,15 +6,15 @@
 <body>
 
 <!-- 正文开始 -->
-<div class="layui-fluid">
-    <div class="layui-card">
-        <div class="layui-card-header">
-            添加优惠券
-        </div>
-        <div class="layui-card-body">
-            <!-- 表单开始 -->
-            <form class="layui-form" id="formBasForm" lay-filter="formBasForm" style="margin-top: 10px">
+<div class="layui-fluid" style="padding-bottom: 65px;">
 
+    <!-- 表单开始 -->
+    <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                添加优惠券
+            </div>
+            <div class="layui-card-body">
                 <!-- 商品选择 -->
                 <div class="layui-form-item" id="selectByitem">
                     <label class="layui-form-label layui-form-required">选择商品:</label>
@@ -93,21 +93,16 @@
                                lay-text="重复使用|一次使用">
                     </div>
                 </div>
-
-                <!-- 提交 -->
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加&emsp;</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
+        <!-- 提交 -->
+        <div class="form-group-bottom text-right">
+            <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+            <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加优惠券&emsp;</button>
+        </div>
+    </form>
 
-<!-- title 标题-->
-<div class="layui-fluid" style="padding: 0px 15px 15px 15px">
-    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+    <div class="layui-card" style="margin-top: 15px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
         <div class="layui-card-body" style="font-size: 13px">
             <i class="layui-icon layui-icon-notice" style="color: #FF5722"></i> <span
                 style="color: #FF5722">温馨提示:</span> 在重复使用类型下，如果代码券为手动输入的相同商品不允许出现<span

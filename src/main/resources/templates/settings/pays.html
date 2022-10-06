@@ -15,14 +15,19 @@
             <table id="paysTable" lay-filter="paysTable"></table>
         </div>
     </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            手续费示以百分比计算的，例如：填写的是10 就以当前订单金额x10% 就是当前订单的手续费了。
+        </div>
+    </div>
 </div>
 <!-- 表格操作列 -->
 <script type="text/html" id="paysTbBar">
     {{# if(d.driver=='mqpay_alipay' || d.driver=='mqpay_wxpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="mqpay">配置修改</a>
     {{# } }}
-    {{# if(d.driver=='zlianpay_alipay' || d.driver=='zlianpay_wxpay' || d.driver=='zlianpay_qqpay'){ }}
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="zlianpay">配置修改</a>
+    {{# if(d.driver=='epay_alipay' || d.driver=='epay_wxpay' || d.driver=='epay_qqpay'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="epay">配置修改</a>
     {{# } }}
     {{# if(d.driver=='yungouos_wxpay' || d.driver=='yungouos_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yungouos">配置修改</a>
@@ -114,9 +119,9 @@
     </form>
 </script>
 
-<!-- zlianpay -->
-<script type="text/html" id="zlianpayEditDialog">
-    <form id="zlianpayEditForm" lay-filter="zlianpayEditForm" class="layui-form model-form">
+<!-- epay -->
+<script type="text/html" id="epayEditDialog">
+    <form id="epayEditForm" lay-filter="epayEditForm" class="layui-form model-form">
         <input name="id" type="hidden"/>
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">支付类型名称:</label>
@@ -175,7 +180,7 @@
         </div>
 
         <div class="layui-form-item text-right">
-            <button class="layui-btn" lay-filter="zlianpayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn" lay-filter="epayEditSubmit" lay-submit>保存</button>
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
@@ -761,8 +766,7 @@
             elem: '#paysTable',
             url: 'pays/page',
             page: true,
-            limit: 20,
-            height: 'full-50',
+            limit: 10,
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
@@ -786,19 +790,39 @@
                 },
                 {field: 'driver', title: '驱动', width: 160},
                 {field: 'comment', title: '说明', minWidth: 200},
-                {field: 'isHandlingFee', title: '手续费TAG', align: 'center', templet: '#paysPcTbHandling', width: 120},
+                {field: 'handlingFee', title: '手续费', align: 'center', width: 80, edit: 'text'},
+                {field: 'isHandlingFee', title: '手续费TAG', align: 'center', templet: '#paysPcTbHandling', width: 110},
                 {field: 'isMobile', title: '移动端', templet: '#paysMobileTbStatus', width: 90},
                 {field: 'isPc', title: '电脑端', templet: '#paysPcTbStatus', width: 90},
-                {field: 'updatedAt', title: '更新时间', width: 200},
-                {title: '操作', toolbar: '#paysTbBar', align: 'center', width: 130}
+                {field: 'updatedAt', title: '更新时间', width: 170},
+                {title: '操作', toolbar: '#paysTbBar', align: 'center', width: 100}
             ]]
+        });
+
+        /**
+         * 修改手续费
+         */
+        table.on('edit(paysTable)', function (obj) {
+            var value = obj.value, data = obj.data, field = obj.field;
+            if (field == 'handlingFee') {
+                $.post('pays/updateHandlingFee', {
+                    id: data.id,
+                    handlingFee: util.escape(value)
+                }, function (res) {
+                    if (0 === res.code) {
+                        layer.msg(res.msg, {icon: 1});
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                });
+            }
         });
 
         /* 表格工具条点击事件 */
         table.on('tool(paysTable)', function (obj) {
             if ('mqpay' === obj.event) {
                 showEditModel(obj.data);
-            } else if ('zlianpay' === obj.event) {
+            } else if ('epay' === obj.event) {
                 showEditModel(obj.data);
             } else if ('yungouos' === obj.event) {
                 showEditModel(obj.data);
@@ -827,10 +851,10 @@
                 var html = $('#mqpayEditDialog').html();
                 var forms = 'mqpayEditForm';
                 var submit = 'mqpayEditSubmit';
-            } else if (mData.driver == 'zlianpay_alipay' || mData.driver == 'zlianpay_wxpay' || mData.driver == 'zlianpay_qqpay') {
-                var html = $('#zlianpayEditDialog').html();
-                var forms = 'zlianpayEditForm';
-                var submit = 'zlianpayEditSubmit';
+            } else if (mData.driver == 'epay_alipay' || mData.driver == 'epay_wxpay' || mData.driver == 'epay_qqpay') {
+                var html = $('#epayEditDialog').html();
+                var forms = 'epayEditForm';
+                var submit = 'epayEditSubmit';
             } else if (mData.driver == 'yungouos_wxpay' || mData.driver == 'yungouos_alipay') {
                 var html = $('#yungouosEditDialog').html();
                 var forms = 'yungouosEditForm';

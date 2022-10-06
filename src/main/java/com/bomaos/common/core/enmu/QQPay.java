@@ -1,7 +1,7 @@
 package com.bomaos.common.core.enmu;
 
 public enum QQPay {
-    ZLIANPAY_QQPAY("zlianpay_qqpay");
+    EPAY_QQPAY("epay_qqpay");
 
     QQPay(String code) {
         this.code = code;

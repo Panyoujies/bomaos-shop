@@ -10,13 +10,14 @@
 </head>
 <body>
 <!-- 正文开始 -->
-<div class="layui-fluid">
-    <div class="layui-card">
-        <div class="layui-card-header">
-            网站设置
-        </div>
-        <div class="layui-card-body">
-            <form class="layui-form" lay-filter="websiteForm" style="margin-top: 10px">
+<div class="layui-fluid" style="padding-bottom: 65px;">
+
+    <form class="layui-form" lay-filter="websiteForm">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                网站设置
+            </div>
+            <div class="layui-card-body">
                 <input name="id" type="hidden"/>
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">Favicon:</label>
@@ -86,15 +87,14 @@
                                   lay-verType="tips" lay-verify="required" required></textarea>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="websiteEditSubmit" lay-submit> 保存设置</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-
+        <!-- 提交 -->
+        <div class="form-group-bottom text-right">
+            <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+            <button class="layui-btn" lay-filter="websiteEditSubmit" lay-submit>&emsp;保存设置&emsp;</button>
+        </div>
+    </form>
 </div>
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>

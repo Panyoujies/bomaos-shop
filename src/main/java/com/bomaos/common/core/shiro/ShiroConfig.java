@@ -91,8 +91,8 @@ public class ShiroConfig {
         // 异步通知
         filterChainDefinitions.put("/mqpay/notifyUrl", "anon");
         filterChainDefinitions.put("/mqpay/returnUrl", "anon");
-        filterChainDefinitions.put("/zlianpay/notifyUrl", "anon");
-        filterChainDefinitions.put("/zlianpay/returnUrl", "anon");
+        filterChainDefinitions.put("/epay/notifyUrl", "anon");
+        filterChainDefinitions.put("/epay/returnUrl", "anon");
         filterChainDefinitions.put("/xunhupay/notifyUrl", "anon");
         filterChainDefinitions.put("/xunhupay/returnUrl", "anon");
         filterChainDefinitions.put("/yungouos/notify", "anon");

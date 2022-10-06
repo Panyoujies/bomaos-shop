@@ -19,7 +19,7 @@ import com.bomaos.common.core.pays.paypal.config.PaypalPaymentMethod;
 import com.bomaos.common.core.pays.wxpay.SendWxPay;
 import com.bomaos.common.core.pays.xunhupay.PayUtils;
 import com.bomaos.common.core.pays.yungouos.YunGouosConfig;
-import com.bomaos.common.core.pays.zlianpay.ZlianPay;
+import com.bomaos.common.core.pays.epay.EpayUtil;
 import com.bomaos.common.core.utils.DateUtil;
 import com.bomaos.common.core.utils.FormCheckUtil;
 import com.bomaos.common.core.utils.RequestParamsUtil;
@@ -364,10 +364,10 @@ public class OrderController extends BaseController {
                 String createMqPay = mqPay.sendCreateMqPay(pays, price, ordersMember, cloudPayid, productDescription);
                 response.sendRedirect(createMqPay);
                 break;
-            case ZLIANPAY_ALIPAY: // 易支付支付宝
-            case ZLIANPAY_QQPAY: // 易支付QQ钱包
-            case ZLIANPAY_WXPAY: // 易支付微信
-                String zlianSendPay = ZlianPay.zlianSendPay(pays, price, ordersMember, productDescription);
+            case EPAY_ALIPAY: // 易支付支付宝
+            case EPAY_QQPAY: // 易支付QQ钱包
+            case EPAY_WXPAY: // 易支付微信
+                String zlianSendPay = EpayUtil.epaySendPay(pays, price, ordersMember, productDescription);
                 response.sendRedirect(zlianSendPay);
                 break;
             case YUNGOUOS_WXPAY: // yungouos微信
@@ -415,7 +415,6 @@ public class OrderController extends BaseController {
                 return "theme/" + theme.getDriver() + "/yunpay.html";
             case ALIPAY: // 支付宝当面付
                 String faceToFace = AlipayUtil.getFaceToFace(pays, productDescription, ordersMember, price);
-                // String payAlipay = SendAlipay.payAlipay(pays, price, ordersMember, goodsName, productDescription, request);
                 model.addAttribute("type", 2); // 支付宝当面付
                 model.addAttribute("result", JSON.toJSONString(faceToFace));
                 return "theme/" + theme.getDriver() + "/yunpay.html";

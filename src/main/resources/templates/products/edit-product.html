@@ -10,14 +10,13 @@
 </head>
 <body>
 <!-- 正文开始 -->
-<div class="layui-fluid">
-    <div class="layui-card">
-        <div class="layui-card-header">
-            编辑商品
-        </div>
-        <div class="layui-card-body">
-            <form class="layui-form" lay-filter="productForm" style="margin-top: 10px">
-
+<div class="layui-fluid" style="padding-bottom: 65px;">
+    <form class="layui-form" lay-filter="productForm">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                编辑商品
+            </div>
+            <div class="layui-card-body">
                 <input name="id" type="hidden"/>
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">商品分类:</label>
@@ -81,6 +80,17 @@
                     </div>
                 </div>
 
+                <!-- 重复使用出现，自定义输入框 -->
+                <div class="layui-form-item" id="customize" style="display:none;">
+                    <div class="layui-input-block" id="customizeInput">
+                        <textarea name="customize" placeholder="请输入关键字" class="layui-textarea"
+                                  lay-verType="tips"></textarea>
+                        <div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个
+                            [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）
+                        </div>
+                    </div>
+                </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">提示语句:</label>
                     <div class="layui-input-block">
@@ -108,17 +118,6 @@
                     <div class="layui-input-block">
                         <input name="componentUrl" placeholder="请输入文件下载地址" class="layui-input"/>
                         <div class="layui-word-aux">提示类型为文件下载有效</div>
-                    </div>
-                </div>
-
-                <!-- 重复使用出现，自定义输入框 -->
-                <div class="layui-form-item" id="customize" style="display:none;">
-                    <div class="layui-input-block" id="customizeInput">
-                        <textarea name="customize" placeholder="请输入关键字" class="layui-textarea"
-                                  lay-verType="tips"></textarea>
-                        <div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个
-                            [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）
-                        </div>
                     </div>
                 </div>
 
@@ -214,16 +213,16 @@
                     </div>
                 </div>
 
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit> 保存商品</button>
-                    </div>
-                </div>
-
-            </form>
+            </div>
         </div>
-    </div>
+        <!-- 提交 -->
+        <div class="form-group-bottom text-right">
+            <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+            <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit>&emsp;保存商品&emsp;</button>
+        </div>
+    </form>
 </div>
+
 <:include file="../common/js.html"/>
 <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
 <script>
@@ -241,7 +240,8 @@
                 '<textarea name="wholesale" placeholder="请输入批发配置" class="layui-textarea"></textarea>' +
                 '<div class="layui-word-aux">例如：填写 5=3 表示客户购买 5 件或以上时，每件价格为 3 元。一行一个</div>'
             );
-        };
+        }
+        ;
 
         if (products.isCustomize == 1) {
             $("#customize").attr("style", "display:block;");
@@ -249,7 +249,8 @@
                 '<textarea name="customizeInput" placeholder="请输入自定义关键字" class="layui-textarea"></textarea>' +
                 '<div class="layui-word-aux">格式为[唯一标识(英文)=输入框名字=是否必填]，例如：填写 qq_account=QQ账号=true 表示产品详情页会新增一个 [QQ账号] 输入框，客户可在其中输入 [QQ账号]，true 为必填，false 为选填。（一行一个）</div>'
             );
-        };
+        }
+        ;
 
         if (products.shipType == 1) {
             $("#inventory").attr("style", "display:block;");
@@ -262,6 +263,7 @@
                 '<input name="sales" placeholder="请输入销量" class="layui-input" value="0"/>' +
                 '<div class="layui-word-aux">手动发货模式生效</div>'
             );
+            $("#sellTypeDisplay").attr("style", "display:none;");
         }
 
         // 回显表单数据

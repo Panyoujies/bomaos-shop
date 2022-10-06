@@ -380,17 +380,16 @@ public class IndexController {
         if (products.getShipType() == 0) { // 自动发货模式
             Integer count = getCardListCount(cardsService, products); // 计算卡密使用情况
             model.addAttribute("cardCount", count);
+            if (products.getSellType() == 1) {
+                Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 1));
+                if (!ObjectUtils.isEmpty(cards)) {
+                    model.addAttribute("cardCount", cards.getNumber());
+                } else {
+                    model.addAttribute("cardCount", 0);
+                }
+            }
         } else { // 手动发货模式
             model.addAttribute("cardCount", products.getInventory());
-        }
-
-        if (products.getSellType() == 1) {
-            Cards cards = cardsService.getOne(new QueryWrapper<Cards>().eq("product_id", products.getId()).eq("status", 0).eq("sell_type", 1));
-            if (!ObjectUtils.isEmpty(cards)) {
-                model.addAttribute("cardCount", cards.getNumber());
-            } else {
-                model.addAttribute("cardCount", 0);
-            }
         }
 
         return "theme/" + theme.getDriver() + "/product.html";

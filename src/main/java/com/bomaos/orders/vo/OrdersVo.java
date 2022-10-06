@@ -139,4 +139,9 @@ public class OrdersVo {
      * 附加信息
      */
     private List<Map<String, String>> attachInfoList;
+
+    /**
+     * 手续费
+     */
+    private BigDecimal handlingFee;
 }

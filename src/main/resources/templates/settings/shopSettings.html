@@ -10,13 +10,15 @@
 </head>
 <body>
 <!-- 正文开始 -->
-<div class="layui-fluid">
-    <div class="layui-card">
-        <div class="layui-card-header">
-            商店设置
-        </div>
-        <div class="layui-card-body">
-            <form lay-filter="shopSettingsForm" class="layui-form" style="margin-top: 10px">
+<div class="layui-fluid" style="padding-bottom: 65px;">
+
+    <form lay-filter="shopSettingsForm" class="layui-form">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                商店设置
+            </div>
+            <div class="layui-card-body">
+
                 <input name="id" type="hidden"/>
 
                 <div class="layui-form-item">
@@ -62,11 +64,12 @@
                     <label class="layui-form-label">客服CrispID:</label>
                     <div class="layui-input-block">
                         <input name="crispKey" placeholder="请输入 CrispID" class="layui-input"/>
-                        <div class="layui-word-aux">申请地址：<a href="https://crisp.chat/zh/" target="_blank">https://crisp.chat/zh/</a></div>
+                        <div class="layui-word-aux">申请地址：<a href="https://crisp.chat/zh/" target="_blank">https://crisp.chat/zh/</a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">QQ群二维码:</label>
                     <div class="layui-input-block">
                         <input id="qqGroupQrcode" name="qqGroupQrcode" placeholder="请输入QQ群二维码" class="layui-input"/>
@@ -77,7 +80,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">首页模版:</label>
@@ -88,10 +91,11 @@
                     </div>
                 </div>
 
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">商店背景:</label>
                     <div class="layui-input-block">
-                        <input id="isBackground" name="isBackground" placeholder="请输入全局背景图" class="layui-input"/>
+                        <input id="isBackground" name="isBackground" placeholder="请输入全局背景图"
+                               class="layui-input"/>
                         <div class="layui-upload" style="margin-top: 10px">
                             <button type="button" class="layui-btn" id="test1">上传图片</button>
                             <div class="layui-upload-list">
@@ -99,7 +103,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">购物须知:</label>
                     <div class="layui-input-block">
@@ -119,14 +123,14 @@
                         <textarea id="windowText"></textarea>
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="shopSettingsEditSubmit" lay-submit> 保存设置 </button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+        <!-- 提交 -->
+        <div class="form-group-bottom text-right">
+            <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+            <button class="layui-btn" lay-filter="shopSettingsEditSubmit" lay-submit>&emsp;保存设置&emsp;</button>
+        </div>
+    </form>
 </div>
 
 <:include file="../common/js.html"/>

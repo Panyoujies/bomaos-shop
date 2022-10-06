@@ -101,7 +101,7 @@ public class MainController extends BaseController implements ErrorController {
     public String index(Model model) {
 
         Pays paypal = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "paypal"));
-        Pays zlqqpay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "zlianpay_qqpay"));
+        Pays zlqqpay = paysService.getOne(new QueryWrapper<Pays>().eq("driver", "epay_qqpay"));
 
         if (ObjectUtils.isEmpty(paypal)) {
             Pays pays1 = new Pays();
@@ -125,7 +125,7 @@ public class MainController extends BaseController implements ErrorController {
         if (ObjectUtils.isEmpty(zlqqpay)) {
             Pays pays1 = new Pays();
             pays1.setName("QQ钱包");
-            pays1.setDriver("zlianpay_qqpay");
+            pays1.setDriver("epay_qqpay");
 
             Map<String, String> map = new HashMap<>();
             map.put("pid", "xxx");

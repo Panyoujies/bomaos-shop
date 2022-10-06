@@ -318,7 +318,6 @@
     min-width: 4em;
     color: rgba(0, 0, 0, 0.5);
     text-align: justify;
-    text-align-last: justify;
 }
 
 .weui-form-preview__value {
@@ -378,7 +377,6 @@
     min-width: 4em;
     color: rgba(0,0,0,0.6);
     text-align: justify;
-    text-align-last: justify;
 }
 
 .weui-form-preview__values {

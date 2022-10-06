@@ -74,6 +74,9 @@
                 <if test="page.pageData.attachInfo != null">
                     AND a.attach_info LIKE CONCAT('%', #{page.pageData.attachInfo}, '%')
                 </if>
+                <if test="page.pageData.handlingFee != null">
+                    AND a.handling_fee = #{page.pageData.handlingFee}
+                </if>
             </if>
         </where>
     </sql>

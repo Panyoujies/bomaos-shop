@@ -172,13 +172,13 @@
                 {field: 'productName', title: '商品名称'},
                 {
                     field: 'payType', title: '支付类型', templet: function (res) {
-                        if (res.payType == 'mqpay_alipay' || res.payType == 'zlianpay_alipay' || res.payType == 'yungouos_alipay' || res.payType == 'xunhupay_alipay' || res.payType == 'jiepay_alipay' || res.payType == 'payjs_alipay' || res.payType == 'alipay') {
+                        if (res.payType == 'mqpay_alipay' || res.payType == 'epay_alipay' || res.payType == 'yungouos_alipay' || res.payType == 'xunhupay_alipay' || res.payType == 'jiepay_alipay' || res.payType == 'payjs_alipay' || res.payType == 'alipay') {
                             return '<span class="layui-badge layui-badge-blue">支付宝</span>'
-                        } else if (res.payType == 'mqpay_wxpay' || res.payType == 'zlianpay_wxpay' || res.payType == 'yungouos_wxpay' || res.payType == 'xunhupay_wxpay' || res.payType == 'jiepay_wxpay' || res.payType == 'payjs_wxpay' || res.payType == 'wxpay' || res.payType == 'wxpay_h5') {
+                        } else if (res.payType == 'mqpay_wxpay' || res.payType == 'epay_wxpay' || res.payType == 'yungouos_wxpay' || res.payType == 'xunhupay_wxpay' || res.payType == 'jiepay_wxpay' || res.payType == 'payjs_wxpay' || res.payType == 'wxpay' || res.payType == 'wxpay_h5') {
                             return '<span class="layui-badge layui-badge-green">微信</span>'
                         } else if (res.payType == 'paypal') {
                             return '<span class="layui-badge layui-badge-paypal">Paypal</span>'
-                        } else if (res.payType == 'zlianpay_qqpay') {
+                        } else if (res.payType == 'epay_qqpay') {
                             return '<span class="layui-badge layui-badge-blue">QQ钱包</span>'
                         } else if (res.payType == 'alipay_pc') {
                             return '<span class="layui-badge layui-badge-blue">支付宝PC</span>'

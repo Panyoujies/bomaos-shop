@@ -1,4 +1,4 @@
-package com.bomaos.common.core.pays.zlianpay;
+package com.bomaos.common.core.pays.epay;
 
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
@@ -9,10 +9,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZlianPay {
+public class EpayUtil {
 
-    public static String zlianSendPay(Pays pays, String price, String payId, String param) {
-
+    public static String epaySendPay(Pays pays, String price, String payId, String param) {
         Map mapTypes = JSON.parseObject(pays.getConfig());
 
         String key = mapTypes.get("key").toString();
@@ -20,20 +19,20 @@ public class ZlianPay {
         String create_url = mapTypes.get("create_url").toString();
         String notify_url = mapTypes.get("notify_url").toString();
 
-        String notifyUrl = notify_url + "/zlianpay/notifyUrl";
-        String returnUrl = notify_url + "/zlianpay/returnUrl";
+        String notifyUrl = notify_url + "/epay/notifyUrl";
+        String returnUrl = notify_url + "/epay/returnUrl";
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("pid", pid);
 
         String type = "";
-        if (pays.getDriver().equals("zlianpay_alipay")) {
+        if (pays.getDriver().equals("epay_alipay")) {
             type = "alipay";
             paramMap.put("type", "alipay");
-        } else if (pays.getDriver().equals("zlianpay_wxpay")) {
+        } else if (pays.getDriver().equals("epay_wxpay")) {
             type = "wxpay";
             paramMap.put("type", "wxpay");
-        } else if (pays.getDriver().equals("zlianpay_qqpay")) {
+        } else if (pays.getDriver().equals("epay_qqpay")) {
             type = "qqpay";
             paramMap.put("type", "qqpay");
         }

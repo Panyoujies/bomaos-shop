@@ -64,9 +64,9 @@ public class PaysController extends BaseController {
                     paysVo.setCreateUrl(configs.get("create_url").toString());
                     paysVo.setNotifyUrl(configs.get("notify_url").toString());
                     break;
-                case ZLIANPAY_ALIPAY:
-                case ZLIANPAY_QQPAY:
-                case ZLIANPAY_WXPAY:
+                case EPAY_ALIPAY:
+                case EPAY_QQPAY:
+                case EPAY_WXPAY:
                     paysVo.setAppid(configs.get("pid").toString());
                     paysVo.setKey(configs.get("key").toString());
                     paysVo.setCreateUrl(configs.get("create_url").toString());
@@ -187,9 +187,9 @@ public class PaysController extends BaseController {
                 map.put("create_url", paysVo.getCreateUrl());
                 map.put("notify_url", paysVo.getNotifyUrl());
                 break;
-            case ZLIANPAY_ALIPAY:
-            case ZLIANPAY_QQPAY:
-            case ZLIANPAY_WXPAY:
+            case EPAY_ALIPAY:
+            case EPAY_QQPAY:
+            case EPAY_WXPAY:
                 map.put("pid", paysVo.getAppid());
                 map.put("key", paysVo.getKey());
                 map.put("create_url", paysVo.getCreateUrl());
@@ -377,4 +377,21 @@ public class PaysController extends BaseController {
         return JsonResult.error("开启失败");
     }
 
+    /**
+     * 修改支付配置
+     */
+    @RequiresPermissions("settings:pays:update")
+    @OperLog(value = "支付配置管理", desc = "修改手续费", param = false, result = true)
+    @ResponseBody
+    @RequestMapping("/updateHandlingFee")
+    public JsonResult updateSort(PaysVo paysVo) {
+        Pays pays = new Pays();
+        BeanUtils.copyProperties(paysVo, pays);
+        pays.setHandlingFee(paysVo.getHandlingFee());
+
+        if (paysService.updateById(pays)) {
+            return JsonResult.ok("修改成功");
+        }
+        return JsonResult.error("修改失败");
+    }
 }

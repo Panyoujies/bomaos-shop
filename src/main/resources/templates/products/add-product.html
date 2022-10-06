@@ -10,14 +10,14 @@
 </head>
 <body>
 <!-- 正文开始 -->
-<div class="layui-fluid">
-    <div class="layui-card">
-        <div class="layui-card-header">
-            添加商品
-        </div>
-        <div class="layui-card-body">
-            <form class="layui-form" lay-filter="emailForm" style="margin-top: 10px">
+<div class="layui-fluid" style="padding-bottom: 65px;">
 
+    <form class="layui-form" lay-filter="emailForm">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                添加商品
+            </div>
+            <div class="layui-card-body">
                 <div class="layui-form-item" style="margin-top: 5px">
                     <label class="layui-form-label layui-form-required">商品分类:</label>
                     <div class="layui-input-block">
@@ -71,16 +71,10 @@
 
                 <!-- 自定义输入框配置 -->
                 <div class="layui-form-item">
-                    <label class="layui-form-label layui-form-required">自定义输入框</label>
-                    <div class="layui-input-inline" style="width: auto;">
-                        <input type="hidden" name="isCustomize" value="0"> <!-- 默认未开启 -->
-                        <input type="checkbox" lay-verify="required"
-                               lay-filter="isCustomize"
-                               id="isCustomize"
-                               value="1"
-                               name="isCustomize"
-                               lay-skin="switch"
-                               lay-text="开启|关闭">
+                    <label class="layui-form-label layui-form-required">自定义输入框:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="isCustomize" lay-filter="isCustomize" value="0" title="关闭" checked>
+                        <input type="radio" name="isCustomize" lay-filter="isCustomize" value="1" title="开启">
                     </div>
                 </div>
 
@@ -98,8 +92,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">提示语句:</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="componentEnabled" value="0" title="开启提示" checked>
-                        <input type="radio" name="componentEnabled" value="1" title="关闭提示">
+                        <input type="radio" name="componentEnabled" value="0" title="开启提示">
+                        <input type="radio" name="componentEnabled" value="1" title="关闭提示" checked>
                     </div>
                 </div>
                 <div class="layui-form-item" style="margin-top: 5px">
@@ -128,8 +122,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">发货模式:</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货"
-                               checked>
+                        <input type="radio" name="shipType" lay-filter="shipType" value="0" title="自动发货" checked>
                         <input type="radio" name="shipType" lay-filter="shipType" value="1" title="手动发货">
                     </div>
                 </div>
@@ -223,14 +216,14 @@
                         <input type="radio" name="status" value="0" title="下架">
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit> 保存商品</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+        <!-- 提交 -->
+        <div class="form-group-bottom text-right">
+            <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+            <button class="layui-btn" lay-filter="productsEditSubmit" lay-submit>&emsp;添加商品&emsp;</button>
+        </div>
+    </form>
 
 </div>
 <:include file="../common/js.html"/>
@@ -359,9 +352,9 @@
         });
 
         //监听指定开关
-        form.on('switch(isCustomize)', function (data) {
+        form.on('radio(isCustomize)', function (data) {
             // 使用
-            if (this.checked == true) {
+            if (this.value == true) {
                 layer.msg("请输入需要自定义的输入框配置", {icon: 1});
                 $("#customize").attr("style", "display:block;");
                 $("#customizeInput").html(

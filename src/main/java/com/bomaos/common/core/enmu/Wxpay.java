@@ -2,7 +2,7 @@ package com.bomaos.common.core.enmu;
 
 public enum Wxpay {
     MQPAY_WXPAY("mqpay_wxpay"),
-    ZLIANPAY_WXPAY("zlianpay_wxpay"),
+    EPAY_WXPAY("epay_wxpay"),
     YUNGOUOS_WXPAY("yungouos_wxpay"),
     XUNHUPAY_WXPAY("xunhupay_wxpay"),
     JIEPAY_WXPAY("jiepay_wxpay"),

@@ -5,18 +5,20 @@
 </head>
 <body>
 <!-- 正文开始 -->
-<div class="layui-fluid">
-    <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
-        <div class="layui-card-header">
-            添加卡密
-        </div>
-        <div class="layui-card-body">
-            <!-- 表单开始 -->
-            <form class="layui-form" id="formBasForm" lay-filter="formBasForm" style="margin-top: 20px">
+<div class="layui-fluid" style="padding-bottom: 65px;">
+
+    <!-- 表单开始 -->
+    <form class="layui-form" id="formBasForm" lay-filter="formBasForm">
+        <div class="layui-card" style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+            <div class="layui-card-header">
+                添加卡密
+            </div>
+            <div class="layui-card-body">
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">选择商品</label>
                     <div class="layui-input-inline">
-                        <select id="classifyId" lay-verType="tips" lay-verify="required" lay-filter="classifyId" required>
+                        <select id="classifyId" lay-verType="tips" lay-verify="required" lay-filter="classifyId"
+                                required>
                             <option value="">请选择分类</option>
                             <:for items="${classifysList}" var="item">
                                 <option value="${item.id}">${item.name}</option>
@@ -52,7 +54,8 @@
                 <div class="layui-form-item" id="sellNumber" style="display:none;">
                     <label class="layui-form-label layui-form-required">可用次数:</label>
                     <div class="layui-input-block" id="inputNumber">
-                        <input name="sellNumber" placeholder="输入要销售的次数..." value="0" class="layui-input" lay-verType="tips"/>
+                        <input name="sellNumber" placeholder="输入要销售的次数..." value="0" class="layui-input"
+                               lay-verType="tips"/>
                     </div>
                 </div>
 
@@ -64,15 +67,14 @@
                                lay-text="关闭|开启">
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加&emsp;</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+        <!-- 提交 -->
+        <div class="form-group-bottom text-right">
+            <button type="reset" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>
+            <button class="layui-btn" lay-filter="formBasSubmit" lay-submit>&emsp;添加卡密&emsp;</button>
+        </div>
+    </form>
 </div>
 
 <:include file="../common/js.html"/>
@@ -111,7 +113,8 @@
             $.post('save', data.field, function (res) {
                 console.log(data.field)
                 if (0 === res.code) {
-                    notice.msg(res.msg, {icon: 1, timeout: 1500, onClosing: function () {
+                    notice.msg(res.msg, {
+                        icon: 1, timeout: 1500, onClosing: function () {
                             location.reload();
                         }
                     });

@@ -132,4 +132,10 @@ public class OrderVos {
      * 附加信息
      */
     private String attachInfo;
+
+
+    /**
+     * 手续费
+     */
+    private BigDecimal handlingFee;
 }

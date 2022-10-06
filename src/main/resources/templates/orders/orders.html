@@ -169,6 +169,11 @@
                             <label class="layui-form-label">下单设备:</label>
                             <div class="layui-input-block layui-word-aux">{{d.device}}</div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下单时间:</label>
+                            <div class="layui-input-block layui-word-aux">{{layui.util.toDateString(d.createTime)}}
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-col-md6">
                         <div class="layui-form-item">
@@ -176,13 +181,12 @@
                             <div class="layui-input-block layui-word-aux">{{d.money}}</div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">购买数量:</label>
-                            <div class="layui-input-block layui-word-aux">{{d.number}}</div>
+                            <label class="layui-form-label">手续费:</label>
+                            <div class="layui-input-block layui-word-aux">{{d.handlingFee}}</div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">下单时间:</label>
-                            <div class="layui-input-block layui-word-aux">{{layui.util.toDateString(d.createTime)}}
-                            </div>
+                            <label class="layui-form-label">购买数量:</label>
+                            <div class="layui-input-block layui-word-aux">{{d.number}}</div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">付款时间:</label>
@@ -265,12 +269,12 @@
                                 return '<span class="layui-badge layui-badge-blue">支付宝-v免签</span>';
                             case 'mqpay_wxpay' :
                                 return '<span class="layui-badge layui-badge-green">微信-v免签</span>';
-                            case 'zlianpay_alipay' :
-                                return '<span class="layui-badge layui-badge-blue">支付宝-值联码支付</span>';
-                            case 'zlianpay_qqpay' :
+                            case 'epay_alipay' :
+                                return '<span class="layui-badge layui-badge-blue">支付宝-易支付</span>';
+                            case 'epay_qqpay' :
                                 return '<span class="layui-badge layui-badge-blue">QQ钱包-易支付</span>';
-                            case 'zlianpay_wxpay' :
-                                return '<span class="layui-badge layui-badge-green">微信-值联码支付</span>';
+                            case 'epay_wxpay' :
+                                return '<span class="layui-badge layui-badge-green">微信-易支付</span>';
                             case 'yungouos_alipay' :
                                 return '<span class="layui-badge layui-badge-blue">支付宝-YunGouOS</span>';
                             case 'yungouos_wxpay' :

@@ -29,6 +29,9 @@
                 <if test="page.pageData.isHandlingFee != null">
                     AND a.is_handling_fee = #{page.pageData.isHandlingFee}
                 </if>
+                <if test="page.pageData.handlingFee != null">
+                    AND a.handling_fee = #{page.pageData.handlingFee}
+                </if>
                 <if test="page.pageData.createdAt != null">
                     AND a.created_at LIKE CONCAT('%', #{page.pageData.createdAt}, '%')
                 </if>

@@ -13,7 +13,7 @@ import com.bomaos.common.core.pays.mqpay.mqPay;
 import com.bomaos.common.core.pays.payjs.SignUtil;
 import com.bomaos.common.core.pays.paypal.PaypalSend;
 import com.bomaos.common.core.pays.xunhupay.PayUtils;
-import com.bomaos.common.core.pays.zlianpay.ZlianPay;
+import com.bomaos.common.core.pays.epay.EpayUtil;
 import com.bomaos.common.core.utils.DateUtil;
 import com.bomaos.common.core.utils.FormCheckUtil;
 import com.bomaos.common.core.utils.RequestParamsUtil;
@@ -189,7 +189,7 @@ public class NotifyController {
         }
     }
 
-    @RequestMapping("/zlianpay/notifyUrl")
+    @RequestMapping("/epay/notifyUrl")
     @ResponseBody
     public String zlianpNotify(HttpServletRequest request) {
         Map<String, String> parameterMap = RequestParamsUtil.getParameterMap(request);
@@ -200,11 +200,11 @@ public class NotifyController {
 
         String driver = "";
         if (type.equals("wxpay")) {
-            driver = "zlianpay_wxpay";
+            driver = "epay_wxpay";
         } else if (type.equals("alipay")) {
-            driver = "zlianpay_alipay";
+            driver = "epay_alipay";
         } else if (type.equals("qqpay")) {
-            driver = "zlianpay_qqpay";
+            driver = "epay_qqpay";
         }
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", driver));
@@ -241,7 +241,7 @@ public class NotifyController {
         params.put("notify_url", notify_url);
         params.put("trade_status", trade_status);
 
-        String sign1 = ZlianPay.createSign(params, secret_key);
+        String sign1 = EpayUtil.createSign(params, secret_key);
 
         if (sign1.equals(sign)) {
             AtomicReference<String> notifyText = new AtomicReference<>();
@@ -255,7 +255,7 @@ public class NotifyController {
         }
     }
 
-    @RequestMapping("/zlianpay/returnUrl")
+    @RequestMapping("/epay/returnUrl")
     @ResponseBody
     public void zlianpReturnUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -269,11 +269,11 @@ public class NotifyController {
 
         String driver = "";
         if (type.equals("wxpay")) {
-            driver = "zlianpay_wxpay";
+            driver = "epay_wxpay";
         } else if (type.equals("alipay")) {
-            driver = "zlianpay_alipay";
+            driver = "epay_alipay";
         } else if (type.equals("qqpay")) {
-            driver = "zlianpay_qqpay";
+            driver = "epay_qqpay";
         }
 
         Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", driver));
@@ -302,7 +302,7 @@ public class NotifyController {
         params.put("notify_url", notify_url);
         params.put("trade_status", trade_status);
 
-        String sign1 = ZlianPay.createSign(params, secret_key);
+        String sign1 = EpayUtil.createSign(params, secret_key);
 
         if (sign1.equals(sign)) {
             String url = "/pay/state/" + out_trade_no;

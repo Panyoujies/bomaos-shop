@@ -1,6 +1,7 @@
 package com.bomaos.orders.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bomaos.common.core.utils.*;
 import com.bomaos.common.core.web.PageParam;
@@ -12,12 +13,17 @@ import com.bomaos.orders.service.OrdersService;
 import com.bomaos.products.entity.Products;
 import com.bomaos.products.mapper.ProductsMapper;
 import com.bomaos.settings.entity.Coupon;
+import com.bomaos.settings.entity.Pays;
 import com.bomaos.settings.mapper.CouponMapper;
+import com.bomaos.settings.mapper.PaysMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -31,11 +37,16 @@ import java.util.*;
 @Transactional
 public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> implements OrdersService {
 
-    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(OrdersServiceImpl.class);
+
+    @Resource
     private ProductsMapper productsMapper;
 
-    @Autowired
+    @Resource
     private CouponMapper couponMapper;
+
+    @Resource
+    private PaysMapper paysMapper;
 
     @Override
     public PageResult<Orders> listPage(PageParam<Orders> page) {
@@ -165,9 +176,26 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             orders.setIsCoupon(0); // 1 为使用优惠了
         }
 
-        System.out.println("订单数：" + number);
-        System.out.println("总价：" + multiply);
-        System.out.println("实际支付价格：" + orders.getMoney());
+        /**
+         * 计算手续费
+         */
+        Pays pays = paysMapper.selectOne(Wrappers.<Pays>lambdaQuery().eq(Pays::getDriver, orders.getPayType()));
+        if (!Objects.isNull(pays.getIsHandlingFee())) {
+            if (pays.getIsHandlingFee() == 1 && !Objects.isNull(pays.getHandlingFee())) {
+                BigDecimal handlingFee = orders.getMoney().multiply(toPoint100(pays.getHandlingFee().toString())).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                BigDecimal decimal = orders.getMoney().add(handlingFee).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                orders.setMoney(decimal);
+                orders.setHandlingFee(handlingFee);
+            } else {
+                orders.setHandlingFee(new BigDecimal(0.00));
+            }
+        } else {
+            orders.setHandlingFee(new BigDecimal(0.00));
+        }
+
+        logger.info("订单数：{}", number);
+        logger.info("总价：{}", multiply);
+        logger.info("实际支付价格：{}", orders.getMoney());
 
         /**
          * 判断下是不是电子邮件
@@ -189,6 +217,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         map.put("total_price", multiply.toString());
         map.put("money", orders.getMoney().toString());
         map.put("member", orders.getMember());
+        map.put("handling_fee", orders.getHandlingFee().toString());
 
         return map;
     }
@@ -224,7 +253,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Override
     public boolean clearAllRemove() {
-        Date startDayTime = DateStrUtil.getStartDayTime(-+7);
+        Date startDayTime = DateStrUtil.getStartDayTime(-+6);
         QueryWrapper queryWrapper = getQueryWrapper(startDayTime);
 
         List<Orders> list = this.list(queryWrapper);

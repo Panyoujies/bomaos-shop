@@ -1822,6 +1822,17 @@ a cite {
     color: #fff !important
 }
 
+.form-group-bottom {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 -1px 2px 0 rgb(0 0 0 / 5%);
+}
+
 .layui-card-body {
     position: relative;
     padding: 10px 15px;
