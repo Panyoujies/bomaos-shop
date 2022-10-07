@@ -10,7 +10,6 @@ import com.bomaos.common.core.annotation.OperLog;
 import com.bomaos.common.core.pays.alipay.AlipayUtil;
 import com.bomaos.common.core.pays.epusdt.entity.EpusdtEntity;
 import com.bomaos.common.core.pays.epusdt.sendPay;
-import com.bomaos.common.core.pays.jiepay.JiepaySend;
 import com.bomaos.common.core.pays.mqpay.mqPay;
 import com.bomaos.common.core.pays.payjs.sendPayjs;
 import com.bomaos.common.core.pays.paypal.PaypalSend;
@@ -390,11 +389,6 @@ public class OrderController extends BaseController {
                 } else {
                     return "theme/" + theme.getDriver() + "/pay-error.html";
                 }
-                break;
-            case JIEPAY_WXPAY: // 捷支付微信
-            case JIEPAY_ALIPAY: // 捷支付支付宝
-                String payUtils = JiepaySend.jiePayUtils(pays, price, ordersMember, productDescription);
-                response.sendRedirect(payUtils);
                 break;
             case PAYJS_WXPAY: // payjs 微信
             case PAYJS_ALIPAY: // payjs 支付宝

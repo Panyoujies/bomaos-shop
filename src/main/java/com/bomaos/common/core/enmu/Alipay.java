@@ -5,7 +5,6 @@ public enum Alipay {
     EPAY_ALIPAY("epay_alipay"),
     YUNGOUOS_ALIPAY("yungouos_alipay"),
     XUNHUPAY_ALIPAY("xunhupay_alipay"),
-    JIEPAY_ALIPAY("jiepay_alipay"),
     PAYJS_ALIPAY("payjs_alipay"),
     ALIPAY("alipay"),
     ALIPAY_PC("alipay_pc");

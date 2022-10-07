@@ -85,11 +85,6 @@ public class PaysController extends BaseController {
                     paysVo.setCreateUrl(configs.containsKey("create_url") ? configs.get("create_url").toString() : "");
                     paysVo.setNotifyUrl(configs.get("notify_url").toString());
                     break;
-                case JIEPAY_ALIPAY:
-                case JIEPAY_WXPAY:
-                    paysVo.setAppid(configs.get("appid").toString());
-                    paysVo.setKey(configs.get("apptoken").toString());
-                    break;
                 case PAYJS_ALIPAY:
                 case PAYJS_WXPAY:
                     paysVo.setAppid(configs.get("mchId").toString());
@@ -207,11 +202,6 @@ public class PaysController extends BaseController {
                 map.put("appsecret", paysVo.getKey());
                 map.put("create_url", paysVo.getCreateUrl());
                 map.put("notify_url", paysVo.getNotifyUrl());
-                break;
-            case JIEPAY_WXPAY:
-            case JIEPAY_ALIPAY:
-                map.put("appid", paysVo.getAppid());
-                map.put("apptoken", paysVo.getKey());
                 break;
             case PAYJS_ALIPAY:
             case PAYJS_WXPAY:

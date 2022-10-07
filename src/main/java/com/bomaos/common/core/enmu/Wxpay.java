@@ -5,7 +5,6 @@ public enum Wxpay {
     EPAY_WXPAY("epay_wxpay"),
     YUNGOUOS_WXPAY("yungouos_wxpay"),
     XUNHUPAY_WXPAY("xunhupay_wxpay"),
-    JIEPAY_WXPAY("jiepay_wxpay"),
     PAYJS_WXPAY("payjs_wxpay"),
     WXPAY("wxpay"),
     WXPAU_H5("wxpay_h5");

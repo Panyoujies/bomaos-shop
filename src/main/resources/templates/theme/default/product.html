@@ -218,7 +218,7 @@
                     <div class="pay-type-group">
                         <div class="layui-row layui-col-space15">
                             <:for items="${paysList}" var="item">
-                                <:if test="${item.driver=='mqpay_wxpay' || item.driver=='epay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='jiepay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='wxpay_h5' || item.driver=='wxpay'}">
+                                <:if test="${item.driver=='mqpay_wxpay' || item.driver=='epay_wxpay' || item.driver=='yungouos_wxpay' || item.driver=='xunhupay_wxpay' || item.driver=='payjs_wxpay' || item.driver=='wxpay_h5' || item.driver=='wxpay'}">
                                     <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
                                         <div class="pay-type-wexin<:if test="${item.andIncrement == 0}"> active</:if>" data-id="${item.driver}">
                                             <img style="vertical-align: middle;" src="${ctxPath}/default/images/pays/wxpay.svg">
@@ -231,7 +231,7 @@
                                         </div>
                                     </div>
                                 </:if>
-                                <:if test="${item.driver=='mqpay_alipay' || item.driver=='epay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='jiepay_alipay' || item.driver=='payjs_alipay' || item.driver=='alipay' || item.driver=='alipay_pc'}">
+                                <:if test="${item.driver=='mqpay_alipay' || item.driver=='epay_alipay' || item.driver=='yungouos_alipay' || item.driver=='xunhupay_alipay' || item.driver=='payjs_alipay' || item.driver=='alipay' || item.driver=='alipay_pc'}">
                                     <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
                                         <div class="pay-type-ali<:if test="${item.andIncrement == 0}"> active</:if>" data-id="${item.driver}">
                                             <img style="vertical-align: middle;" src="${ctxPath}/default/images/pays/alipay.svg">
