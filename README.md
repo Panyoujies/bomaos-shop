@@ -1,3 +1,5 @@
+## Spotify 音乐会员合租 关注公众号“悦音坊”
+
 <h1 align="center">波猫商店</h1>
 <p align="center">
 <a href="https://github.com/Panyoujies/zlianpay-faka/releases"><img src="https://img.shields.io/badge/Version-1.0.1-green" alt="License"></a>
