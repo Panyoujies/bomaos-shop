@@ -10,18 +10,13 @@
 <a href="https://free.bomaos.com" target="_blank">演示地址</a>
 </p>
 
-## 本项目为个人学习开发
-## 仅供学习参考、不可用于违法用途。
-
-发卡Telegram技术交流群： [https://t.me/zlianfaka](https://t.me/zlianfaka)
+## 🙋 仅供学习参考、不可用于违法用途。
 
 * Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
 * Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
 
-## 介绍
-
-新版 2.0.3 已正式推出，详情请看 [https://free.bomaos.com/](https://free.bomaos.com/)
-一款高效安全的发卡平台。
+## 🌼 介绍
+本项目为个人学习开发，新版 2.0.3 已正式推出，一款高效安全的发卡平台。
 
 支持的支付渠道：
 * v免签
@@ -37,7 +32,7 @@
 * epusdt 【usdt trc-20】[https://github.com/assimon/epusdt](https://github.com/assimon/epusdt)
 * 其他待添加。。
 
-## 系统介绍
+## 🔥 系统介绍
 - 开源式站长自动化售货解决方案、高效、稳定、快速！
 
   演示地址：[https://free.bomaos.com/](https://free.bomaos.com/)
@@ -46,10 +41,10 @@
 - 开发框架：Spring boot
 - 前端UI [layui](https://www.layui.com/).     
 
-## 适用场景：
+## 🍊 适用场景：
 适用于各种电商、优惠卷、论坛邀请码、充值卡、激活码、注册码、腾讯爱奇艺积分CDK等，支持手动和全自动发货，还有类似1688的分层批发模式。
 
-## 功能特色：
+## 🍊 功能特色：
 * Layui 开发的白天 - 黑夜 - 炫丽暗黑模板
 * 基于Layui开发的炫丽后台界面
 * 集成了后台多种主题模式
@@ -64,6 +59,7 @@
 * 集成了强大的优惠券系统
 * 集成了自定义的商品购买备注字段
 
-有问题欢迎入
-QQ群1反馈：940086807
-QQ群2反馈：441322649
+💬 有问题欢迎入
+* QQ群1反馈：940086807
+* QQ群2反馈：441322649
+* Telegram技术交流群： [https://t.me/zlianfaka](https://t.me/zlianfaka)
