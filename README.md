@@ -1,6 +1,3 @@
-## Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
-## Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
-
 <h1 align="center">波猫商店</h1>
 <p align="center">
 <a href="https://github.com/Panyoujies/zlianpay-faka/releases"><img src="https://img.shields.io/badge/Version-1.0.1-green" alt="License"></a>
@@ -15,6 +12,11 @@
 
 ## 本项目为个人学习开发
 ## 仅供学习参考、不可用于违法用途。
+
+发卡Telegram技术交流群： [https://t.me/zlianfaka](https://t.me/zlianfaka)
+
+Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
+Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
 
 ## 介绍
 
