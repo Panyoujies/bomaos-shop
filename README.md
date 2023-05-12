@@ -15,8 +15,8 @@
 
 发卡Telegram技术交流群： [https://t.me/zlianfaka](https://t.me/zlianfaka)
 
-Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
-Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
+* Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
+* Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
 
 ## 介绍
 
