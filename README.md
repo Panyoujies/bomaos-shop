@@ -12,6 +12,7 @@
 
 ## 🙋 仅供学习参考、不可用于违法用途。
 
+* 导航网站 [http://bomaos.com](http://bomaos.com)
 * Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
 * Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
 
