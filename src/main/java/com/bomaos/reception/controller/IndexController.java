@@ -9,6 +9,7 @@ import com.bomaos.carmi.entity.Cards;
 import com.bomaos.carmi.service.CardsService;
 import com.bomaos.common.core.enmu.*;
 import com.bomaos.common.core.utils.DateUtil;
+import com.bomaos.common.core.utils.DeviceUtils;
 import com.bomaos.common.core.web.JsonResult;
 import com.bomaos.common.core.web.PageParam;
 import com.bomaos.common.core.web.PageResult;
@@ -46,8 +47,6 @@ import com.bomaos.website.entity.Website;
 import com.bomaos.website.service.WebsiteService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -315,9 +314,9 @@ public class IndexController {
         // 查出分类
         Classifys classifys = classifysService.getById(products.getClassifyId());
 
-        Device currentDevice = DeviceUtils.getCurrentDevice(request);
+        boolean isMobile = DeviceUtils.isMobileDevice(request);
         AtomicInteger index = new AtomicInteger(0);
-        if (currentDevice.isMobile()) {
+        if (isMobile) {
             List<PaysVo> paysVoList = getPaysVoList(paysService.list(new QueryWrapper<Pays>().eq("is_mobile", 1)), index);
             model.addAttribute("paysList", paysVoList);
         } else {

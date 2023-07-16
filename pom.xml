@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.3</version>
+        <version>2.7.13</version>
         <relativePath/>
     </parent>
 
@@ -62,9 +62,9 @@
 
         <!-- mysql -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.33</version>
         </dependency>
 
         <!-- druid -->
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.3.1</version>
         </dependency>
 
         <!-- fastjson -->
@@ -92,19 +92,19 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
-            <version>5.8.6</version>
+            <version>5.8.20</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-poi</artifactId>
-            <version>5.8.6</version>
+            <version>5.8.20</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.6</version>
+            <version>5.8.20</version>
         </dependency>
 
         <!-- poi -->
@@ -151,13 +151,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.7.13</version>
         </dependency>
 
         <!-- shiro -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
-            <version>1.9.1</version>
+            <version>1.11.0</version>
         </dependency>
 
         <dependency>
@@ -236,7 +237,7 @@
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-easysdk</artifactId>
-            <version>2.2.2</version>
+            <version>2.2.3</version>
         </dependency>
 
         <dependency>
@@ -248,7 +249,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.7</version>
+            <version>2.10.1</version>
         </dependency>
 
         <dependency>
@@ -266,13 +267,7 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.mobile</groupId>
-            <artifactId>spring-mobile-starter</artifactId>
-            <version>2.0.0.M2</version>
+            <version>3.5.1</version>
         </dependency>
 
         <dependency>
@@ -333,13 +328,7 @@
     <repositories>
         <repository>
             <id>nexus-aliyun</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-        </repository>
-
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
         </repository>
     </repositories>
 

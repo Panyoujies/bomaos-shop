@@ -19,10 +19,7 @@ import com.bomaos.common.core.pays.wxpay.SendWxPay;
 import com.bomaos.common.core.pays.xunhupay.PayUtils;
 import com.bomaos.common.core.pays.yungouos.YunGouosConfig;
 import com.bomaos.common.core.pays.epay.EpayUtil;
-import com.bomaos.common.core.utils.DateUtil;
-import com.bomaos.common.core.utils.FormCheckUtil;
-import com.bomaos.common.core.utils.RequestParamsUtil;
-import com.bomaos.common.core.utils.UserAgentGetter;
+import com.bomaos.common.core.utils.*;
 import com.bomaos.common.core.web.BaseController;
 import com.bomaos.common.core.web.JsonResult;
 import com.bomaos.common.system.service.EmailService;
@@ -47,9 +44,6 @@ import com.paypal.api.payments.Payment;
 import com.zjiecode.wxpusher.client.WxPusher;
 import com.zjiecode.wxpusher.client.bean.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DevicePlatform;
-import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -127,9 +121,8 @@ public class OrderController extends BaseController {
             return JsonResult.error("请选择付款方式！");
         }
 
-        Device currentDevice = DeviceUtils.getCurrentDevice(request);
-        DevicePlatform devicePlatform = currentDevice.getDevicePlatform();
-        if (devicePlatform.name().equals("IOS") || devicePlatform.name().equals("ANDROID")) {
+        boolean isMobile = DeviceUtils.isMobileDevice(request);
+        if (isMobile) {
             Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", payType).eq("is_mobile", 1));
             if (ObjectUtils.isEmpty(pays)) {
                 return JsonResult.error("不要搞我啦！！");
