@@ -8,6 +8,8 @@ import com.bomaos.carmi.service.CardsService;
 import com.bomaos.common.core.Constants;
 import com.bomaos.common.core.annotation.OperLog;
 import com.bomaos.common.core.pays.alipay.AlipayUtil;
+import com.bomaos.common.core.pays.budpay.BudpayUtil;
+import com.bomaos.common.core.pays.epay.EpayUtil;
 import com.bomaos.common.core.pays.epusdt.entity.EpusdtEntity;
 import com.bomaos.common.core.pays.epusdt.sendPay;
 import com.bomaos.common.core.pays.mqpay.mqPay;
@@ -18,7 +20,6 @@ import com.bomaos.common.core.pays.paypal.config.PaypalPaymentMethod;
 import com.bomaos.common.core.pays.wxpay.SendWxPay;
 import com.bomaos.common.core.pays.xunhupay.PayUtils;
 import com.bomaos.common.core.pays.yungouos.YunGouosConfig;
-import com.bomaos.common.core.pays.epay.EpayUtil;
 import com.bomaos.common.core.utils.*;
 import com.bomaos.common.core.web.BaseController;
 import com.bomaos.common.core.web.JsonResult;
@@ -361,6 +362,11 @@ public class OrderController extends BaseController {
             case EPAY_WXPAY: // 易支付微信
                 String zlianSendPay = EpayUtil.epaySendPay(pays, price, ordersMember, productDescription);
                 response.sendRedirect(zlianSendPay);
+                break;
+            case BUDPAY_ALIPAY: // 易支付支付宝
+            case BUDPAY_WECHAT: // 易支付微信
+                String budpaySendPay = BudpayUtil.budpaySendPay(pays, price, ordersMember, productDescription);
+                response.sendRedirect(budpaySendPay);
                 break;
             case YUNGOUOS_WXPAY: // yungouos微信
             case YUNGOUOS_ALIPAY: // yungouos支付宝

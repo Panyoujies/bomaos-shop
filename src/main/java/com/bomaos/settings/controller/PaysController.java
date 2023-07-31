@@ -72,6 +72,13 @@ public class PaysController extends BaseController {
                     paysVo.setCreateUrl(configs.get("create_url").toString());
                     paysVo.setNotifyUrl(configs.get("notify_url").toString());
                     break;
+                case BUDPAY_ALIPAY:
+                case BUDPAY_WECHAT:
+                    paysVo.setAppid(configs.get("pid").toString());
+                    paysVo.setKey(configs.get("key").toString());
+                    paysVo.setCreateUrl(configs.get("create_url").toString());
+                    paysVo.setNotifyUrl(configs.get("notify_url").toString());
+                    break;
                 case YUNGOUOS_ALIPAY:
                 case YUNGOUOS_WXPAY:
                     paysVo.setAppid(configs.get("mchId").toString());
@@ -185,6 +192,13 @@ public class PaysController extends BaseController {
             case EPAY_ALIPAY:
             case EPAY_QQPAY:
             case EPAY_WXPAY:
+                map.put("pid", paysVo.getAppid());
+                map.put("key", paysVo.getKey());
+                map.put("create_url", paysVo.getCreateUrl());
+                map.put("notify_url", paysVo.getNotifyUrl());
+                break;
+            case BUDPAY_ALIPAY:
+            case BUDPAY_WECHAT:
                 map.put("pid", paysVo.getAppid());
                 map.put("key", paysVo.getKey());
                 map.put("create_url", paysVo.getCreateUrl());

@@ -29,6 +29,9 @@
     {{# if(d.driver=='epay_alipay' || d.driver=='epay_wxpay' || d.driver=='epay_qqpay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="epay">配置修改</a>
     {{# } }}
+    {{# if(d.driver=='budpay_alipay' || d.driver=='budpay_wechat'){ }}
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="budpay">配置修改</a>
+    {{# } }}
     {{# if(d.driver=='yungouos_wxpay' || d.driver=='yungouos_alipay'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="yungouos">配置修改</a>
     {{# } }}
@@ -184,6 +187,72 @@
 </script>
 
 
+<!-- epay -->
+<script type="text/html" id="budpayEditDialog">
+    <form id="budpayEditForm" lay-filter="budpayEditForm" class="layui-form model-form">
+        <input name="id" type="hidden"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付类型名称:</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入支付类型名称" class="layui-input" disabled=""
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付驱动类型:</label>
+            <div class="layui-input-block">
+                <input name="driver" placeholder="请输入支付驱动类型" class="layui-input" disabled=""
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">pid:</label>
+            <div class="layui-input-block">
+                <input name="appid" placeholder="输入pid" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">key:</label>
+            <div class="layui-input-block">
+                <input name="key" placeholder="输入key" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">支付网关:</label>
+            <div class="layui-input-block">
+                <input name="createUrl" placeholder="输入V免签官网" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">通知地址:</label>
+            <div class="layui-input-block">
+                <input name="notifyUrl" placeholder="输入通知的地址" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label layui-form-required">说明:</label>
+            <div class="layui-input-block">
+                <input name="comment" placeholder="请输入说明" class="layui-input"
+                       lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn" lay-filter="budpayEditSubmit" lay-submit>保存</button>
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
+        </div>
+    </form>
+</script>
 <!-- yungouos -->
 <script type="text/html" id="yungouosEditDialog">
     <form id="yungouosEditForm" lay-filter="yungouosEditForm" class="layui-form model-form">
@@ -771,6 +840,8 @@
                 showEditModel(obj.data);
             } else if ('epay' === obj.event) {
                 showEditModel(obj.data);
+            } else if ('budpay' === obj.event) {
+                showEditModel(obj.data);
             } else if ('yungouos' === obj.event) {
                 showEditModel(obj.data);
             } else if ('xunhupay' === obj.event) {
@@ -800,6 +871,10 @@
                 var html = $('#epayEditDialog').html();
                 var forms = 'epayEditForm';
                 var submit = 'epayEditSubmit';
+            } else if (mData.driver == 'budpay_alipay' || mData.driver == 'budpay_wechat') {
+                var html = $('#budpayEditDialog').html();
+                var forms = 'budpayEditForm';
+                var submit = 'budpayEditSubmit';
             } else if (mData.driver == 'yungouos_wxpay' || mData.driver == 'yungouos_alipay') {
                 var html = $('#yungouosEditDialog').html();
                 var forms = 'yungouosEditForm';

@@ -1,19 +1,20 @@
 package com.bomaos.reception.controller;
 
-import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.alipay.easysdk.factory.Factory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bomaos.carmi.entity.Cards;
 import com.bomaos.carmi.service.CardsService;
+import com.bomaos.common.core.pays.budpay.BudpayUtil;
+import com.bomaos.common.core.pays.epay.EpayUtil;
 import com.bomaos.common.core.pays.epusdt.entity.EpusdtNotify;
 import com.bomaos.common.core.pays.epusdt.sendPay;
 import com.bomaos.common.core.pays.mqpay.mqPay;
 import com.bomaos.common.core.pays.payjs.SignUtil;
 import com.bomaos.common.core.pays.paypal.PaypalSend;
 import com.bomaos.common.core.pays.xunhupay.PayUtils;
-import com.bomaos.common.core.pays.epay.EpayUtil;
 import com.bomaos.common.core.utils.DateUtil;
 import com.bomaos.common.core.utils.FormCheckUtil;
 import com.bomaos.common.core.utils.RequestParamsUtil;
@@ -26,6 +27,7 @@ import com.bomaos.products.entity.Products;
 import com.bomaos.products.service.ProductsService;
 import com.bomaos.reception.dto.NotifyDTO;
 import com.bomaos.reception.entity.XunhuNotIfy;
+import com.bomaos.reception.result.Budpay;
 import com.bomaos.reception.util.SynchronizedByKeyService;
 import com.bomaos.settings.entity.Pays;
 import com.bomaos.settings.entity.ShopSettings;
@@ -99,6 +101,66 @@ public class NotifyController {
     private final String WxpayH5resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 
     private final String resFailXml = "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[报文为空]]></return_msg></xml>";
+
+    @RequestMapping("/budpay/notifyUrl")
+    @ResponseBody
+    public String budpayNotify(Budpay budpay) {
+
+        System.out.println(budpay);
+        String driver = "";
+        if (budpay.getPay_type().equals("wechat")) {
+            driver = "budpay_wechat";
+        } else if (budpay.getPay_type().equals("alipay")) {
+            driver = "budpay_alipay";
+        }
+
+        Pays pays = paysService.getOne(new QueryWrapper<Pays>().eq("driver", driver));
+
+        /**
+         * 防止破解
+         */
+        Orders orders = ordersService.getOne(new QueryWrapper<Orders>().eq("member", budpay.getOut_trade_no()));
+        System.out.println(orders);
+        if (!orders.getPayType().equals(pays.getDriver())) {
+            return "不要搞我啦！！";
+        }
+
+        Map mapTypes = JSON.parseObject(pays.getConfig());
+
+        // 你的key 在后台获取
+        String secret_key = mapTypes.get("key").toString();
+        String json = JSON.toJSONString(budpay);
+        Map<String, Object> map = JSON.parseObject(json, new TypeReference<Map<String, Object>>() {});
+
+        String sign1 = BudpayUtil.createSign(map, secret_key).toUpperCase();
+        System.out.println(sign1);
+        System.out.println(budpay.getSign());
+        if (sign1.equals(budpay.getSign())) {
+            AtomicReference<String> notifyText = new AtomicReference<>();
+            synchronizedByKeyService.exec(budpay.getOut_trade_no(), () -> {
+                String returnBig1 = returnBig(budpay.getAmount(), budpay.getAmount(), budpay.getOut_trade_no(), budpay.getTrade_no(), budpay.getName(), "success", "final");
+                notifyText.set(returnBig1);
+            });
+            return notifyText.get();
+        } else {
+            return "签名错误！！";
+        }
+    }
+
+    /**
+     * 虎皮椒支付通知
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/budpay/returnUrl")
+    @ResponseBody
+    public void budpayReturnUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 记得 map 第二个泛型是数组 要取 第一个元素 即[0]
+        Map<String, String> params = RequestParamsUtil.getParameterMap(request);
+        String url = "/pay/state/" + params.get("out_trade_no");
+        response.sendRedirect(url);
+    }
 
     @RequestMapping("/mqpay/notifyUrl")
     @ResponseBody

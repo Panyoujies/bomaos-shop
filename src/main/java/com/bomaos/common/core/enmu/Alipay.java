@@ -3,6 +3,7 @@ package com.bomaos.common.core.enmu;
 public enum Alipay {
     MQPAY_ALIPAY("mqpay_alipay"),
     EPAY_ALIPAY("epay_alipay"),
+    BUDPAY_ALIPAY("budpay_alipay"),
     YUNGOUOS_ALIPAY("yungouos_alipay"),
     XUNHUPAY_ALIPAY("xunhupay_alipay"),
     PAYJS_ALIPAY("payjs_alipay"),

@@ -12,7 +12,7 @@ spring:
 # 日志配置
 logging:
   file:
-    name: bomao-faka.log
+    name: bomaos-shop.log
   level:
     root: WARN
     com.bomaos: ERROR

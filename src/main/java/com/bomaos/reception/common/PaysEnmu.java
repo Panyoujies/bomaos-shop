@@ -10,6 +10,8 @@ public enum PaysEnmu {
     EPAY_ALIPAY("epay_alipay"),
     EPAY_WXPAY("epay_wxpay"),
     EPAY_QQPAY("epay_qqpay"),
+    BUDPAY_ALIPAY("budpay_alipay"),
+    BUDPAY_WECHAT("budpay_wechat"),
     YUNGOUOS_WXPAY("yungouos_wxpay"),
     YUNGOUOS_ALIPAY("yungouos_alipay"),
     XUNHUPAY_WXPAY("xunhupay_wxpay"),
