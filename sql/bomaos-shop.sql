@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 80027
  Source Host           : localhost
- Source Database       : zlianweb-demo
+ Source Database       : bomaos-shop
 
  Target Server Type    : MySQL
  Target Server Version : 80027
  File Encoding         : utf-8
 
- Date: 10/06/2022 07:32:31 AM
+ Date: 07/31/2023 11:57:42 AM
 */
 
 SET NAMES utf8;
@@ -80,7 +80,7 @@ CREATE TABLE `sys_cards` (
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8mb4 COMMENT='卡密';
+) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=utf8mb4 COMMENT='卡密';
 
 -- ----------------------------
 --  Table structure for `sys_carousel`
@@ -99,13 +99,6 @@ CREATE TABLE `sys_carousel` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='轮播图管理';
 
 -- ----------------------------
---  Records of `sys_carousel`
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_carousel` VALUES ('1', '值联云卡 Lite 版', 'https://free.zlianpay.cn', '/file/20220325/6072308b8b4924ff779ab83c608a5f96.jpeg', '点击进入值联官网', '2022-03-23 17:26:57', '2022-03-23 17:26:57', '0');
-COMMIT;
-
--- ----------------------------
 --  Table structure for `sys_classifys`
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_classifys`;
@@ -118,13 +111,6 @@ CREATE TABLE `sys_classifys` (
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='分类';
-
--- ----------------------------
---  Records of `sys_classifys`
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_classifys` VALUES ('1', '官方分类', '1', '1000', '2022-03-23 02:20:47', '2022-03-23 02:20:47'), ('2', '测试分类', '0', '1000', '2022-03-23 20:18:03', '2022-03-23 20:18:03');
-COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_coupon`
@@ -228,7 +214,14 @@ CREATE TABLE `sys_login_record` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='登录日志';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='登录日志';
+
+-- ----------------------------
+--  Records of `sys_login_record`
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_login_record` VALUES ('21', 'admin', 'Mac OS X', 'Mac OS X', 'Chrome 11', '127.0.0.1', '0', null, '2023-07-31 11:53:25', '2023-07-31 11:53:25');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_menu`
@@ -282,7 +275,14 @@ CREATE TABLE `sys_oper_record` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `sys_oper_record_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1017 DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=1138 DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
+
+-- ----------------------------
+--  Records of `sys_oper_record`
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_oper_record` VALUES ('1125', '1', '订单表管理', '分页查询', '/orders/orders/page', 'GET', 'com.bomaos.orders.controller.OrdersController.page', '{\"page\":[\"1\"],\"limit\":[\"5\"]}', null, '127.0.0.1', null, '36', '0', '2023-07-31 11:53:27', '2023-07-31 11:53:27'), ('1126', '1', '文章表管理', '分页查询', '/content/article/page', 'GET', 'com.bomaos.content.controller.ArticleController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '7', '0', '2023-07-31 11:53:42', '2023-07-31 11:53:42'), ('1127', '1', '轮播图管理管理', '分页查询', '/content/carousel/page', 'GET', 'com.bomaos.content.controller.CarouselController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '3', '0', '2023-07-31 11:53:43', '2023-07-31 11:53:43'), ('1128', '1', '优惠券管理', '分页查询', '/settings/coupon/page', 'GET', 'com.bomaos.settings.controller.CouponController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '8', '0', '2023-07-31 11:53:46', '2023-07-31 11:53:46'), ('1129', '1', '订单表管理', '分页查询', '/orders/orders/page', 'GET', 'com.bomaos.orders.controller.OrdersController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '4', '0', '2023-07-31 11:53:47', '2023-07-31 11:53:47'), ('1130', '1', '卡密管理', '分页查询', '/carmi/cards/page', 'GET', 'com.bomaos.carmi.controller.CardsController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '7', '0', '2023-07-31 11:53:49', '2023-07-31 11:53:49'), ('1131', '1', '商品管理', '分页查询', '/products/products/page', 'GET', 'com.bomaos.products.controller.ProductsController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '19', '0', '2023-07-31 11:53:52', '2023-07-31 11:53:52'), ('1132', '1', '分类管理', '分页查询', '/products/classifys/page', 'GET', 'com.bomaos.products.controller.ClassifysController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '9', '0', '2023-07-31 11:53:54', '2023-07-31 11:53:54'), ('1133', '1', '支付配置管理', '分页查询', '/settings/pays/page', 'GET', 'com.bomaos.settings.controller.PaysController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '25', '0', '2023-07-31 11:53:56', '2023-07-31 11:53:56'), ('1134', '1', '支付配置管理', '修改', '/settings/pays/update', 'POST', 'com.bomaos.settings.controller.PaysController.update', null, '{\"msg\":\"修改成功\",\"code\":0}', '127.0.0.1', null, '16', '0', '2023-07-31 11:55:10', '2023-07-31 11:55:10'), ('1135', '1', '支付配置管理', '分页查询', '/settings/pays/page', 'GET', 'com.bomaos.settings.controller.PaysController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '13', '0', '2023-07-31 11:55:10', '2023-07-31 11:55:10'), ('1136', '1', '支付配置管理', '分页查询', '/settings/pays/page', 'GET', 'com.bomaos.settings.controller.PaysController.page', '{\"page\":[\"2\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '30', '0', '2023-07-31 11:55:12', '2023-07-31 11:55:12'), ('1137', '1', '支付配置管理', '分页查询', '/settings/pays/page', 'GET', 'com.bomaos.settings.controller.PaysController.page', '{\"page\":[\"1\"],\"limit\":[\"10\"]}', null, '127.0.0.1', null, '19', '0', '2023-07-31 11:55:21', '2023-07-31 11:55:21');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_orders`
@@ -317,7 +317,7 @@ CREATE TABLE `sys_orders` (
   `handling_fee` decimal(18,2) DEFAULT NULL COMMENT '手续费',
   PRIMARY KEY (`id`,`price`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
 
 -- ----------------------------
 --  Table structure for `sys_organization`
@@ -365,13 +365,13 @@ CREATE TABLE `sys_pays` (
   `is_handling_fee` int DEFAULT NULL COMMENT '手续费tag',
   `handling_fee` int DEFAULT NULL COMMENT '手续费',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COMMENT='支付配置';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COMMENT='支付配置';
 
 -- ----------------------------
 --  Records of `sys_pays`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_pays` VALUES ('1', '支付宝', 'mqpay_alipay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 支付宝（费率0）（自己搭建）', '2021-03-29 16:16:05', '2021-03-29 16:16:07', '0', '0', null, '0'), ('2', '微信', 'mqpay_wxpay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 微信 （费率0）（自己搭建）', '2021-03-29 16:17:52', '2021-03-29 16:17:55', '0', '0', null, '0'), ('3', 'QQ钱包', 'epay_qqpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - QQ钱包', '2021-05-24 16:12:49', '2021-10-30 16:12:49', '0', '0', '0', '0'), ('5', '支付宝', 'epay_alipay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - 支付宝', '2021-05-24 12:00:01', '2021-05-24 12:00:04', '0', '0', null, '0'), ('6', '微信', 'epay_wxpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - 微信', '2021-05-24 12:00:55', '2021-05-24 12:01:00', '0', '0', null, '0'), ('7', '微信', 'yungouos_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxxx\"}', 'YunGouOS - 微信（个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:53:12', '2021-06-06 04:53:20', '0', '0', null, '0'), ('8', '支付宝', 'yungouos_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'YunGouOS - 支付宝 （个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:54:03', '2021-06-06 04:54:06', '0', '0', null, '0'), ('9', '微信', 'xunhupay_wxpay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"https://api.xunhupay.com/payment/do.html\"}', '虎皮椒V3 - 微信（费率-H5版2%/普通版1%） 申请地址：https://www.xunhupay.com', '2021-06-06 22:24:47', '2021-06-06 22:24:50', '0', '0', null, '0'), ('10', '支付宝', 'xunhupay_alipay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\"}', '虎皮椒V3 - 支付宝 申请地址：https://www.xunhupay.com', '2021-06-06 22:25:19', '2021-06-06 22:25:22', '0', '0', null, '0'), ('13', '微信', 'payjs_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 微信扫码 申请地址：https://payjs.cn', '2021-06-27 14:17:54', '2021-06-27 14:17:58', '0', '0', null, '0'), ('14', '支付宝', 'payjs_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 支付宝扫码 申请地址：https://payjs.cn', '2021-06-27 14:18:38', '2021-06-27 14:18:43', '0', '0', null, '0'), ('17', '微信', 'wxpay', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - 扫码支付', '2021-07-02 02:47:37', '2021-07-02 02:47:40', '0', '0', null, '0'), ('18', '支付宝', 'alipay', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '官方支付宝 - 当面付', '2021-07-03 18:53:08', '2021-07-02 18:53:11', '0', '0', '0', '0'), ('19', '微信H5', 'wxpay_h5', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - H5支付 （开启后只在手机端显示）', '2021-07-02 23:20:54', '2021-08-17 23:20:56', '0', '0', null, '0'), ('20', 'Paypal', 'paypal', '{\"clientId\":\"xxx\",\"return_url\":\"xxx\",\"clientSecret\":\"xxx\"}', 'Paypal 境外支付（默认美元交易）', '2021-08-24 12:04:25', '2021-08-24 12:04:28', '0', '0', '0', '0'), ('22', '支付宝PC', 'alipay_pc', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '支付宝官方 - pc端支付', '2021-07-03 03:04:02', '2021-11-03 03:04:02', '1', '1', '0', '0'), ('23', 'USDT', 'epusdt', '{\"notify_url\":\"xxx\",\"create_url\":\"填写收银台域名后面不变/api/v1/order/create-transaction\",\"key\":\"xxx\"}', 'Epusdt TRC-20 数字货币 自己搭建【地址：https://github.com/assimon/epusdt】', '2022-09-15 15:33:41', '2022-09-15 15:33:43', '1', '1', '1', '8');
+INSERT INTO `sys_pays` VALUES ('1', '支付宝', 'mqpay_alipay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 支付宝（费率0）（自己搭建）', '2021-03-29 16:16:05', '2021-03-29 16:16:07', '0', '0', null, '0'), ('2', '微信', 'mqpay_wxpay', '{\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', 'V免签 - 微信 （费率0）（自己搭建）', '2021-03-29 16:17:52', '2021-03-29 16:17:55', '0', '0', null, '0'), ('3', 'QQ钱包', 'epay_qqpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - QQ钱包', '2021-05-24 16:12:49', '2021-10-30 16:12:49', '0', '0', '0', '0'), ('5', '支付宝', 'epay_alipay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - 支付宝', '2021-05-24 12:00:01', '2021-05-24 12:00:04', '1', '1', null, '0'), ('6', '微信', 'epay_wxpay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"xxx\",\"key\":\"xxx\"}', '易支付 - 微信', '2021-05-24 12:00:55', '2021-05-24 12:01:00', '0', '0', null, '0'), ('7', '微信', 'yungouos_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxxx\"}', 'YunGouOS - 微信（个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:53:12', '2021-06-06 04:53:20', '0', '0', null, '0'), ('8', '支付宝', 'yungouos_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'YunGouOS - 支付宝 （个人小薇支付-费率低） 申请地址：https://dwz.cn/QQLN87nX', '2021-06-06 04:54:03', '2021-06-06 04:54:06', '0', '0', null, '0'), ('9', '微信', 'xunhupay_wxpay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"https://api.xunhupay.com/payment/do.html\"}', '虎皮椒V3 - 微信（费率-H5版2%/普通版1%） 申请地址：https://www.xunhupay.com', '2021-06-06 22:24:47', '2021-06-06 22:24:50', '0', '0', null, '0'), ('10', '支付宝', 'xunhupay_alipay', '{\"appid\":\"xxx\",\"appsecret\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"https://api.xunhupay.com/payment/do.html\"}', '虎皮椒V3 - 支付宝 申请地址：https://www.xunhupay.com', '2021-06-06 22:25:19', '2021-06-06 22:25:22', '0', '0', null, '0'), ('13', '微信', 'payjs_wxpay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 微信扫码 申请地址：https://payjs.cn', '2021-06-27 14:17:54', '2021-06-27 14:17:58', '0', '0', null, '0'), ('14', '支付宝', 'payjs_alipay', '{\"mchId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', 'Payjs - 支付宝扫码 申请地址：https://payjs.cn', '2021-06-27 14:18:38', '2021-06-27 14:18:43', '0', '0', null, '0'), ('17', '微信', 'wxpay', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - 扫码支付', '2021-07-02 02:47:37', '2021-07-02 02:47:40', '0', '0', null, '0'), ('18', '支付宝', 'alipay', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '官方支付宝 - 当面付', '2021-07-03 18:53:08', '2021-07-02 18:53:11', '0', '0', '0', '0'), ('19', '微信H5', 'wxpay_h5', '{\"mchId\":\"xxx\",\"appId\":\"xxx\",\"notify_url\":\"xxx\",\"key\":\"xxx\"}', '官方微信 - H5支付 （开启后只在手机端显示）', '2021-07-02 23:20:54', '2021-08-17 23:20:56', '0', '0', null, '0'), ('20', 'Paypal', 'paypal', '{\"clientId\":\"xxx\",\"return_url\":\"xxx\",\"clientSecret\":\"xxx\"}', 'Paypal 境外支付（默认美元交易）', '2021-08-24 12:04:25', '2021-08-24 12:04:28', '0', '0', '0', '0'), ('22', '支付宝PC', 'alipay_pc', '{\"private_key\":\"xxx\",\"notify_url\":\"xxx\",\"app_id\":\"xxx\",\"alipay_public_key\":\"xxx\"}', '支付宝官方 - pc端支付', '2021-07-03 03:04:02', '2021-11-03 03:04:02', '0', '0', '0', '0'), ('23', 'USDT', 'epusdt', '{\"notify_url\":\"xxx\",\"create_url\":\"填写收银台域名后面不变/api/v1/order/create-transaction\",\"key\":\"xxx\"}', 'Epusdt TRC-20 数字货币 自己搭建【地址：https://github.com/assimon/epusdt】', '2022-09-15 15:33:41', '2022-09-15 15:33:43', '0', '0', '0', '8'), ('24', '支付宝', 'budpay_alipay', '{\"pid\":\"xxx\",\"notify_url\":\"xxx\",\"create_url\":\"https://pay.whbh1658.vip/api\",\"key\":\"xxx\"}', 'Budpay-支付宝支付', '2023-07-28 08:28:46', '2023-07-28 08:28:48', '0', '0', '0', '0');
 COMMIT;
 
 -- ----------------------------
@@ -408,13 +408,6 @@ CREATE TABLE `sys_products` (
   `component_enabled` int DEFAULT NULL COMMENT '是否开启提示',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='商品';
-
--- ----------------------------
---  Records of `sys_products`
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_products` VALUES ('9', '官方分类', '20.00', '1000', 'U545gGSf1j0Q1HUJ', '1', '', '2022-10-05 23:06:40', '2022-10-05 23:06:40', '2022-10-05 23:06:40', '1', '', '', '0', '', '0', '0', null, null, '1', null, '0', '0', '', '1', '', '1');
-COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_role`
