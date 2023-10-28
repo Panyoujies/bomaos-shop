@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  app:
+    container_name: bomaos-shop
+    build: .
+    restart: always
+    environment:
+      - spring.profiles.active=dev
+      - user.timezone=GMT+08
+      - spring.datasource.password=root
+      - spring.datasource.url=jdbc:mysql://mysql:3306/bomaos-shop?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&&allowPublicKeyRetrieval=true
+    volumes:
+      - ./app/:/app/
+      - ./app/logs/:/logs/
+    ports:
+      - 8085:8085
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql8
+    image: mysql:8
+    restart: always
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/logs:/logs
+      - ./mysql/db/init.sql:/docker-entrypoint-initdb.d/init.sql  #初始化sql, 将 sql/bomaos-shop.sql 复制到 mysql/db/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root #root密码
+      - MYSQL_DATABASE=bomaos-shop #数据库
+    ports:
+      - 3306:3306 #远程
+
