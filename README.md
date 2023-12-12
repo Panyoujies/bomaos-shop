@@ -12,9 +12,7 @@
 
 ## 🙋 仅供学习参考、不可用于违法用途。
 
-* 导航网站 [http://bomaos.com](http://bomaos.com)
-* Spotify 音乐会员合租 [http://m.zlianyun.cn](http://m.zlianyun.cn/)
-* Spotify 注册助手（完全免费） [http://spotify.zlianyun.cn](http://spotify.zlianyun.cn/)
+* 博客网站 [http://bomaos.com](http://bomaos.com)
 
 ## 🌼 介绍
 本项目为个人学习开发，新版 2.0.3 已正式推出，一款高效安全的发卡平台。
