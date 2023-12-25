@@ -61,4 +61,4 @@
 💬 有问题欢迎入
 * QQ群1反馈：940086807【已满】
 * QQ群2反馈：441322649
-* Telegram技术交流群： [https://t.me/zlianfaka](https://t.me/zlianfaka)
+* Telegram技术交流群： [https://t.me/bomaoshop](https://t.me/bomaoshop)
