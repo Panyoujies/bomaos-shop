@@ -14,7 +14,7 @@
 
 跨境小铺 - 跨境账号购买,跨境小铺,AppleID,GV账号,谷歌账号,Telegram会员,谷歌邮箱,谷歌网盘,小火箭,Quan x,苹果礼品卡,Apple兑换码,网站代搭建
 
-购买地址 [http://store.buykjzh.com](http://store.buykjzh.com)
+购买地址 [https://store.buykjzh.com](https://store.buykjzh.com)
 
 ## 🙋 仅供学习参考、不可用于违法用途。
 
