@@ -10,6 +10,9 @@
 <a href="https://free.bomaos.com" target="_blank">演示地址</a>
 </p>
 
+## AD 购买跨境账号就上 跨境小铺
+购买地址 [http://store.buykjzh.com](http://store.buykjzh.com)
+
 ## 🙋 仅供学习参考、不可用于违法用途。
 
 * 博客网站 [http://bomaos.com](http://bomaos.com)
