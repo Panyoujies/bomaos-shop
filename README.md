@@ -10,15 +10,18 @@
 <a href="https://free.bomaos.com" target="_blank">演示地址</a>
 </p>
 
-## AD 购买跨境账号就上 跨境小铺
+## 新版波猫商店Plus版
 
-跨境小铺 - 跨境账号购买,跨境小铺,AppleID,GV账号,谷歌账号,Telegram会员,谷歌邮箱,谷歌网盘,小火箭,Quan x,苹果礼品卡,Apple兑换码,网站代搭建
+新版plus 波猫商店 限时优惠价 499 需要的小伙伴可联系我。
+演示地址 buykjzh.com
+后台地址 admin.buykjzh.com
+用户名：test
+密码：test1
 
-购买地址 [https://store.buykjzh.com](https://store.buykjzh.com)
+联系方式：1724962375
 
 ## 🙋 仅供学习参考、不可用于违法用途。
 
-* 博客网站 [http://bomaos.com](http://bomaos.com)
 
 ## 🌼 介绍
 本项目为个人学习开发，新版 2.0.3 已正式推出，一款高效安全的发卡平台。
